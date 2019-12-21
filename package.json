@@ -28,6 +28,8 @@
     "pg-promise": "10.3.1",
     "redis": "2.8.0",
     "sequelize": "5.21.3",
+    "sequelize-cli": "5.5.1",
+    "uuidv4": "6.0.0",
     "winston": "3.2.1"
   },
   "devDependencies": {
