@@ -2,14 +2,25 @@ import express from 'express';
 import http from 'http';
 import session from 'express-session';
 import RedisStore from 'connect-redis';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import passport from './modules/passport';
 import getRedisClient from './modules/redis';
 import settings from './config';
 import getLogger from './modules/logger';
+import routes from './routes/index';
 
 const Redis = RedisStore(session);
 const log = getLogger('app');
 
 const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(cookieParser(settings.app.jwt.secret));
+app.use(passport.initialize());
+app.use(passport.session());
 
 const server = http.createServer(app);
 
@@ -34,6 +45,8 @@ app.get('/health', (req, res) => {
     env: process.env.NODE_ENV,
   });
 });
+
+app.use('/', routes);
 
 server.listen(settings.app.port);
 log.info('Env is: %s', app.get('env'));

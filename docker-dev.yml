@@ -23,6 +23,7 @@ services:
       LOG_LEVEL: "debug"
       POSTGRES_URL: "postgresql://docker:docker@postgres:5432/quk_docker"
       REDIS_URL: "redis://redis:6379"
+      JWT_SECRET: "Not.Known.Secret.Word"
       SESSION_SECRET: "VerySecretKey"
   redis:
     image: redis
