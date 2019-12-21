@@ -1,0 +1,14 @@
+.DS_Store
+
+.env
+
+/node_modules/
+/test/e2e/node_modules/
+/.idea/
+/logs/*.log.*
+/logs/*.log
+/dist
+.vscode
+
+.nyc_output
+coverage

@@ -1,0 +1,40 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "automerge": false,
+  "packageRules": [
+    {
+      "depTypeList": [
+        "devDependencies"
+      ],
+      "automerge": true,
+      "major": {
+        "automerge": false
+      }
+    }
+  ],
+  "major": {
+    "labels": [
+      "major",
+      "dependency-update"
+    ]
+  },
+  "minor": {
+    "labels": [
+      "minor",
+      "dependency-update"
+    ]
+  },
+  "patch": {
+    "labels": [
+      "patch",
+      "dependency-update"
+    ],
+    "automerge": true
+  },
+  "prConcurrentLimit": 10,
+  "baseBranches": [
+    "develop"
+  ]
+}

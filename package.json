@@ -1,0 +1,63 @@
+{
+  "name": "@quidditchuk/api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "babel ./src -d dist --copy-files",
+    "start": "babel-node ./src",
+    "serve": "npm run build && node dist/index.js",
+    "prod": "node dist/index.js",
+    "dev": "docker-compose -f docker-dev.yml up --build",
+    "debug": "docker-compose -f docker-debug.yml up --build",
+    "dev:startup": "bash startup.sh",
+    "test": "ava",
+    "test:coverage": "nyc ava"
+  },
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "cookie-parser": "1.4.4",
+    "crypto": "1.0.1",
+    "express": "4.17.1",
+    "express-session": "1.17.0",
+    "http": "0.0.0",
+    "jsonwebtoken": "8.5.1",
+    "passport": "0.4.1",
+    "passport-local": "1.0.0",
+    "pg-promise": "10.3.1",
+    "winston": "3.2.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.7.7",
+    "@babel/core": "7.7.7",
+    "@babel/node": "7.7.7",
+    "@babel/preset-env": "7.7.7",
+    "@babel/register": "7.7.7",
+    "ava": "2.4.0",
+    "babel-eslint": "10.0.3",
+    "babel-watch": "7.0.0",
+    "dotenv": "8.2.0",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-plugin-import": "2.19.1",
+    "husky": "3.1.0",
+    "lint-staged": "9.5.0",
+    "nyc": "14.1.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*.js"
+    ]
+  }
+}
