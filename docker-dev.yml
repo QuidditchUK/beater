@@ -1,0 +1,36 @@
+version: "2"
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    links:
+      - postgres:postgres
+    networks:
+      - net_dev
+    ports:
+      - 3000
+      - 3333:3000
+      - 8080:8080
+    environment:
+      NODE_ENV: "docker"
+      LOG_LEVEL: "debug"
+      POSTGRES_URL: "postgresql://docker:docker@postgres:5432/quk_docker"
+  postgres:
+    restart: always
+    image: mdillon/postgis:10-alpine
+    networks:
+      - net_dev
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+networks:
+  net_dev:
+    driver: bridge

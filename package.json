@@ -8,6 +8,8 @@
     "serve": "npm run build && node dist/index.js",
     "prod": "node dist/index.js",
     "dev": "docker-compose -f docker-dev.yml up --build",
+    "dev:api": "babel-watch src/index.js -L",
+    "dev:debug": "babel-node --inspect-brk=0.0.0.0 src/index.js",
     "debug": "docker-compose -f docker-debug.yml up --build",
     "dev:startup": "bash startup.sh",
     "test": "ava",

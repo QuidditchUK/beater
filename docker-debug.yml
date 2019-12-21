@@ -1,0 +1,24 @@
+version: "2"
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: debug.Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    links:
+      - postgres:postgres
+    ports:
+      - 3000
+      - 3333:3000
+      - 8080:8080
+      - 9229:9229
+  postgres:
+    restart: always
+    image: mdillon/postgis:10-alpine
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
