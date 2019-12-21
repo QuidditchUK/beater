@@ -10,12 +10,15 @@ services:
     volumes:
       - .:/usr/src/app
     links:
+      - redis:redis
       - postgres:postgres
     ports:
       - 3000
       - 3333:3000
       - 8080:8080
       - 9229:9229
+  redis:
+    image: redis
   postgres:
     restart: always
     image: mdillon/postgis:10-alpine
