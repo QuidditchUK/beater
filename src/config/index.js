@@ -9,4 +9,11 @@ export default {
     host: process.env.HOST || 'localhost',
   },
   logLevel: process.env.LOG_LEVEL || 'debug',
+  redis: {
+    url: process.env.REDIS_URL || 'redis://localhost:6379',
+  },
+  session: {
+    secretKey: process.env.SESSION_SECRET,
+    session_max_age: Number(process.env.SESSION_EXPIRY_DAYS) || 21,
+  },
 };
