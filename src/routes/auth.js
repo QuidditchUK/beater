@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
+import asyncHandler from 'express-async-handler';
 import settings from '../config';
 import getLogger from '../modules/logger';
-import passport from '../modules/passport';
+import passport, { checkAuthenticated } from '../modules/passport';
 import { parse } from '../modules/utils';
-import { update } from '../models/users';
+import { update, readOne } from '../models/users';
+import { authenticateJWT } from '../modules/jwt';
 
 const log = getLogger('router/auth');
 
@@ -68,6 +70,12 @@ export default function authRoute() {
       token_type: 'Bearer',
     });
   });
+
+  router.get('/me/', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const user = await readOne('email', req.user.email);
+
+    res.json(user);
+  }));
 
   return router;
 }

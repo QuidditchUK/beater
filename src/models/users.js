@@ -3,16 +3,16 @@ import { db, pgp } from '../modules/pg';
 import { sqlReadOne, sqlUpdateOne } from '../sql';
 
 
-export const getOneEmail = (email) => db.one(sqlReadOne, {
+export const readOne = (key, value) => db.one(sqlReadOne, {
   table: 'users',
   columns: '*',
-  key: 'email',
-  value: email,
+  key,
+  value,
 });
 
 export const checkPassword = async (email, password) => {
   try {
-    const user = await getOneEmail(email);
+    const user = await readOne('email', email);
 
     return crypto.createHmac('sha1', user.salt).update(password).digest('hex') === user.hashed_password;
   } catch (err) {

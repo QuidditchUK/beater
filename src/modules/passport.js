@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import getLogger from './logger';
-import { getOneEmail, checkPassword } from '../models/users';
+import { readOne, checkPassword } from '../models/users';
 
 const log = getLogger('modules/passport');
 
@@ -13,7 +13,7 @@ passport.use(new LocalStrategy(
   },
   async (email, password, done) => {
     try {
-      const user = await getOneEmail(email);
+      const user = await readOne('email', email);
 
       if (!user) {
         return done(null, false, { message: 'Not valid username or password' });
@@ -49,3 +49,12 @@ passport.deserializeUser((user, done) => {
 });
 
 export default passport;
+
+export const checkAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  log.warn('user is not authenticated %s', JSON.stringify({ cookie: req.cookies['connect.sid'], session: req.sessionID }));
+  return next({ message: 'USER NOT AUTH' });
+};
