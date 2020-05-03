@@ -22,7 +22,7 @@ export const up = (queryInterface, Sequelize) => queryInterface.createTable('use
   salt: Sequelize.STRING,
 
   type: {
-    type: Sequelize.ENUM('user', 'admin'),
+    type: Sequelize.STRING,
     defaultValue: 'user',
     allowNull: false,
   },

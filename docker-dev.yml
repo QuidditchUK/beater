@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
   app:
     container_name: app
@@ -9,36 +9,24 @@ services:
       - .env
     volumes:
       - .:/usr/src/app
-    links:
-      - redis:redis
-      - postgres:postgres
-    networks:
-      - net_dev
     ports:
-      - 3000
       - 3333:3000
       - 8080:8080
     environment:
-      NODE_ENV: "development"
-      LOG_LEVEL: "debug"
-      POSTGRES_URL: "postgresql://docker:docker@postgres:5432/quk_docker"
-      REDIS_URL: "redis://redis:6379"
-      JWT_SECRET: "Not.Known.Secret.Word"
-      SESSION_SECRET: "VerySecretKey"
+      NODE_ENV: development
+      LOG_LEVEL: debug
+      POSTGRES_URL: postgres://docker:docker@postgres:5432/docker
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: Not.Known.Secret.Word
+      SESSION_SECRET: VerySecretKey
   redis:
     image: redis
-    networks:
-      - net_dev
   postgres:
+    container_name: postgres
     restart: always
     image: mdillon/postgis:10-alpine
-    networks:
-      - net_dev
     ports:
-      - 5433:5432
+      - "5432:5432"
     environment:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
-networks:
-  net_dev:
-    driver: bridge

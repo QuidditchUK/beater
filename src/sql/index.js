@@ -10,8 +10,10 @@ export function sql(file, external = {}) {
   return new pgp.QueryFile(fullPath, {
     minify: true,
     params: external,
+    debug: true,
   });
 }
 
 export const sqlReadOne = sql('./read-one.sql');
 export const sqlUpdateOne = sql('./update-one.sql');
+export const sqlSearchClubs = sql('./search-clubs.sql');
