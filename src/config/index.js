@@ -29,7 +29,11 @@ export default {
   },
 
   postgres: {
-    url: process.env.POSTGRES_URL || 'postgresql://postgres:postgres@localhost:5432/quk',
+    host: process.env.POSTGRES_HOST || 'localhost',
+    database: process.env.POSTGRES_DATABASE || 'quk',
+    user: process.env.POSTGRES_USER || 'docker',
+    password: process.env.POSTGRES_PASSWORD || 'postgres',
+    port: process.env.POSTGRES_PORT || 5432,
   },
 
   session: {

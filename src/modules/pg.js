@@ -9,4 +9,14 @@ export const pgp = pgPromise({
     logger.debug('QUERY: %s', e.query);
   },
 });
-export const db = pgp(settings.postgres.url);
+
+const cn = {
+  host: settings.postgres.host,
+  port: settings.postgres.port,
+  database: settings.postgres.database,
+  user: settings.postgres.user,
+  password: settings.postgres.password,
+  max: 30,
+};
+
+export const db = pgp(cn);
