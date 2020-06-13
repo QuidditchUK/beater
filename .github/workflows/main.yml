@@ -1,4 +1,4 @@
-name: Beater
+name: Beater-Prod
 
 on:
   push:
