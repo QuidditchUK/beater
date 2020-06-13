@@ -10,11 +10,11 @@ CREATE TABLE clubs (
     , type varchar(255) NOT NULL
 );
 
-INSERT INTO clubs (uuid, created, updated, name, slug, location, type) VALUES
-    (uuid_generate_v4(), NOW(), NOW(), 'London Quidditch Club', 'london-quidditch-club', ST_GeomFromText('POINT(-0.150805 51.460149)',4326), 'Community'),
-    (uuid_generate_v4(), NOW(), NOW(), 'London Unspeakables Quidditch', 'london-unspeakables', ST_GeomFromText('POINT(-0.148176 51.453825)',4326), 'Community'),
-    (uuid_generate_v4(), NOW(), NOW(), 'Werewolves of London Quidditch Club', 'werewolves-of-london', ST_GeomFromText('POINT(-0.157671 51.558175)',4326), 'Community'),
-    (uuid_generate_v4(), NOW(), NOW(), 'St Andrews Snidgets Quidditch Club', 'st-andrews-snidgets', ST_GeomFromText('POINT(-2.811808 56.341305)',4326), 'University');
+INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, icon) VALUES
+    (uuid_generate_v4(), NOW(), NOW(), 'London Quidditch Club', 'london-quidditch-club', ST_GeomFromText('POINT(-0.150805 51.460149)',4326), 'Community', 'Clapham Common', 'image'),
+    (uuid_generate_v4(), NOW(), NOW(), 'London Unspeakables Quidditch', 'london-unspeakables', ST_GeomFromText('POINT(-0.148176 51.453825)',4326), 'Community', 'Clapham South', 'image'),
+    (uuid_generate_v4(), NOW(), NOW(), 'Werewolves of London Quidditch Club', 'werewolves-of-london', ST_GeomFromText('POINT(-0.157671 51.558175)',4326), 'Community', 'Hampstead Heath', 'image'),
+    (uuid_generate_v4(), NOW(), NOW(), 'St Andrews Snidgets Quidditch Club', 'st-andrews-snidgets', ST_GeomFromText('POINT(-2.811808 56.341305)',4326), 'University', 'St Andrews', 'image');
 
 -- Give me all clubs within 100km of me
 SELECT * 

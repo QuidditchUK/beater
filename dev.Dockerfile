@@ -1,12 +1,16 @@
 FROM node:alpine
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Install app dependencies
-COPY package*.json ./
-RUN npm install
+COPY package.json ./
+COPY yarn.lock ./
 
-EXPOSE 3000
+RUN yarn install
+
+COPY . .
+
+EXPOSE 4000
 
 CMD [ "npm", "run", "dev:api" ]
