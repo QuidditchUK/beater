@@ -7,11 +7,8 @@ services:
       dockerfile: dev.Dockerfile
     env_file:
       - .env
-    volumes:
-      - .:/usr/src/app
     ports:
       - 3333:3000
-      - 8080:8080
     environment:
       NODE_ENV: development
       LOG_LEVEL: debug
@@ -25,8 +22,6 @@ services:
     container_name: postgres
     restart: always
     image: mdillon/postgis:10-alpine
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker

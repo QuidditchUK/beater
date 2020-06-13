@@ -14,13 +14,15 @@
     "labels": [
       "major",
       "dependency-update"
-    ]
+    ],
+    "automerge": false
   },
   "minor": {
     "labels": [
       "minor",
       "dependency-update"
-    ]
+    ],
+    "automerge": true
   },
   "patch": {
     "labels": [
