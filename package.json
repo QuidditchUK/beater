@@ -16,7 +16,7 @@
     "test:coverage": "nyc ava"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "0.19.2",
     "body-parser": "1.19.0",
     "connect-redis": "4.0.3",
     "cookie-parser": "1.4.4",
@@ -32,7 +32,7 @@
     "pg-promise": "10.3.5",
     "redis": "2.8.0",
     "sequelize": "5.21.3",
-    "sequelize-cli": "^5.5.1",
+    "sequelize-cli": "5.5.1",
     "uuidv4": "6.0.1",
     "winston": "3.2.1"
   },
