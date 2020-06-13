@@ -1,1 +1,1 @@
-web: node yarn run prod
+web: node dist/index.js
