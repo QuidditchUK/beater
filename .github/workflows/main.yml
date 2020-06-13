@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [12.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -19,7 +19,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-node-
 #
@@ -55,10 +55,10 @@ jobs:
       with:
         aws_access_key: ${{secrets.AWS_ACCESS_KEY}}
         aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
-        application_name: <app-name>
-        environment_name: <beanstalk-env-name>
-        region: <aws_region>
-        version_label: "my-app-${{ steps.format-time.outputs.replaced }}"
+        application_name: beater
+        environment_name: Beater-env-1
+        region: eu-west-2
+        version_label: "quk-beater-${{ steps.format-time.outputs.replaced }}"
         deployment_package: deploy.zip
 
     - name: Deployed!
