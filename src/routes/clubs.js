@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 import { lookup } from '../modules/postcode';
-import { searchClubs } from '../models/clubs';
+import { searchClubs, getClubBySlug } from '../models/clubs';
 
 export default function authRoute() {
   const router = new Router();
@@ -13,6 +13,12 @@ export default function authRoute() {
     const clubs = await searchClubs(data.result, radius);
 
     res.json(clubs);
+  }));
+
+  router.get('/:slug', asyncHandler(async (req, res) => {
+    const club = await getClubBySlug(req.params.slug);
+
+    res.json(club);
   }));
 
   return router;

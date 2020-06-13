@@ -15,5 +15,6 @@ export function sql(file, external = {}) {
 }
 
 export const sqlReadOne = sql('./read-one.sql');
+export const sqlReadMany = sql('./read-many.sql');
 export const sqlUpdateOne = sql('./update-one.sql');
 export const sqlSearchClubs = sql('./search-clubs.sql');

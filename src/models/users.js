@@ -2,7 +2,6 @@ import crypto from 'crypto';
 import { db, pgp } from '../modules/pg';
 import { sqlReadOne, sqlUpdateOne } from '../sql';
 
-
 export const readOne = (key, value) => db.one(sqlReadOne, {
   table: 'users',
   columns: '*',
