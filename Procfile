@@ -1,0 +1,1 @@
+web: node yarn run prod
