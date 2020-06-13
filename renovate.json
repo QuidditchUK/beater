@@ -1,17 +1,13 @@
 {
-  "extends": [
-    "config:base"
-  ],
-  "automerge": false,
   "packageRules": [
     {
-      "depTypeList": [
-        "devDependencies"
+      "updateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
       ],
-      "automerge": true,
-      "major": {
-        "automerge": false
-      }
+      "automerge": true
     }
   ],
   "major": {
@@ -32,9 +28,5 @@
       "dependency-update"
     ],
     "automerge": true
-  },
-  "prConcurrentLimit": 10,
-  "baseBranches": [
-    "develop"
-  ]
+  }
 }
