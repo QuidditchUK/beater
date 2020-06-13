@@ -14,6 +14,7 @@ exports.up = async (next) => {
     short_name varchar(255),
     current_division int,
     current_position int,
+    image text,
     club_uuid uuid REFERENCES clubs(uuid) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL
   )
   `);
