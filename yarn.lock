@@ -7268,10 +7268,10 @@ uuid@^3.3.3:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-uuidv4@6.0.9:
-  version "6.0.9"
-  resolved "https://registry.yarnpkg.com/uuidv4/-/uuidv4-6.0.9.tgz#cfab0855ef9f58aff8b0bb75c51670cf4242ecac"
-  integrity sha512-a/1nruGzltmS3RQkWD49/9/kj1D/bGwWl0SUcDbJJy1tvJ8/xnh4ADFshUwYDGiVNj1xmr23NsogQXBgvvTy5g==
+uuidv4@6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/uuidv4/-/uuidv4-6.1.0.tgz#a8d50c71e46da4dd0edc887a2b766a75e48e5740"
+  integrity sha512-BLAg+H3301PcC0Vp2Nq/q0qujpr2iI6NN2Kt28dtTFmHHZCXurq8+lDl9+XJzvavYBz2HJoUncjKx0+XVcTJIg==
   dependencies:
     uuid "8.1.0"
 
