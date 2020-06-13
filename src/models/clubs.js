@@ -13,6 +13,7 @@ export const getClubBySlug = async (slug) => {
     key: 'slug',
     value: slug,
   });
+
   const teams = await db.any(sqlReadMany, {
     columns: '*',
     table: 'teams',
@@ -22,3 +23,5 @@ export const getClubBySlug = async (slug) => {
 
   return { ...club, teams };
 };
+
+export const allClubs = () => db.any('SELECT * FROM CLUBS ORDER BY name ASC;');
