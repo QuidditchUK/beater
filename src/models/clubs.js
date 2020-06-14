@@ -8,7 +8,7 @@ export const searchClubs = ({ longitude, latitude }, radius) => db.any(sqlSearch
 
 export const getClubBySlug = async (slug) => {
   const club = await db.oneOrNone(sqlReadOne, {
-    columns: '*',
+    columns: '*, ST_AsGeoJSON(location) AS coordinates',
     table: 'clubs',
     key: 'slug',
     value: slug,
