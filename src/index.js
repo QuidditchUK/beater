@@ -4,6 +4,7 @@ import session from 'express-session';
 import RedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import passport from './modules/passport';
 import getRedisClient from './modules/redis';
 import settings from './config';
@@ -14,6 +15,12 @@ const Redis = RedisStore(session);
 const log = getLogger('app');
 
 const app = express();
+
+app.use(cors({
+  origin: ['http://localhost', /\.quidditchuk\.org$/],
+  methods: 'GET,PUT,POST,PATCH',
+  credentials: true,
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
