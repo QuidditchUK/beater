@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
-import { lookup } from '../modules/postcode';
+import { lookup, postcodeRegex } from '../modules/postcode';
 import { searchClubs, getClubBySlug, allClubs } from '../models/clubs';
 
 export default function authRoute() {
   const router = new Router();
 
   router.get('/search', asyncHandler(async (req, res) => {
-    if (!req.query.postcode) {
+    if (!req.query.postcode || !req.query.postcode.match(postcodeRegex)) {
       const clubs = await allClubs();
       res.json(clubs);
 
