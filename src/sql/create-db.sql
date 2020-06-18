@@ -20,6 +20,9 @@ INSERT INTO teams (uuid, created, updated, name, short_name, current_division, c
     (uuid_generate_v4(), NOW(), NOW(), 'London Quidditch Club A', 'LQA', 1, 1, '91DA3CD8-AEC6-4FFE-957E-320EF991055A'),
     (uuid_generate_v4(), NOW(), NOW(), 'London Quidditch Club B', 'LQB', 2, 1, '91DA3CD8-AEC6-4FFE-957E-320EF991055A');
 
+INSERT INTO events (uuid, created, updated, name, venue, icon, start_time, end_time, team_fee, player_fee) VALUES
+    (uuid_generate_v4(), NOW(), NOW(), 'Northern Cup 2020', 'Sheffield Park', 'https://images.prismic.io/chaser/65d65868-3e13-4024-871a-6f23d1467042_Northern-Cup-2019-Logo.png?auto=compress,format', '2020-11-14 07:00:00Z', '2020-11-15 17:00:00Z', 10000, 0);
+
 -- Give me all clubs within 100km of me
 SELECT * 
 FROM clubs 
