@@ -1,9 +1,4 @@
-const pgp = require('pg-promise')();
-
-const db = pgp({
-  connectionString: process.env.POSTGRES_URL,
-  max: 10,
-});
+const db = require('../../bin/db');
 
 exports.up = async (next) => {
   await db.query(`CREATE TABLE IF NOT EXISTS clubs (
