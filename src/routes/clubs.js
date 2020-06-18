@@ -24,6 +24,10 @@ export default function authRoute() {
 
   router.get('/:slug', asyncHandler(async (req, res) => {
     const club = await getClubBySlug(req.params.slug);
+    if (!club) {
+      res.sendStatus(404);
+      return;
+    }
 
     res.json(club);
   }));

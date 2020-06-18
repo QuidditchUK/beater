@@ -23,9 +23,13 @@ export default function authRoute() {
   }));
 
   router.get('/:slug', asyncHandler(async (req, res) => {
-    const club = await getEventBySlug(req.params.slug);
+    const event = await getEventBySlug(req.params.slug);
+    if (!event) {
+      res.sendStatus(404);
+      return;
+    }
 
-    res.json(club);
+    res.json(event);
   }));
 
   return router;
