@@ -1,1 +1,1 @@
-web: node ./bin/migrate.js && node dist/index.js
+web: node dist/index.js
