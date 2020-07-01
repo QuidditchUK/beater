@@ -1,7 +1,7 @@
 import { db } from '../modules/pg';
 import { sqlSearchClubs, sqlReadMany } from '../sql';
 
-export const searchClubs = ({ longitude, latitude }, radius, leagues = []) => db.any(sqlSearchClubs, {
+export const searchClubs = ({ longitude, latitude }, radius, leagues = ['Community', 'University']) => db.any(sqlSearchClubs, {
   point: `'POINT(${longitude} ${latitude})'`,
   radius,
   leagues,

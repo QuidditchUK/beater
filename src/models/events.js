@@ -1,7 +1,7 @@
 import { db } from '../modules/pg';
 import { sqlSearchEvents } from '../sql';
 
-export const searchEvents = ({ longitude, latitude }, radius, leagues = []) => db.any(sqlSearchEvents, {
+export const searchEvents = ({ longitude, latitude }, radius, leagues = ['Community', 'University']) => db.any(sqlSearchEvents, {
   point: `'POINT(${longitude} ${latitude})'`,
   radius,
   leagues,
