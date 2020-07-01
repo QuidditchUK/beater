@@ -1,9 +1,10 @@
 import { db } from '../modules/pg';
 import { sqlSearchClubs, sqlReadMany } from '../sql';
 
-export const searchClubs = ({ longitude, latitude }, radius) => db.any(sqlSearchClubs, {
+export const searchClubs = ({ longitude, latitude }, radius, leagues = []) => db.any(sqlSearchClubs, {
   point: `'POINT(${longitude} ${latitude})'`,
   radius,
+  leagues: [leagues],
 });
 
 export const getClubBySlug = async (slug) => {
@@ -23,4 +24,4 @@ export const getClubBySlug = async (slug) => {
   return { ...club, teams };
 };
 
-export const allClubs = () => db.any('SELECT * FROM CLUBS ORDER BY name ASC;');
+export const allClubs = (leagues = []) => db.any('SELECT * FROM clubs WHERE league IN ($1:list) ORDER BY name ASC;', [leagues]);

@@ -3,7 +3,7 @@ import asyncHandler from 'express-async-handler';
 import { lookup, postcodeRegex } from '../modules/postcode';
 import { searchEvents, getEventBySlug, allEvents } from '../models/events';
 
-export default function authRoute() {
+export default function eventsRoute() {
   const router = new Router();
 
   router.get('/search', asyncHandler(async (req, res) => {

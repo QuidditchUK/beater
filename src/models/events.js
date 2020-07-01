@@ -1,9 +1,10 @@
 import { db } from '../modules/pg';
 import { sqlSearchEvents } from '../sql';
 
-export const searchEvents = ({ longitude, latitude }, radius) => db.any(sqlSearchEvents, {
+export const searchEvents = ({ longitude, latitude }, radius, leagues = []) => db.any(sqlSearchEvents, {
   point: `'POINT(${longitude} ${latitude})'`,
   radius,
+  leagues: [leagues],
 });
 
 export const getEventBySlug = async (slug) => {
@@ -18,4 +19,4 @@ export const getEventBySlug = async (slug) => {
   return { ...event, teams };
 };
 
-export const allEvents = () => db.any('SELECT * FROM EVENTS ORDER BY name ASC;');
+export const allEvents = (leagues = []) => db.any('SELECT * FROM events WHERE league IN ($1:list) ORDER BY name ASC;', [leagues]);
