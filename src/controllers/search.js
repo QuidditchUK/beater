@@ -6,10 +6,10 @@ export const search = async (location, radius, showTypes, leagues) => {
   let clubs = [];
 
   if (!showTypes || showTypes.includes('events')) {
-    events = await searchClubs(location, radius, leagues);
+    clubs = await searchClubs(location, radius, leagues);
   }
   if (!showTypes || showTypes.includes('clubs')) {
-    clubs = await searchEvents(location, radius, leagues);
+    events = await searchEvents(location, radius, leagues);
   }
 
   return { events, clubs };
