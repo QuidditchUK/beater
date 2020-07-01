@@ -24,4 +24,4 @@ export const getClubBySlug = async (slug) => {
   return { ...club, teams };
 };
 
-export const allClubs = (leagues = []) => db.any('SELECT * FROM clubs WHERE league IN ($1:list) ORDER BY name ASC;', [leagues]);
+export const allClubs = (leagues = ['Community', 'University']) => db.any('SELECT * FROM clubs WHERE league IN ($1:list) ORDER BY name ASC;', [leagues]);
