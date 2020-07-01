@@ -4,7 +4,7 @@ import { sqlSearchClubs, sqlReadMany } from '../sql';
 export const searchClubs = ({ longitude, latitude }, radius, leagues = []) => db.any(sqlSearchClubs, {
   point: `'POINT(${longitude} ${latitude})'`,
   radius,
-  leagues: [leagues],
+  leagues,
 });
 
 export const getClubBySlug = async (slug) => {

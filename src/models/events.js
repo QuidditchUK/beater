@@ -4,7 +4,7 @@ import { sqlSearchEvents } from '../sql';
 export const searchEvents = ({ longitude, latitude }, radius, leagues = []) => db.any(sqlSearchEvents, {
   point: `'POINT(${longitude} ${latitude})'`,
   radius,
-  leagues: [leagues],
+  leagues,
 });
 
 export const getEventBySlug = async (slug) => {
