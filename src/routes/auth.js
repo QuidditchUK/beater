@@ -5,8 +5,10 @@ import settings from '../config';
 import getLogger from '../modules/logger';
 import passport, { checkAuthenticated } from '../modules/passport';
 import { parse } from '../modules/utils';
-import { update, readOne } from '../models/users';
+import { update, readOne, create } from '../models/users';
 import { authenticateJWT } from '../modules/jwt';
+import { validate } from '../modules/validate';
+import { schema } from '../modules/validation_schemas/users';
 
 const log = getLogger('router/auth');
 
@@ -21,7 +23,7 @@ function loginMiddleware(req, res, next) {
     };
   }
 
-  passport.authenticate('local', { session: false }, (err, user) => {
+  passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err) {
       log.error('error in passport.authenticate: %s', err.stack);
       return next(err);
@@ -29,7 +31,7 @@ function loginMiddleware(req, res, next) {
 
     if (!user) {
       log.verbose('user authentication failed, no such user');
-      return next({ message: 'User not found' });
+      res.status(403).json({ error: info }).end();
     }
 
     const loginUser = {
@@ -63,7 +65,7 @@ function loginMiddleware(req, res, next) {
 export default function authRoute() {
   const router = new Router();
 
-  router.post('/login/', loginMiddleware, (req, res) => {
+  router.post('/login', validate(schema), loginMiddleware, (req, res) => {
     res.json({
       uuid: req.user.uuid,
       access_token: req.access_token,
@@ -71,11 +73,26 @@ export default function authRoute() {
     });
   });
 
-  router.get('/me/', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+  router.get('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
     const user = await readOne('email', req.user.email);
 
     res.json(user);
   }));
+
+  router.post('/', validate(schema), asyncHandler(async (req, res, next) => {
+    try {
+      await create(req.body);
+      next();
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }), loginMiddleware, (req, res) => {
+    res.json({
+      uuid: req.user.uuid,
+      access_token: req.access_token,
+      token_type: 'Bearer',
+    });
+  });
 
   return router;
 }
