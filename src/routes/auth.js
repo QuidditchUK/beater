@@ -5,10 +5,13 @@ import settings from '../config';
 import getLogger from '../modules/logger';
 import passport, { checkAuthenticated } from '../modules/passport';
 import { parse } from '../modules/utils';
-import { update, readOne, create } from '../models/users';
+import {
+  update, readOne, create, updatePassword,
+} from '../models/users';
 import { authenticateJWT } from '../modules/jwt';
 import { validate } from '../modules/validate';
-import { schema } from '../modules/validation_schemas/users';
+import { schema, resetSchema } from '../modules/validation_schemas/users';
+import { email as sendEmail } from '../modules/email';
 
 const log = getLogger('router/auth');
 
@@ -78,6 +81,45 @@ export default function authRoute() {
 
     res.json(user);
   }));
+
+  router.post('/forgot', asyncHandler(async (req, res) => {
+    try {
+      const { hashed_password, uuid, created } = await readOne('email', req.body.email);
+      const token = jwt.sign({ uuid, email: req.body.email }, `${hashed_password}-${created.toISOString()}`, { expiresIn: '1d' });
+
+      sendEmail(req.body.email, 'forgotPassword', { reset_url: `${settings.app.baseUrl}/reset?token=${token}&uuid=${uuid}` });
+
+      res.status(200).end();
+    } catch (error) {
+      // "fail" silently, regardless of if there is a user with that email or not
+      // so an attacker can't use this functionality to sniff for user emails
+      res.status(200).end();
+    }
+  }));
+
+  router.post('/reset', validate(resetSchema), asyncHandler(async (req, res, next) => {
+    try {
+      const { hashed_password, created, email } = await readOne('uuid', req.body.uuid);
+      jwt.verify(req.body.token, `${hashed_password}-${created.toISOString()}`);
+
+      await updatePassword(req.body.uuid, req.body.password);
+
+      req.body = {
+        email,
+        password: req.body.password,
+      };
+
+      next();
+    } catch (error) {
+      res.status(400).json({ error: { message: 'Invalid token' } });
+    }
+  }), loginMiddleware, (req, res) => {
+    res.json({
+      uuid: req.user.uuid,
+      access_token: req.access_token,
+      token_type: 'Bearer',
+    });
+  });
 
   router.post('/', validate(schema), asyncHandler(async (req, res, next) => {
     try {

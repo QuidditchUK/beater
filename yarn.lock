@@ -1268,7 +1268,7 @@ ava@3.8.2:
     write-file-atomic "^3.0.3"
     yargs "^15.3.1"
 
-axios@0.19.2:
+axios@0.19.2, axios@^0.19.2:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
@@ -5080,6 +5080,13 @@ postgres-interval@^1.1.0:
   integrity sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==
   dependencies:
     xtend "^4.0.0"
+
+postmark@^2.5.4:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-2.5.4.tgz#91f648f3f9763bbf7c4acf3aae4e42b1ac576618"
+  integrity sha512-oQ8IZdTaw8r3OVtTHi+t/Wi295EeV6mmYpTxOznQsH5b6lFCc82eUmCIxS1o/j4AndCpHS9jTnJP+8ZTYX8s7w==
+  dependencies:
+    axios "^0.19.2"
 
 prelude-ls@^1.2.1:
   version "1.2.1"

@@ -5,7 +5,9 @@ const logger = getLogger('modules/pg');
 
 export const pgp = pgPromise({
   query(e) {
-    logger.debug('QUERY: %s', e.query);
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('QUERY: %s', e.query);
+    }
   },
 });
 

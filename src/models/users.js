@@ -25,6 +25,21 @@ export const update = (uuid, data) => db.none(sqlUpdateOne, {
   uuid,
 });
 
+export const updatePassword = (uuid, password) => {
+  const salt = `${Math.random()}`;
+  const hashed_password = crypto.createHmac('sha1', salt)
+    .update(password)
+    .digest('hex');
+
+  const data = { hashed_password, salt };
+
+  return db.none(sqlUpdateOne, {
+    table: 'users',
+    sets: pgp.helpers.sets(data),
+    uuid,
+  });
+};
+
 export const create = async ({ password, email, ...rest }) => {
   const user = await readOne('email', email.toLowerCase());
 

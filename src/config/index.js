@@ -20,6 +20,7 @@ export default {
         secure: true,
       },
     },
+    baseUrl: process.env.BASE_URL || 'localhost',
   },
 
   logLevel: process.env.LOG_LEVEL || 'debug',
@@ -39,5 +40,13 @@ export default {
   session: {
     secretKey: process.env.SESSION_SECRET,
     session_max_age: Number(process.env.SESSION_EXPIRY_DAYS) || 21,
+  },
+
+  postmark: {
+    token: process.env.POSTMARK_TOKEN,
+    from: 'admin@quidditchuk.org',
+    templates: {
+      forgotPassword: 19133707,
+    },
   },
 };
