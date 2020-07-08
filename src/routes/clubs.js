@@ -39,6 +39,7 @@ export default function clubsRoute() {
   router.post('/', authenticateJWT, checkAuthenticated, checkAdmin, asyncHandler(async (req, res) => {
     try {
       await create(req.body);
+      res.status(201).end();
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

@@ -19,3 +19,4 @@ export const sqlReadMany = sql('./read-many.sql');
 export const sqlUpdateOne = sql('./update-one.sql');
 export const sqlSearchClubs = sql('./search-clubs.sql');
 export const sqlSearchEvents = sql('./search-events.sql');
+export const sqlInsertClub = sql('./create-club.sql');
