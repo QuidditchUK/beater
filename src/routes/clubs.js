@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 import { lookup, postcodeRegex } from '../modules/postcode';
-import { searchClubs, getClubBySlug, allClubs } from '../models/clubs';
+import {
+  searchClubs, getClubBySlug, allClubs, create,
+} from '../models/clubs';
+import { authenticateJWT } from '../modules/jwt';
+import { checkAuthenticated, checkAdmin } from '../modules/passport';
 
 export default function clubsRoute() {
   const router = new Router();
@@ -30,6 +34,14 @@ export default function clubsRoute() {
     }
 
     res.json(club);
+  }));
+
+  router.post('/', authenticateJWT, checkAuthenticated, checkAdmin, asyncHandler(async (req, res) => {
+    try {
+      await create(req.body);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }));
 
   return router;

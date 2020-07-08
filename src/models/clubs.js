@@ -1,4 +1,4 @@
-import { db } from '../modules/pg';
+import { db, pgp } from '../modules/pg';
 import { sqlSearchClubs, sqlReadMany } from '../sql';
 
 export const searchClubs = ({ longitude, latitude }, radius, leagues = ['Community', 'University']) => db.any(sqlSearchClubs, {
@@ -25,3 +25,5 @@ export const getClubBySlug = async (slug) => {
 };
 
 export const allClubs = (leagues = ['Community', 'University']) => db.any('SELECT * FROM clubs WHERE league IN ($1:list) ORDER BY name ASC;', [leagues]);
+
+export const create = (data) => db.none(pgp.helpers.insert(data, null, 'clubs'));

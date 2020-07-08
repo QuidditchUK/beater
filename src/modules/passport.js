@@ -58,3 +58,13 @@ export const checkAuthenticated = (req, res, next) => {
   log.warn('user is not authenticated %s', JSON.stringify({ cookie: req.cookies['connect.sid'], session: req.sessionID }));
   return next({ message: 'USER NOT AUTH' });
 };
+
+export const checkAdmin = (req, res, next) => {
+  if (req.user.role === 'admin') {
+    return next();
+  }
+
+  log.warn('user is not authenticated %s', JSON.stringify({ cookie: req.cookies['connect.sid'], session: req.sessionID }));
+  res.status(403).end();
+  return next({ message: 'USER NOT AUTH' });
+};
