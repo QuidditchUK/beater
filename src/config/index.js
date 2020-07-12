@@ -20,7 +20,7 @@ export default {
         secure: true,
       },
     },
-    baseUrl: process.env.BASE_URL || 'localhost',
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
   },
 
   logLevel: process.env.LOG_LEVEL || 'debug',
@@ -49,4 +49,8 @@ export default {
       forgotPassword: 19133707,
     },
   },
+  stripe: {
+    token: process.env.STRIPE_TOKEN,
+  },
+
 };
