@@ -51,6 +51,6 @@ export default {
   },
   stripe: {
     token: process.env.STRIPE_TOKEN,
+    webhookToken: process.env.STRIPE_WEBHOOK_TOKEN,
   },
-
 };

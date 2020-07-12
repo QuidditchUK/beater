@@ -2,6 +2,9 @@ import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 import stripe from '../modules/stripe';
 import settings from '../config';
+import { authenticateJWT } from '../modules/jwt';
+import { getUserProducts } from '../models/products';
+import { checkAuthenticated } from '../modules/passport';
 
 export default function productsRoute() {
   const router = new Router();
@@ -18,7 +21,7 @@ export default function productsRoute() {
     res.json(results);
   }));
 
-  router.get('/session', asyncHandler(async (req, res) => {
+  router.get('/session', authenticateJWT, asyncHandler(async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
@@ -28,9 +31,18 @@ export default function productsRoute() {
       mode: 'payment',
       success_url: `${settings.app.baseUrl}/dashboard/membership/success`,
       cancel_url: `${settings.app.baseUrl}/dashboard/membership/purchase`,
+      metadata: {
+        user_uuid: req.user.uuid,
+      },
     });
 
     res.json(session);
+  }));
+
+  router.get('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const products = await getUserProducts(req.user.uuid);
+
+    res.json(products);
   }));
 
   return router;
