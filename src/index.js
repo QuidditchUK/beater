@@ -5,15 +5,12 @@ import RedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import asyncHandler from 'express-async-handler';
 import passport from './modules/passport';
 import getRedisClient from './modules/redis';
 import settings from './config';
 import getLogger from './modules/logger';
 import routes from './routes/index';
-import stripe from './modules/stripe';
-import { update } from './models/users';
-import { create } from './models/products';
+import stripeWebhookRoutes from './routes/stripe-webhooks';
 
 const Redis = RedisStore(session);
 const log = getLogger('app');
@@ -26,7 +23,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use('/webhooks/stripe', bodyParser.raw({ type: 'application/json' }));
+app.use('/webhooks/stripe', bodyParser.raw({ type: 'application/json' }), stripeWebhookRoutes());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -60,36 +57,6 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/', routes);
-
-app.post('/webhooks/stripe', asyncHandler(async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, settings.stripe.webhookToken);
-  } catch (err) {
-    res.end();
-  }
-
-  switch (event.type) {
-    case 'checkout.session.completed': {
-      const { customer, metadata, id } = event.data.object;
-      const { user_uuid } = metadata;
-
-      const { data } = await stripe.checkout.sessions.listLineItems(id);
-      const [item] = data;
-
-      update(user_uuid, { stripe_customer_id: customer });
-      create({ user_uuid, stripe_product_id: item.price.product });
-
-      res.status(200).end();
-      break;
-    }
-    default:
-      res.status(400).end();
-  }
-}));
 
 server.listen(settings.app.port);
 log.info('Env is: %s', app.get('env'));
