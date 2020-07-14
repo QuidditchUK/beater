@@ -10,7 +10,6 @@ import getRedisClient from './modules/redis';
 import settings from './config';
 import getLogger from './modules/logger';
 import routes from './routes/index';
-import stripeWebhookRoutes from './routes/stripe-webhooks';
 
 const Redis = RedisStore(session);
 const log = getLogger('app');
@@ -22,8 +21,6 @@ app.use(cors({
   methods: 'GET,PUT,POST,PATCH',
   credentials: true,
 }));
-
-app.use('/webhooks/stripe', bodyParser.raw({ type: 'application/json' }), stripeWebhookRoutes());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

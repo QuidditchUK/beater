@@ -5,7 +5,7 @@ import clubsRoute from './clubs';
 import eventsRoute from './events';
 import searchRoute from './search';
 import productsRoute from './products';
-// import webhooksRoute from './webhooks';
+import webhooksRoute from './webhooks';
 
 const router = express.Router();
 
@@ -16,5 +16,6 @@ router.use('/clubs', clubsRoute());
 router.use('/events', eventsRoute());
 router.use('/search', searchRoute());
 router.use('/products', productsRoute());
+router.use('/webhooks', webhooksRoute());
 
 export default router;
