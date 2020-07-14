@@ -15,7 +15,9 @@ export const getUserProducts = async (user_uuid) => {
     return [];
   }
 
-  const products = await Promise.all(rows.map(({ stripe_product_id }) => stripe.products.retrieve(stripe_product_id)));
+  const sortedRows = rows.sort((a, b) => a.created - b.created);
+
+  const products = await Promise.all(sortedRows.map(({ stripe_product_id }) => stripe.products.retrieve(stripe_product_id)));
   const { data: prices } = await stripe.prices.list();
 
   const results = products.map((prod) => {
