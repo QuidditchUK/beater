@@ -77,7 +77,7 @@ export default function authRoute() {
   });
 
   router.get('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
-    const user = await readOne('email', req.user.email);
+    const { hashed_password, salt, ...user } = await readOne('email', req.user.email);
 
     res.json(user);
   }));
@@ -120,6 +120,13 @@ export default function authRoute() {
       token_type: 'Bearer',
     });
   });
+
+  router.patch('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    await update(req.user.uuid, req.body);
+
+    const { hashed_password, salt, ...user } = await readOne('uuid', req.user.uuid);
+    res.json(user);
+  }));
 
   router.post('/', validate(schema), asyncHandler(async (req, res, next) => {
     try {
