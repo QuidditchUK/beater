@@ -35,3 +35,23 @@ FROM clubs
 CROSS JOIN (SELECT ST_GeomFromText('POINT(-0.157671 51.558175)', 4326)::geography AS ref_geom) AS r
 WHERE ST_DWithin(location, ref_geom, 100000)
 ORDER BY ST_Distance(location, ref_geom);
+
+INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, icon, images, tags, leader, leader_position, featured_color, text_color, description) VALUES
+    (
+        uuid_generate_v4(),
+        NOW(),
+        NOW(),
+        'Loughborough Longshots',
+        'loughborough-longshots',
+        ST_GeomFromText('POINT(-1.2336621 52.7648043)',4326),
+        'University',
+        'Loughborough University',
+        'https://images.prismic.io/chaser/dafc4123-cfd0-431b-bdcc-f0679c754394_Logo+New-01+-+Loughborough+Longshots.png?auto=compress,format',
+        '{"https://images.prismic.io/chaser/d7a51631-e413-49b4-b3d1-2633dbaa9a6e_53216921_330790634447620_6601668113261920256_n+-+Loughborough+Longshots.jpg?auto=compress,format"}',
+        '{"Loughborough Longshots", Loughborough}',
+        'Lucy Nicholls',
+        'President',
+        '#4b2565',
+        '#ffffff',
+        'The Loughborough Longshots are Loughborough University''s quidditch team, and part of the LSU Harry Potter and Quidditch Society. Since they were founded in 2013, the team have competed at both national and international tournaments.'
+    );
