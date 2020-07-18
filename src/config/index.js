@@ -45,8 +45,13 @@ export default {
   postmark: {
     token: process.env.POSTMARK_TOKEN,
     from: 'admin@quidditchuk.org',
+    adminEmail: 'admin@quidditchuk.org',
+    secretaryEmail: 'secretary@quidditchuk.org',
+    volunteerEmail: 'volunteer-form@quidditchuk.org',
     templates: {
       forgotPassword: 19133707,
+      contactForm: 19443708,
+      volunteerForm: 19447684,
     },
   },
   stripe: {
