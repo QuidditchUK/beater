@@ -140,9 +140,9 @@ export default function authRoute() {
         res.status(200).end();
       }
 
-      res.status(400).json({ error: 'Incorrect password' });
+      res.status(400).json({ error: { message: 'Current password is incorrect' } });
     } catch (error) {
-      res.status(400).json({ error: { message: error.message } });
+      res.status(400).json({ error: error.message });
     }
   }));
 
