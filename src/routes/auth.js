@@ -6,11 +6,15 @@ import getLogger from '../modules/logger';
 import passport, { checkAuthenticated } from '../modules/passport';
 import { parse } from '../modules/utils';
 import {
-  update, readOne, create, updatePassword,
+  update,
+  readOne,
+  create,
+  updatePassword,
+  checkPassword,
 } from '../models/users';
 import { authenticateJWT } from '../modules/jwt';
 import { validate } from '../modules/validate';
-import { schema, resetSchema } from '../modules/validation_schemas/users';
+import { schema, resetSchema, updateSchema } from '../modules/validation_schemas/users';
 import { email as sendEmail } from '../modules/email';
 
 const log = getLogger('router/auth');
@@ -126,6 +130,20 @@ export default function authRoute() {
 
     const { hashed_password, salt, ...user } = await readOne('uuid', req.user.uuid);
     res.json(user);
+  }));
+
+  router.put('/password', authenticateJWT, checkAuthenticated, validate(updateSchema), asyncHandler(async (req, res) => {
+    try {
+      const check = await checkPassword(req.user.email, req.body.old_password);
+      if (check) {
+        await updatePassword(req.body.password);
+        res.status(200).end();
+      }
+
+      res.status(400).json({ error: 'Incorrect password' });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }));
 
   router.post('/', validate(schema), asyncHandler(async (req, res, next) => {
