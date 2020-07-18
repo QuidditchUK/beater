@@ -121,7 +121,7 @@ export default function authRoute() {
     });
   });
 
-  router.patch('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+  router.put('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
     await update(req.user.uuid, req.body);
 
     const { hashed_password, salt, ...user } = await readOne('uuid', req.user.uuid);
