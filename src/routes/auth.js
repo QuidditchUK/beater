@@ -136,7 +136,7 @@ export default function authRoute() {
     try {
       const check = await checkPassword(req.user.email, req.body.old_password);
       if (check) {
-        await updatePassword(req.body.password);
+        await updatePassword(req.user.uuid, req.body.password);
         res.status(200).end();
       }
 
