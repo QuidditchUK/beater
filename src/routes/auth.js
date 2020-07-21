@@ -12,6 +12,7 @@ import {
   updatePassword,
   checkPassword,
 } from '../models/users';
+import { getClub } from '../models/clubs';
 import { authenticateJWT } from '../modules/jwt';
 import { validate } from '../modules/validate';
 import { schema, resetSchema, updateSchema } from '../modules/validation_schemas/users';
@@ -126,7 +127,13 @@ export default function authRoute() {
   });
 
   router.put('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const { club_uuid, first_name, last_name } = await readOne('uuid', req.user.uuid);
     await update(req.user.uuid, req.body);
+
+    if (req.body.club_uuid !== club_uuid) {
+      const { email } = await getClub(req.params.uuid);
+      sendEmail(email, 'newMember', { email: req.user.email, first_name, last_name });
+    }
 
     const { hashed_password, salt, ...user } = await readOne('uuid', req.user.uuid);
     res.json(user);

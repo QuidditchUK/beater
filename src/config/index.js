@@ -53,6 +53,7 @@ export default {
       forgotPassword: 19133707,
       contactForm: 19443708,
       volunteerForm: 19447684,
+      newMember: 19486834,
     },
   },
   stripe: {
