@@ -49,6 +49,7 @@ export default {
     secretaryEmail: 'secretary@quidditchuk.org',
     volunteerEmail: 'volunteer-form@quidditchuk.org',
     templates: {
+      welcome: 19455866,
       forgotPassword: 19133707,
       contactForm: 19443708,
       volunteerForm: 19447684,

@@ -149,6 +149,7 @@ export default function authRoute() {
   router.post('/', validate(schema), asyncHandler(async (req, res, next) => {
     try {
       await create(req.body);
+      sendEmail(req.body.email, 'welcome', {});
       next();
     } catch (error) {
       res.status(400).json({ error: error.message });
