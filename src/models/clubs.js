@@ -22,7 +22,7 @@ export const getClub = async (uuid) => {
     value: club.uuid,
   });
 
-  return { ...club, teams };
+  return { ...club, teams: teams.sort((a, b) => a.order - b.order) };
 };
 
 export const getClubBySlug = async (slug) => {
