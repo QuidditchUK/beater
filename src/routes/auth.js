@@ -131,7 +131,7 @@ export default function authRoute() {
     await update(req.user.uuid, req.body);
 
     if (req.body.club_uuid !== club_uuid) {
-      const { email } = await getClub(req.params.uuid);
+      const { email } = await getClub(req.body.club_uuid);
       sendEmail(email, 'newMember', { email: req.user.email, first_name, last_name });
     }
 
