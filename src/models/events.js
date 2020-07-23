@@ -23,4 +23,4 @@ export const getEventBySlug = async (slug) => {
   return { ...event, teams };
 };
 
-export const allEvents = (leagues = ['Community', 'University']) => db.any('SELECT * FROM events WHERE league IN ($1:list) ORDER BY name ASC;', [leagues]);
+export const allEvents = () => db.any('SELECT * FROM events ORDER BY name ASC;');
