@@ -23,4 +23,4 @@ export const getEventBySlug = async (slug) => {
   return { ...event, teams };
 };
 
-export const allEvents = () => db.any('SELECT * FROM events ORDER BY name ASC;');
+export const allEvents = () => db.any('SELECT * FROM events ORDER BY start_time ASC;');
