@@ -8,7 +8,7 @@ export default function eventsRoute() {
 
   router.get('/search', asyncHandler(async (req, res) => {
     if (!req.query.postcode || !req.query.postcode.match(postcodeRegex)) {
-      const events = await allEvents();
+      const events = await allEvents(req.query.leagues);
       res.json(events);
 
       return;

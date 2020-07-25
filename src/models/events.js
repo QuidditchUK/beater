@@ -23,4 +23,4 @@ export const getEventBySlug = async (slug) => {
   return { ...event, teams };
 };
 
-export const allEvents = () => db.any('SELECT * FROM events ORDER BY start_time ASC;');
+export const allEvents = (leagues = ['Community', 'University']) => db.any('SELECT * FROM events WHERE league <@ Array[$1:list]::text[] ORDER BY start_time ASC;', [leagues]);
