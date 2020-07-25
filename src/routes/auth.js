@@ -131,8 +131,13 @@ export default function authRoute() {
     await update(req.user.uuid, req.body);
 
     if (req.body.club_uuid && req.body.club_uuid !== club_uuid) {
-      const { email } = await getClub(req.body.club_uuid);
-      sendEmail(email, 'newMember', { email: req.user.email, first_name, last_name });
+      const { email, name } = await getClub(req.body.club_uuid);
+      sendEmail(email, 'newMember', {
+        email: req.user.email,
+        name,
+        first_name,
+        last_name,
+      });
     }
 
     const { hashed_password, salt, ...user } = await readOne('uuid', req.user.uuid);
@@ -156,7 +161,8 @@ export default function authRoute() {
   router.post('/', validate(schema), asyncHandler(async (req, res, next) => {
     try {
       await create(req.body);
-      sendEmail(req.body.email, 'welcome', {});
+
+      sendEmail(req.body.email, 'welcome', { first_name: req.body.first_name });
       next();
     } catch (error) {
       res.status(400).json({ error: error.message });
