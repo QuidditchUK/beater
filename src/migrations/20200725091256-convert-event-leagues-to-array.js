@@ -2,7 +2,7 @@ const db = require('../../bin/db');
 
 exports.up = async (next) => {
   await db.query(`
-    ALTER TABLE events 
+    ALTER TABLE events
     ALTER league type text[] USING array[league];
 
     UPDATE events
