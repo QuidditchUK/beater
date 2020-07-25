@@ -15,5 +15,10 @@ export default function contactRoute() {
     res.status(200).end();
   });
 
+  router.post('/national', (req, res) => {
+    email(settings.postmark.nationalTeamsEmails[req.body.team], 'nationalTeam', req.body, req.body.email);
+    res.status(200).end();
+  });
+
   return router;
 }
