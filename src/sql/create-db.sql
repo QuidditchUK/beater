@@ -72,6 +72,7 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , location
         , description
         , league
+        , slug
     ) VALUES
     (
         uuid_generate_v4()
@@ -88,6 +89,7 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , ST_GeomFromText('POINT(-1.1881193 51.6489061)', 4326)
         , '<p>The first QuidditchUK Community League fixture of the 2020/2021 Season. All community teams are eligible to attend and compete in divisions for promotion and relegation for the next fixture. More details to be announced closer to the event.</p>'
         , 'Community'
+        , 'community-fixture-1'
     ),
     (
         uuid_generate_v4()
@@ -104,6 +106,7 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , ST_GeomFromText('POINT(-2.0037141 52.477564)', 4326)
         , '<p>The second QuidditchUK Community League fixture of the 2020/2021 Season. Community teams compete in divisions for the Community League Cup and to qualify for the British Quidditch Cup. More details to be announced closer to the event.</p>'
         , 'Community'
+        , 'community-fixture-2'
     ),
     (
         uuid_generate_v4()
@@ -120,6 +123,7 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , ST_GeomFromText('POINT(-2.0037141 52.477564)', 4326)
         , '<p>Opt-in tournament for any University Club to begin the 2020/2021 Season. Has no bearing on BQC Qualification, provides competitive fixture to clubs that can attend. More details to be announced closer to the event.</p>'
         , 'University'
+        , 'university-cup'
     ),
     (
         uuid_generate_v4()
@@ -136,6 +140,7 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , ST_GeomFromText('POINT(-2.0037141 52.477564)', 4326)
         , '<p>University teams split into divisions based on their performance in the 2019/2020 season. Results will determine entry into BQC. More details to be announced closer to the event.</p>'
         , 'University'
+        , 'northern-cup'
     ),
     (
         uuid_generate_v4()
@@ -152,6 +157,7 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , ST_GeomFromText('POINT(-1.1881193 51.6489061)', 4326)
         , '<p>University teams split into divisions based on their performance in the 2019/2020 season. Results will determine entry into BQC. More details to be announced closer to the event.</p>'
         , 'University'
+        , 'southern-cup'
     ),
     (
         uuid_generate_v4()
@@ -167,6 +173,8 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , 0
         , ST_GeomFromText('POINT(-1.1881193 51.6489061)', 4326)
         , '<p>Community and university teams play each other for the chance to become Development Cup champion. Coaching and refereeing workshops run alongside friendly yet competitive matches at this community-based tournament focused on player development. More details to be announced closer to the event.</p>'
+        , null
+        , 'development-cup'
     ),
     (
         uuid_generate_v4()
@@ -174,7 +182,7 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , NOW()
         , 'British Quidditch Club'
         , 'TBA'
-        , 'https://images.prismic.io/chaser/e96e82e8-98a5-4e38-a6f6-86535b8da710_89536699_330857781207062_3898434058144710656_n+-+Manchester+Quidditch.jpg?auto=compress,format'
+        , ''
         , '{"https://images.prismic.io/chaser/fc5ae1be-6892-4ed2-891c-e35c21f5ca2c_broomsup-2000x1152.jpg?auto=compress,format"}'
         , '2021-04-17 07:00:00Z'
         , '2021-04-18 17:00:00Z'
@@ -182,4 +190,6 @@ INSERT INTO clubs (uuid, created, updated, name, slug, location, league, venue, 
         , 0
         , ST_GeomFromText('POINT(-1.9821047 52.7367035)', 4326)
         , '<p>The premier event of the UK quidditch season. 12 Community teams compete for the title of British Community Quidditch Champion while 12 University teams compete for the title of British University Quidditch Champion. More details to be announced closer to the event.</p>'
+        , null
+        , 'british-quidditch-cup'
     );
