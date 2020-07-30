@@ -3,7 +3,7 @@ const db = require('../../bin/db');
 exports.up = async (next) => {
   await db.query(`
     ALTER TABLE users
-    ADD is_student boolean DEFAULT false NOT NULL,
+    ADD is_student boolean NULL,
     ADD university text NULL;
   `);
 
