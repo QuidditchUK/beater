@@ -10,7 +10,7 @@ export default function productsRoute() {
   const router = new Router();
 
   router.get('/', asyncHandler(async (_, res) => {
-    const { data: products } = await stripe.products.list();
+    const { data: products } = await stripe.products.list({ active: true });
     const { data: prices } = await stripe.prices.list();
 
     const results = products.map((prod) => {
