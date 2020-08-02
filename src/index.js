@@ -16,7 +16,7 @@ const log = getLogger('app');
 
 const app = express();
 
-const allowList = process.NODE_ENV === 'production'
+const allowList = process.env.NODE_ENV === 'production'
   ? ['https://quidditchuk.org', /\.quidditchuk\.org$/]
   : ['http://localhost:3000', 'https://quidditchuk.org', /\.quidditchuk\.org$/];
 
