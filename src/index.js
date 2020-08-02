@@ -18,7 +18,7 @@ const app = express();
 
 const allowList = process.NODE_ENV === 'production'
   ? ['https://quidditchuk.org', /\.quidditchuk\.org$/]
-  : ['http://localhost', 'https://quidditchuk.org', /\.quidditchuk\.org$/];
+  : ['http://localhost:3000', 'https://quidditchuk.org', /\.quidditchuk\.org$/];
 
 app.use(cors({
   origin(origin, callback) {
