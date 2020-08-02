@@ -16,10 +16,18 @@ const log = getLogger('app');
 
 const app = express();
 
+const allowList = process.NODE_ENV === 'production'
+  ? ['https://quidditchuk.org', /\.quidditchuk\.org$/]
+  : ['http://localhost', 'https://quidditchuk.org', /\.quidditchuk\.org$/];
+
 app.use(cors({
-  origin: process.NODE_ENV === 'production'
-    ? ['https://quidditchuk.org', /\.quidditchuk\.org$/]
-    : ['http://localhost', 'https://quidditchuk.org', /\.quidditchuk\.org$/],
+  origin(origin, callback) {
+    if (allowList.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
   methods: 'GET,PUT,POST,PATCH',
   credentials: true,
 }));
