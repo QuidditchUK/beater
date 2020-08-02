@@ -25,7 +25,7 @@ INSERT INTO events (uuid, created, updated, name, venue, icon, start_time, end_t
 
 -- Give me all clubs within 100km of me
 SELECT * 
-FROM clubs 
+FROM clubs
 WHERE ST_DWithin(location, ST_GeomFromText('POINT(-0.146135 51.464211)', 4326)::geography, 100000);
 
 -- Give me all clubs 100km from me, ordered by distance

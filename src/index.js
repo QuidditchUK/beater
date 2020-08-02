@@ -17,7 +17,9 @@ const log = getLogger('app');
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost', 'https://quidditchuk.org', /\.quidditchuk\.org$/],
+  origin: process.NODE_ENV === 'production'
+    ? ['https://quidditchuk.org', /\.quidditchuk\.org$/]
+    : ['http://localhost', 'https://quidditchuk.org', /\.quidditchuk\.org$/],
   methods: 'GET,PUT,POST,PATCH',
   credentials: true,
 }));
