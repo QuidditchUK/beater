@@ -1,7 +1,9 @@
-name: Beater-Prod
+name: Beater-Dev
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+    - main
 
 jobs:
   build:
@@ -20,7 +22,6 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-node-
-
     - name: Node ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -54,7 +55,7 @@ jobs:
         aws_access_key: ${{secrets.AWS_ACCESS_KEY}}
         aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
         application_name: beater
-        environment_name: Beater-env-1
+        environment_name: Beater-Dev
         region: eu-west-2
         version_label: "quk-beater-${{ steps.format-time.outputs.replaced }}"
         deployment_package: deploy.zip
