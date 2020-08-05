@@ -7,6 +7,8 @@ const client = new postmark.ServerClient(settings.postmark.token);
 export const email = (To, template, data, From = settings.postmark.from, CC = null) => {
   // no-op when developing
   if (process.env.NODE_ENV !== 'production') {
+    console.log('EMAIL NO-OP');
+    console.log(process.env.NODE_ENV);
     return {};
   }
 
