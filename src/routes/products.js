@@ -9,7 +9,7 @@ import { checkAuthenticated } from '../modules/passport';
 export default function productsRoute() {
   const router = new Router();
 
-  router.get('/', asyncHandler(async (_, res) => {
+  router.get('/', authenticateJWT, checkAuthenticated, asyncHandler(async (_, res) => {
     const { data: products } = await stripe.products.list({ active: true });
     const { data: prices } = await stripe.prices.list();
 
