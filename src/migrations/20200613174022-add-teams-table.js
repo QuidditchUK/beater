@@ -7,8 +7,8 @@ exports.up = async (next) => {
     updated timestamptz,
     name varchar(255) NOT NULL,
     short_name varchar(255),
-    current_division int,
-    current_position int,
+    current_division integer,
+    current_position integer,
     image text,
     club_uuid uuid REFERENCES clubs(uuid) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL
   )

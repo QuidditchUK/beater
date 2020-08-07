@@ -6,7 +6,7 @@ exports.up = async (next) => {
     created timestamptz,
     updated timestamptz,
     name varchar(255),
-    slug varchar UNIQUE,
+    slug varchar(255) UNIQUE,
     league varchar(255),
     location geometry(POINT,4326),
     venue varchar NOT NULL,
