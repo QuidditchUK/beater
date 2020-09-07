@@ -6,17 +6,17 @@ export default function contactRoute() {
   const router = new Router();
 
   router.post('/form', (req, res) => {
-    email(settings.postmark.secretaryEmail, 'contactForm', req.body, req.body.email, settings.postmark.adminEmail);
+    email(settings.postmark.secretaryEmail, 'contactForm', req.body, settings.postmark.adminEmail, settings.postmark.adminEmail);
     res.status(200).end();
   });
 
   router.post('/volunteer', (req, res) => {
-    email(settings.postmark.volunteerEmail, 'volunteerForm', req.body, req.body.email, settings.postmark.adminEmail);
+    email(settings.postmark.volunteerEmail, 'volunteerForm', req.body, settings.postmark.adminEmail, settings.postmark.adminEmail);
     res.status(200).end();
   });
 
   router.post('/national', (req, res) => {
-    email(settings.postmark.nationalTeamsEmails[req.body.team], 'nationalTeam', req.body, req.body.email);
+    email(settings.postmark.nationalTeamsEmails[req.body.team], 'nationalTeam', req.body, settings.postmark.adminEmail);
     res.status(200).end();
   });
 
