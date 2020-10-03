@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import settings from '../config';
 import getLogger from '../modules/logger';
-import passport, { checkAuthenticated } from '../modules/passport';
+import passport, { checkAuthenticated, checkAdmin } from '../modules/passport';
 import { parse } from '../modules/utils';
 import {
   update,
@@ -173,6 +173,10 @@ export default function authRoute() {
       access_token: req.access_token,
       token_type: 'Bearer',
     });
+  });
+
+  router.get('/admin', authenticateJWT, checkAdmin, (_, res) => {
+    res.json({ isAdmin: true });
   });
 
   return router;
