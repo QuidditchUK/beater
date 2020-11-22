@@ -30,5 +30,15 @@ export default function contactRoute() {
     res.status(200).end();
   });
 
+  router.post('/youth-coach', (req, res) => {
+    email(
+      `${settings.postmark.presidentEmail}, ${settings.postmark.adminEmail}, ${settings.postmark.volunteerEmail}, ${settings.postmark.youthEmail}`,
+      'youthCoachForm',
+      req.body,
+      settings.postmark.adminEmail,
+    );
+    res.status(200).end();
+  });
+
   return router;
 }
