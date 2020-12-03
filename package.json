@@ -38,7 +38,7 @@
     "stripe": "^8.69.0",
     "uuidv4": "6.1.0",
     "winston": "3.2.1",
-    "yup": "^0.29.1"
+    "yup": "^0.32.0"
   },
   "devDependencies": {
     "@babel/cli": "7.10.1",
