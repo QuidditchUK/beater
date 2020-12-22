@@ -17,7 +17,7 @@
     "test:coverage": "nyc ava"
   },
   "dependencies": {
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "body-parser": "1.19.0",
     "connect-redis": "4.0.4",
     "cookie-parser": "1.4.5",
