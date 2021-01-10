@@ -17,7 +17,7 @@
     "test:coverage": "nyc ava"
   },
   "dependencies": {
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "body-parser": "1.19.0",
     "connect-redis": "4.0.4",
     "cookie-parser": "1.4.5",
@@ -36,9 +36,9 @@
     "postmark": "^2.5.4",
     "redis": "2.8.0",
     "stripe": "^8.69.0",
-    "uuidv4": "6.1.0",
+    "uuidv4": "6.2.6",
     "winston": "3.2.1",
-    "yup": "^0.29.1"
+    "yup": "^0.32.0"
   },
   "devDependencies": {
     "@babel/cli": "7.10.1",
