@@ -12,3 +12,5 @@
 
 .nyc_output
 coverage
+
+dump.sql

@@ -3,15 +3,21 @@ import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import settings from '../config';
 import getLogger from '../modules/logger';
-import passport, { checkAuthenticated } from '../modules/passport';
+import passport, { checkAuthenticated, checkAdmin } from '../modules/passport';
 import { parse } from '../modules/utils';
 import {
-  update, readOne, create, updatePassword,
+  update,
+  readOne,
+  create,
+  updatePassword,
+  checkPassword,
 } from '../models/users';
+import { getClub } from '../models/clubs';
 import { authenticateJWT } from '../modules/jwt';
 import { validate } from '../modules/validate';
-import { schema, resetSchema } from '../modules/validation_schemas/users';
+import { schema, resetSchema, updateSchema } from '../modules/validation_schemas/users';
 import { email as sendEmail } from '../modules/email';
+import { sanitiseEmailMiddleware } from '../modules/sanitise';
 
 const log = getLogger('router/auth');
 
@@ -68,7 +74,7 @@ function loginMiddleware(req, res, next) {
 export default function authRoute() {
   const router = new Router();
 
-  router.post('/login', validate(schema), loginMiddleware, (req, res) => {
+  router.post('/login', sanitiseEmailMiddleware, validate(schema), loginMiddleware, (req, res) => {
     res.json({
       uuid: req.user.uuid,
       access_token: req.access_token,
@@ -77,12 +83,12 @@ export default function authRoute() {
   });
 
   router.get('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
-    const user = await readOne('email', req.user.email);
+    const { hashed_password, salt, ...user } = await readOne('email', req.user.email);
 
     res.json(user);
   }));
 
-  router.post('/forgot', asyncHandler(async (req, res) => {
+  router.post('/forgot', sanitiseEmailMiddleware, asyncHandler(async (req, res) => {
     try {
       const { hashed_password, uuid, created } = await readOne('email', req.body.email);
       const token = jwt.sign({ uuid, email: req.body.email }, `${hashed_password}-${created.toISOString()}`, { expiresIn: '1d' });
@@ -121,9 +127,43 @@ export default function authRoute() {
     });
   });
 
-  router.post('/', validate(schema), asyncHandler(async (req, res, next) => {
+  router.put('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const { club_uuid, first_name, last_name } = await readOne('uuid', req.user.uuid);
+    await update(req.user.uuid, req.body);
+
+    if (req.body.club_uuid && req.body.club_uuid !== club_uuid) {
+      const { email, name } = await getClub(req.body.club_uuid);
+      sendEmail(email, 'newMember', {
+        email: req.user.email,
+        name,
+        first_name,
+        last_name,
+      });
+    }
+
+    const { hashed_password, salt, ...user } = await readOne('uuid', req.user.uuid);
+    res.json(user);
+  }));
+
+  router.put('/password', sanitiseEmailMiddleware, authenticateJWT, checkAuthenticated, validate(updateSchema), asyncHandler(async (req, res) => {
+    try {
+      const check = await checkPassword(req.user.email, req.body.old_password);
+      if (check) {
+        await updatePassword(req.user.uuid, req.body.password);
+        res.status(200).end();
+      }
+
+      res.status(400).json({ error: { message: 'Current password is incorrect' } });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
+  router.post('/', sanitiseEmailMiddleware, validate(schema), asyncHandler(async (req, res, next) => {
     try {
       await create(req.body);
+
+      sendEmail(req.body.email, 'welcome', { first_name: req.body.first_name });
       next();
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -134,6 +174,10 @@ export default function authRoute() {
       access_token: req.access_token,
       token_type: 'Bearer',
     });
+  });
+
+  router.get('/admin', authenticateJWT, checkAdmin, (_, res) => {
+    res.json({ isAdmin: true });
   });
 
   return router;

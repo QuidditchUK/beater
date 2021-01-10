@@ -2,7 +2,11 @@ import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 import { lookup, postcodeRegex } from '../modules/postcode';
 import {
-  searchClubs, getClubBySlug, allClubs, create,
+  searchClubs,
+  getClubBySlug,
+  allClubs,
+  create,
+  getClub,
 } from '../models/clubs';
 import { authenticateJWT } from '../modules/jwt';
 import { checkAuthenticated, checkAdmin } from '../modules/passport';
@@ -26,8 +30,18 @@ export default function clubsRoute() {
     res.json(clubs);
   }));
 
-  router.get('/:slug', asyncHandler(async (req, res) => {
+  router.get('/slug/:slug', asyncHandler(async (req, res) => {
     const club = await getClubBySlug(req.params.slug);
+    if (!club) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(club);
+  }));
+
+  router.get('/:uuid', asyncHandler(async (req, res) => {
+    const club = await getClub(req.params.uuid);
     if (!club) {
       res.sendStatus(404);
       return;

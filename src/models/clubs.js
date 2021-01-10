@@ -8,6 +8,23 @@ export const searchClubs = ({ longitude, latitude }, radius, leagues = ['Communi
   leagues,
 });
 
+export const getClub = async (uuid) => {
+  const club = await db.oneOrNone(`SELECT *, ST_AsGeoJSON(location) AS coordinates FROM clubs WHERE uuid = '${uuid}';`);
+
+  if (!club) {
+    return null;
+  }
+
+  const teams = await db.any(sqlReadMany, {
+    columns: '*',
+    table: 'teams',
+    key: 'club_uuid',
+    value: club.uuid,
+  });
+
+  return { ...club, teams: teams.sort((a, b) => a.order - b.order) };
+};
+
 export const getClubBySlug = async (slug) => {
   const club = await db.oneOrNone(`SELECT *, ST_AsGeoJSON(location) AS coordinates FROM clubs WHERE slug = '${slug}';`);
 

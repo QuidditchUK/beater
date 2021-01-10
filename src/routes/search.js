@@ -13,8 +13,9 @@ export default function searchRoute() {
       postcode,
       showTypes,
       distance,
-      leagues,
     } = req.query;
+
+    const leagues = Array.isArray(req.query.leagues) ? req.query.leagues : (req.query.leagues?.split(',') || ['Community', 'University']);
 
     if (!postcode || !postcode.match(postcodeRegex)) {
       const events = await allEvents(leagues);

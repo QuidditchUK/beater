@@ -11,7 +11,7 @@ export const readOne = (key, value) => db.oneOrNone(sqlReadOne, {
 
 export const checkPassword = async (email, password) => {
   try {
-    const user = await readOne('email', email.toLowerCase());
+    const user = await readOne('email', email);
 
     return crypto.createHmac('sha1', user.salt).update(password).digest('hex') === user.hashed_password;
   } catch (err) {
@@ -41,7 +41,7 @@ export const updatePassword = (uuid, password) => {
 };
 
 export const create = async ({ password, email, ...rest }) => {
-  const user = await readOne('email', email.toLowerCase());
+  const user = await readOne('email', email);
 
   if (user) {
     throw new Error('User with email address already exists');

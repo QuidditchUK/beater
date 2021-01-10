@@ -16,8 +16,18 @@ const log = getLogger('app');
 
 const app = express();
 
+const allowList = process.env.NODE_ENV === 'production'
+  ? ['https://quidditchuk.org', 'https://www.quidditchuk.org', 'https://chaser.quidditchuk.org']
+  : ['http://localhost:3000'];
+
 app.use(cors({
-  origin: ['http://localhost', /\.quidditchuk\.org$/],
+  origin(origin, callback) {
+    if (allowList.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
   methods: 'GET,PUT,POST,PATCH',
   credentials: true,
 }));

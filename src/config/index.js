@@ -45,12 +45,30 @@ export default {
   postmark: {
     token: process.env.POSTMARK_TOKEN,
     from: 'admin@quidditchuk.org',
+    adminEmail: 'admin@quidditchuk.org',
+    secretaryEmail: 'secretary@quidditchuk.org',
+    volunteerEmail: 'volunteer-form@quidditchuk.org',
+    presidentEmail: 'president@quidditchuk.org',
+    vicePresidentEmail: 'vicepresident@quidditchuk.org',
+    youthEmail: 'youth@quidditchuk.org',
+    nationalTeamsEmails: {
+      UK: 'teamuk@quidditchuk.org',
+      Wales: 'teamwales@quidditchuk.org',
+      Scotland: 'teamscotland@quidditchuk.org',
+    },
     templates: {
+      welcome: 19455866,
       forgotPassword: 19133707,
+      contactForm: 19443708,
+      volunteerForm: 19447684,
+      newMember: 19486834,
+      nationalTeam: 19535959,
+      ediCommitteeForm: 20291343,
+      youthCoachForm: 21146875,
     },
   },
   stripe: {
     token: process.env.STRIPE_TOKEN,
+    webhookToken: process.env.STRIPE_WEBHOOK_TOKEN,
   },
-
 };

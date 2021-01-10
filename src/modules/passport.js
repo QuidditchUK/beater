@@ -65,6 +65,6 @@ export const checkAdmin = (req, res, next) => {
   }
 
   log.warn('user is not authenticated %s', JSON.stringify({ cookie: req.cookies['connect.sid'], session: req.sessionID }));
-  res.status(403).end();
+  res.status(403).json({ isAdmin: false });
   return next({ message: 'USER NOT AUTH' });
 };
