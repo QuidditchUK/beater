@@ -37,7 +37,7 @@
     "redis": "2.8.0",
     "stripe": "^8.69.0",
     "uuidv4": "6.2.6",
-    "winston": "3.2.1",
+    "winston": "3.3.3",
     "yup": "^0.32.0"
   },
   "devDependencies": {
