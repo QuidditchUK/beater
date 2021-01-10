@@ -50,6 +50,7 @@ export default {
     volunteerEmail: 'volunteer-form@quidditchuk.org',
     presidentEmail: 'president@quidditchuk.org',
     vicePresidentEmail: 'vicepresident@quidditchuk.org',
+    youthEmail: 'youth@quidditchuk.org',
     nationalTeamsEmails: {
       UK: 'teamuk@quidditchuk.org',
       Wales: 'teamwales@quidditchuk.org',
@@ -63,6 +64,7 @@ export default {
       newMember: 19486834,
       nationalTeam: 19535959,
       ediCommitteeForm: 20291343,
+      youthCoachForm: 21146875,
     },
   },
   stripe: {

@@ -17,6 +17,7 @@ import { authenticateJWT } from '../modules/jwt';
 import { validate } from '../modules/validate';
 import { schema, resetSchema, updateSchema } from '../modules/validation_schemas/users';
 import { email as sendEmail } from '../modules/email';
+import { sanitiseEmailMiddleware } from '../modules/sanitise';
 
 const log = getLogger('router/auth');
 
@@ -73,7 +74,7 @@ function loginMiddleware(req, res, next) {
 export default function authRoute() {
   const router = new Router();
 
-  router.post('/login', validate(schema), loginMiddleware, (req, res) => {
+  router.post('/login', sanitiseEmailMiddleware, validate(schema), loginMiddleware, (req, res) => {
     res.json({
       uuid: req.user.uuid,
       access_token: req.access_token,
@@ -87,7 +88,7 @@ export default function authRoute() {
     res.json(user);
   }));
 
-  router.post('/forgot', asyncHandler(async (req, res) => {
+  router.post('/forgot', sanitiseEmailMiddleware, asyncHandler(async (req, res) => {
     try {
       const { hashed_password, uuid, created } = await readOne('email', req.body.email);
       const token = jwt.sign({ uuid, email: req.body.email }, `${hashed_password}-${created.toISOString()}`, { expiresIn: '1d' });
@@ -144,7 +145,7 @@ export default function authRoute() {
     res.json(user);
   }));
 
-  router.put('/password', authenticateJWT, checkAuthenticated, validate(updateSchema), asyncHandler(async (req, res) => {
+  router.put('/password', sanitiseEmailMiddleware, authenticateJWT, checkAuthenticated, validate(updateSchema), asyncHandler(async (req, res) => {
     try {
       const check = await checkPassword(req.user.email, req.body.old_password);
       if (check) {
@@ -158,7 +159,7 @@ export default function authRoute() {
     }
   }));
 
-  router.post('/', validate(schema), asyncHandler(async (req, res, next) => {
+  router.post('/', sanitiseEmailMiddleware, validate(schema), asyncHandler(async (req, res, next) => {
     try {
       await create(req.body);
 
