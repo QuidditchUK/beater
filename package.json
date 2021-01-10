@@ -41,7 +41,7 @@
     "yup": "^0.32.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.10.1",
+    "@babel/cli": "7.12.10",
     "@babel/core": "7.10.2",
     "@babel/node": "7.10.1",
     "@babel/preset-env": "7.10.2",
