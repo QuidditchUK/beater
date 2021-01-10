@@ -51,7 +51,7 @@
     "babel-watch": "7.3.0",
     "dotenv": "8.2.0",
     "eslint": "7.2.0",
-    "eslint-config-airbnb-base": "14.2.0",
+    "eslint-config-airbnb-base": "14.2.1",
     "eslint-plugin-import": "2.21.2",
     "husky": "4.2.5",
     "lint-staged": "9.5.0",
