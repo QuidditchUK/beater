@@ -34,7 +34,7 @@
     "passport-local": "1.0.0",
     "pg-promise": "10.8.7",
     "postmark": "^2.5.4",
-    "redis": "2.8.0",
+    "redis": "3.0.2",
     "stripe": "^8.69.0",
     "uuidv4": "6.2.6",
     "winston": "3.3.3",
