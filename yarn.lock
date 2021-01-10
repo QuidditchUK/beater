@@ -263,18 +263,17 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@babel/node@7.10.1":
-  version "7.10.1"
-  resolved "https://registry.yarnpkg.com/@babel/node/-/node-7.10.1.tgz#34d3405c7c3d5139c48cbce2c80226f46e36ab25"
-  integrity sha512-HoLxelFIekiipykhN0d3cTSLZVxnl0aZiwv6oW4mxjeQEMOt1J/YGnBaIDyYWQ5tIHkUL1cqqn8LOvmWhFoCyw==
+"@babel/node@7.12.10":
+  version "7.12.10"
+  resolved "https://registry.yarnpkg.com/@babel/node/-/node-7.12.10.tgz#2a78e1a3a98f08e0d5e8adbaba783bed5efb09ae"
+  integrity sha512-lJT1sXp1bEfAZ7B2ChEOOiUxaGbIWkcAixqZDpbHnJWUqIjoofOGo5ON1bJ9HOmtMdF7rqKiOoM7zZSI87El3g==
   dependencies:
-    "@babel/register" "^7.10.1"
+    "@babel/register" "^7.12.10"
     commander "^4.0.1"
     core-js "^3.2.1"
-    lodash "^4.17.13"
+    lodash "^4.17.19"
     node-environment-flags "^1.0.5"
     regenerator-runtime "^0.13.4"
-    resolve "^1.13.1"
     v8flags "^3.1.1"
 
 "@babel/parser@^7.12.10", "@babel/parser@^7.12.11", "@babel/parser@^7.12.7", "@babel/parser@^7.7.0":
@@ -805,7 +804,7 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/register@7.12.10", "@babel/register@^7.10.1":
+"@babel/register@7.12.10", "@babel/register@^7.12.10":
   version "7.12.10"
   resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.12.10.tgz#19b87143f17128af4dbe7af54c735663b3999f60"
   integrity sha512-EvX/BvMMJRAA3jZgILWgbsrHwBQvllC5T8B29McyME8DvkdOxk4ujESfrMvME8IHSDvWXrmMXxPvA/lx2gqPLQ==
@@ -847,7 +846,7 @@
     globals "^11.1.0"
     lodash "^4.17.19"
 
-"@babel/types@^7.10.2", "@babel/types@^7.10.4", "@babel/types@^7.10.5", "@babel/types@^7.12.1", "@babel/types@^7.12.10", "@babel/types@^7.12.11", "@babel/types@^7.12.12", "@babel/types@^7.12.5", "@babel/types@^7.12.7", "@babel/types@^7.4.4", "@babel/types@^7.7.0":
+"@babel/types@^7.10.4", "@babel/types@^7.10.5", "@babel/types@^7.12.1", "@babel/types@^7.12.10", "@babel/types@^7.12.11", "@babel/types@^7.12.12", "@babel/types@^7.12.5", "@babel/types@^7.12.7", "@babel/types@^7.4.4", "@babel/types@^7.7.0":
   version "7.12.12"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.12.12.tgz#4608a6ec313abbd87afa55004d373ad04a96c299"
   integrity sha512-lnIX7piTxOH22xE7fDXDbSHg9MM1/6ORnafpJmov5rs0kX5g4BZxeXNJLXsMRiO0U5Rb8/FvMS6xlTnTHvxonQ==
@@ -4014,7 +4013,7 @@ lodash.set@^4.0.0:
   resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
   integrity sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=
 
-lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20:
+lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20:
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
