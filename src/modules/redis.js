@@ -1,10 +1,10 @@
-import redis from 'redis';
-import url from 'url';
+import { URL } from 'url';
+import Redis from 'ioredis';
 
 import getLogger from './logger';
 import config from '../config';
 
-const settings = url.parse(config.redis.url);
+const settings = new URL(config.redis.url);
 
 const port = settings.port || 6379;
 const host = settings.hostname || '127.0.0.1';
@@ -12,10 +12,10 @@ const host = settings.hostname || '127.0.0.1';
 export default (key = '') => {
   const logger = getLogger(`redis-${key}`);
 
-  const client = redis.createClient(port, host, { no_ready_check: true });
+  const client = new Redis(port, host, { no_ready_check: true });
 
-  if (settings.auth) {
-    client.auth(settings.auth);
+  if (settings.username && settings.password) {
+    client.auth(settings.username, settings.password);
   }
 
   client.on('error', (err) => {

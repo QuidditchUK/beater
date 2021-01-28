@@ -145,7 +145,7 @@ export default function authRoute() {
     res.json(user);
   }));
 
-  router.put('/password', sanitiseEmailMiddleware, authenticateJWT, checkAuthenticated, validate(updateSchema), asyncHandler(async (req, res) => {
+  router.put('/password', authenticateJWT, checkAuthenticated, validate(updateSchema), asyncHandler(async (req, res) => {
     try {
       const check = await checkPassword(req.user.email, req.body.old_password);
       if (check) {
