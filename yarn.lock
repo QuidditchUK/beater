@@ -3713,6 +3713,11 @@ jose@^2.0.4:
   dependencies:
     "@panva/asn1.js" "^1.0.0"
 
+jose@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-3.6.0.tgz#9d21aa77f5156f578ef66f8f6f4d1720e233a649"
+  integrity sha512-bhgBEwvie7mPKAPHzH6a9RjiByNyt7iE9+8hMwor1H61VQ3n5f6yX3UbZnnffB2vAbFIH5hudsBE45KUS7WnZQ==
+
 js-string-escape@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/js-string-escape/-/js-string-escape-1.0.1.tgz#e2625badbc0d67c7533e9edc1068c587ae4137ef"
