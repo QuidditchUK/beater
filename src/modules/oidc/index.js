@@ -7,8 +7,10 @@ const configuration = {
   clients: [
     {
       client_id: 'foo',
-      client_secret: 'bar',
-      redirect_uris: ['http://lvh.me/cb'],
+      redirect_uris: ['https://example.com'],
+      response_types: ['id_token'],
+      grant_types: ['implicit'],
+      token_endpoint_auth_method: 'none',
     },
   ],
   formats: {
