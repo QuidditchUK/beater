@@ -5,11 +5,23 @@ import RedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import path from 'path';
 import passport from './modules/passport';
 import getRedisClient from './modules/redis';
 import settings from './config';
 import getLogger from './modules/logger';
-import routes from './routes/index';
+import routes from './routes';
+
+const unless = (middleware, ...paths) => (req, res, next) => {
+  const pathCheck = paths.some((p) => {
+    const regexAs = new RegExp(p.replace(/\//g, '\\/'), 'g');
+    const foundPath = paths?.find((item) => item === req.path);
+
+    return regexAs.test(req.path) || foundPath;
+  });
+
+  return pathCheck ? next() : middleware(req, res, next);
+};
 
 const Redis = RedisStore(session);
 const log = getLogger('app');
@@ -32,12 +44,16 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(unless(bodyParser.json(), '/oidc'));
+app.use(unless(bodyParser.urlencoded({ extended: false }), '/oidc'));
 
 app.use(cookieParser(settings.app.jwt.secret));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.set('trust proxy', true);
+app.set('view engine', 'ejs');
+app.set('views', path.resolve(__dirname, 'views'));
 
 const server = http.createServer(app);
 

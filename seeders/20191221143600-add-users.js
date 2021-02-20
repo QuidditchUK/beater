@@ -10,7 +10,6 @@ export const up = (queryInterface) => {
     .update(password)
     .digest('hex');
 
-
   return queryInterface.bulkInsert('users', [
     {
       uuid: uuid(),

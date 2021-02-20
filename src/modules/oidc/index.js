@@ -1,5 +1,6 @@
 import { Provider } from 'oidc-provider';
 import RedisAdapter from './adapter';
+import Account from './account';
 
 import jwks from './jwks.json';
 
@@ -7,10 +8,11 @@ const configuration = {
   clients: [
     {
       client_id: 'foo',
-      redirect_uris: ['https://example.com'],
-      response_types: ['id_token'],
-      grant_types: ['implicit'],
-      token_endpoint_auth_method: 'none',
+      client_secret: 'bar',
+      redirect_uris: ['https://quidditchuk.org'],
+      response_types: ['code'],
+      grant_types: ['authorization_code'],
+      token_endpoint_auth_method: 'client_secret_post',
     },
   ],
   formats: {
@@ -18,14 +20,38 @@ const configuration = {
   },
   adapter: RedisAdapter,
   cookies: {
-    keys: ['super secure key', 'another', 'one more'],
+    keys: ['super secure key', 'another', 'one more'], // TODO from config
   },
   features: {
-    encryption: { enabled: true },
+    devInteractions: { enabled: false },
+    // encryption: { enabled: true },
     introspection: { enabled: true },
     revocation: { enabled: true },
   },
   jwks,
+
+  // oidc-provider only looks up the accounts by their ID when it has to read the claims,
+  // passing it our Account model method is sufficient, it should return a Promise that resolves
+  // with an object with accountId property and a claims method.
+  findAccount: Account.findAccount,
+
+  // let's tell oidc-provider you also support the email scope, which will contain email and
+  // email_verified claims
+  claims: {
+    openid: ['sub'],
+    email: ['email'],
+    profile: ['name', 'family_name'],
+  },
+
+  // let's tell oidc-provider where our own interactions will be
+  // setting a nested route is just good practice so that users
+  // don't run into weird issues with multiple interactions open
+  // at a time.
+  interactions: {
+    url(ctx) {
+      return `/interaction/${ctx.oidc.uid}`;
+    },
+  },
 };
 
 const oidc = new Provider('http://localhost:3333', configuration);

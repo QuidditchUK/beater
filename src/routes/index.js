@@ -7,6 +7,7 @@ import searchRoute from './search';
 import productsRoute from './products';
 import contactRoute from './contact';
 import webhooksRoute from './webhooks';
+import oidcRoute from './oidc';
 import oidc from '../modules/oidc';
 
 const router = express.Router();
@@ -20,6 +21,7 @@ router.use('/search', searchRoute());
 router.use('/products', productsRoute());
 router.use('/contact', contactRoute());
 router.use('/webhooks', webhooksRoute());
+router.use('/interaction', oidcRoute());
 router.use('/oidc', oidc.callback);
 
 export default router;
