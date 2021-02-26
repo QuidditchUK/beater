@@ -40,7 +40,7 @@ const configuration = {
   claims: {
     openid: ['sub'],
     email: ['email'],
-    profile: ['name', 'family_name'],
+    profile: ['name', 'family_name', 'profile'],
   },
 
   // let's tell oidc-provider where our own interactions will be
@@ -49,7 +49,7 @@ const configuration = {
   // at a time.
   interactions: {
     url(ctx) {
-      return `/interaction/${ctx.oidc.uid}`;
+      return `/oidc/interaction/${ctx.oidc.uid}`;
     },
   },
 };

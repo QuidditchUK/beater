@@ -1,4 +1,7 @@
+import { parse } from 'date-fns';
 import { readOne, checkPassword } from '../../models/users';
+import { getClub } from '../../models/clubs';
+import { getUserProducts } from '../../models/products';
 
 // class Account {
 const Account = {
@@ -6,9 +9,20 @@ const Account = {
   findAccount: async (ctx, id) => {
     // This would ideally be just a check whether the account is still in your storage
     const account = await readOne('uuid', id);
+
     if (!account) {
       return undefined;
     }
+
+    let club;
+
+    if (account.club_uuid) {
+      club = await getClub(account.club_uuid);
+    }
+
+    const products = await getUserProducts(id);
+
+    const currentMembership = Boolean(products.filter((product) => new Date() < parse(product?.metadata?.expires, 'dd-MM-yyyy', new Date())).length);
 
     return {
       accountId: id,
@@ -19,6 +33,10 @@ const Account = {
           email: account.email,
           name: account.first_name,
           family_name: account.last_name,
+          profile: {
+            club: club ? { name: club?.name, slug: club?.slug } : null,
+            quk_current_membership: currentMembership,
+          },
         };
       },
     };
