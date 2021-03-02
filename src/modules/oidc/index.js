@@ -1,14 +1,14 @@
 import { Provider } from 'oidc-provider';
 import RedisAdapter from './adapter';
 import Account from './account';
-
+import settings from '../../config';
 import jwks from './jwks.json';
 
 const configuration = {
   clients: [
     {
-      client_id: 'foo',
-      client_secret: 'bar',
+      client_id: settings.oidc.quidditchSchedulerId,
+      client_secret: settings.oidc.quidditchSchedulerSecret,
       redirect_uris: ['https://quidditchuk.org'],
       response_types: ['code'],
       grant_types: ['authorization_code'],
@@ -20,7 +20,8 @@ const configuration = {
   },
   adapter: RedisAdapter,
   cookies: {
-    keys: ['super secure key', 'another', 'one more'], // TODO from config
+    keys: settings.oidc.cookiesKeys, // TODO from config
+    // keys: ['super secure key', 'another', 'one more'], // TODO from config
   },
   features: {
     devInteractions: { enabled: false },

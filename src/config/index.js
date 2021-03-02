@@ -71,4 +71,10 @@ export default {
     token: process.env.STRIPE_TOKEN,
     webhookToken: process.env.STRIPE_WEBHOOK_TOKEN,
   },
+
+  oidc: {
+    cookiesKeys: [process.env.OIDC_COOKIES_KEY, process.env.OIDC_COOKIES_KEY_2, process.env.OIDC_COOKIES_KEY_3],
+    quidditchSchedulerId: process.env.OIDC_QUIDDITCH_SCHEDULER_ID,
+    quidditchSchedulerSecret: process.env.OIDC_QUIDDITCH_SCHEDULER_SECRET,
+  },
 };
