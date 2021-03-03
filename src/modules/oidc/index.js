@@ -7,9 +7,11 @@ import jwks from './jwks.json';
 const configuration = {
   clients: [
     {
+      client_name: 'Quidditch Scheduler',
+      logo_uri: 'https://www.quidditchscheduler.com/assets/site-icons/icon.svg',
       client_id: settings.oidc.quidditchSchedulerId,
       client_secret: settings.oidc.quidditchSchedulerSecret,
-      redirect_uris: ['https://quidditchuk.org'],
+      redirect_uris: ['https://www.quidditchscheduler.com/auth/cb'],
       response_types: ['code'],
       grant_types: ['authorization_code'],
       token_endpoint_auth_method: 'client_secret_post',
@@ -20,7 +22,7 @@ const configuration = {
   },
   adapter: RedisAdapter,
   cookies: {
-    keys: settings.oidc.cookiesKeys, // TODO from config
+    keys: settings.oidc.cookiesKeys,
     // keys: ['super secure key', 'another', 'one more'], // TODO from config
   },
   features: {
@@ -50,7 +52,7 @@ const configuration = {
   // at a time.
   interactions: {
     url(ctx) {
-      return `/oidc/interaction/${ctx.oidc.uid}`;
+      return `/interaction/${ctx.oidc.uid}`;
     },
   },
 };

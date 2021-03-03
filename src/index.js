@@ -5,7 +5,7 @@ import RedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import path from 'path';
+import register from '@react-ssr/express/register';
 import passport from './modules/passport';
 import getRedisClient from './modules/redis';
 import settings from './config';
@@ -52,8 +52,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.set('trust proxy', true);
-app.set('view engine', 'ejs');
-app.set('views', path.resolve(__dirname, 'views'));
+// app.set('view engine', 'ejs');
+// app.set('views', path.resolve(__dirname, 'views'));
+// app.set('view engine', 'jsx');
+// app.engine('jsx', require('express-react-views').createEngine());
+
+register(app);
 
 const server = http.createServer(app);
 
