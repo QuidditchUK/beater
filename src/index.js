@@ -29,7 +29,7 @@ const log = getLogger('app');
 const app = express();
 
 const allowList = process.env.NODE_ENV === 'production'
-  ? ['https://quidditchuk.org', 'https://www.quidditchuk.org', 'https://chaser.quidditchuk.org']
+  ? ['https://quidditchuk.org', 'https://www.quidditchuk.org', 'https://chaser.quidditchuk.org', 'http://localhost:3000']
   : ['http://localhost:3000'];
 
 app.use(cors({
@@ -52,10 +52,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.set('trust proxy', true);
-// app.set('view engine', 'ejs');
-// app.set('views', path.resolve(__dirname, 'views'));
-// app.set('view engine', 'jsx');
-// app.engine('jsx', require('express-react-views').createEngine());
 
 register(app);
 
