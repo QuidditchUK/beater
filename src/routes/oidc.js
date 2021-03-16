@@ -38,7 +38,7 @@ export default function oidcRoute() {
         uid,
         details: prompt.details,
         params,
-        title: 'Authorize',
+        title: 'Authorise',
       });
     } catch (err) {
       return next(err);
