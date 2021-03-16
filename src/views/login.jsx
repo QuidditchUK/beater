@@ -1,22 +1,36 @@
+import './reset.scss';
+import './fonts.scss';
+import './global.scss';
+
 export default function Login({
   title, flash, uid, params, client,
 }) {
   return (
-      <div class="login-card">
+    <div className="container">
+      <div className="login">
+        <div className="logo">
+          <img src="/images/logo.png" alt="Quidditch UK" height="45px" width="45px" />
+        </div>
         <h1>{title}</h1>
-        {flash && (<p>{flash}</p>)}
+        <h2>To continue to {client.clientName}</h2>
+        {flash && (<p className="error">{flash}</p>)}
 
-        <form autocomplete="off" action={`/interaction/${uid}/login`} method="post">
-          <input required type="email" name="email" placeholder="Enter an email" autofocus={!params.login_hint} value={params.login_hint} />
-          <input required type="password" name="password" placeholder="password" autoFocus={params.login_hint} />
-          <button type="submit" class="login login-submit">Sign-in</button>
+        <form autoComplete="off" action={`/interaction/${uid}/login`} method="post">
+          <div className="form">
+            <label htmlFor="email">Email Address</label>
+            <input required type="email" name="email" placeholder="Your email address" autoFocus={!params.login_hint} value={params.login_hint} />
+            <label htmlFor="password">Password</label>
+            <input required type="password" name="password" placeholder="Password" autoFocus={params.login_hint} />
+          </div>
+          <button type="submit" className="login-submit">Sign in</button>
         </form>
 
-        <div class="login-help">
-          <a href={`/interaction/${uid}/abort`}>[ Cancel ]</a>
+        <div className="login-help">
+          {/* <a href={`/interaction/${uid}/abort`}>[ Cancel ]</a> */}
           {client.tosUri && (<a href={client.tosUri}>[ Terms of Service ]</a>)}
           {client.policyUri && (<a href={client.policyUri}>[ Privacy Policy ]</a>)}
         </div>
       </div>
+    </div>
   );
 }

@@ -1,3 +1,7 @@
+import './reset.scss';
+import './fonts.scss';
+import './global.scss';
+
 export default function Interaction({
   details, title, client, params, uid,
 }) {

@@ -28,7 +28,7 @@ export default function oidcRoute() {
           uid,
           details: prompt.details,
           params,
-          title: 'Sign-in',
+          title: 'Sign in to QuidditchUK',
           flash: undefined,
         });
       }
@@ -61,7 +61,7 @@ export default function oidcRoute() {
             ...params,
             login_hint: req.body.email,
           },
-          title: 'Sign-in',
+          title: 'Sign in to QuidditchUK',
           flash: 'Invalid email or password.',
         });
         return;

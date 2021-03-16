@@ -52,11 +52,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.set('trust proxy', true);
-// app.set('view engine', 'ejs');
-// app.set('views', path.resolve(__dirname, 'views'));
-// app.set('view engine', 'jsx');
-// app.engine('jsx', require('express-react-views').createEngine());
-
 register(app);
 
 const server = http.createServer(app);
@@ -83,6 +78,7 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.use(express.static('public'));
 app.use('/', routes);
 
 server.listen(settings.app.port);

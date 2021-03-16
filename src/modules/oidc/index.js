@@ -23,7 +23,6 @@ const configuration = {
   adapter: RedisAdapter,
   cookies: {
     keys: settings.oidc.cookiesKeys,
-    // keys: ['super secure key', 'another', 'one more'], // TODO from config
   },
   features: {
     devInteractions: { enabled: false },
@@ -57,7 +56,7 @@ const configuration = {
   },
 };
 
-const oidc = new Provider('http://localhost:3333', configuration);
+const oidc = new Provider('https://api.quidditchuk.org', configuration);
 
 oidc.proxy = true;
 
