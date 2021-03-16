@@ -17,7 +17,7 @@ export default function oidcRoute() {
   router.get('/:uid', setNoCache, async (req, res, next) => {
     try {
       const details = await oidc.interactionDetails(req, res);
-      console.log('see what else is available to you for interaction views', details);
+      // console.log('see what else is available to you for interaction views', details);
       const { uid, prompt, params } = details;
 
       const client = await oidc.Client.find(params.client_id);
