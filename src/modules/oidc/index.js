@@ -11,7 +11,7 @@ const configuration = {
       logo_uri: 'https://www.quidditchscheduler.com/assets/site-icons/icon.svg',
       client_id: settings.oidc.quidditchSchedulerId,
       client_secret: settings.oidc.quidditchSchedulerSecret,
-      redirect_uris: ['https://www.quidditchscheduler.com/auth/cb'],
+      redirect_uris: ['https://quidditchscheduler-staging.eu.auth0.com/login/callback'],
       response_types: ['code'],
       grant_types: ['authorization_code'],
       token_endpoint_auth_method: 'client_secret_post',
