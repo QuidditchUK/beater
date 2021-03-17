@@ -78,9 +78,9 @@ oidc.on('grant.error', handleClientAuthErrors);
 oidc.on('introspection.error', handleClientAuthErrors);
 oidc.on('revocation.error', handleClientAuthErrors);
 oidc.on('server_error', ({ oidc: { body, client } }, error) => {
-  log.error(body);
-  log.error(client);
-  log.error(error);
+  console.log(body);
+  console.log(client);
+  console.log(error);
 });
 
 export default oidc;
