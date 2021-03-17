@@ -55,7 +55,7 @@
     "@babel/core": "7.12.10",
     "@babel/node": "7.12.10",
     "@babel/preset-env": "7.12.11",
-    "@babel/register": "7.12.10",
+    "@babel/register": "7.13.8",
     "ava": "3.15.0",
     "babel-eslint": "10.1.0",
     "babel-watch": "7.3.0",
