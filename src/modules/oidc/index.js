@@ -3,6 +3,9 @@ import RedisAdapter from './adapter';
 import Account from './account';
 import settings from '../../config';
 import jwks from './jwks.json';
+import getLogger from '../logger';
+
+const log = getLogger('modules/oidc');
 
 const configuration = {
   clients: [
@@ -59,5 +62,23 @@ const configuration = {
 const oidc = new Provider('https://api.quidditchuk.org', configuration);
 
 oidc.proxy = true;
+
+function handleClientAuthErrors({ headers: { authorization }, oidc: { body, client } }, err) {
+  if (err.statusCode === 401 && err.message === 'invalid_client') {
+
+    // console.log(err);
+    // save error details out-of-bands for the client developers, `authorization`, `body`, `client`
+    // are just some details available, you can dig in ctx object for more.
+  }
+}
+
+function handleServerErrors(ctx, err) {
+  log.error(err);
+}
+
+oidc.on('grant.error', handleClientAuthErrors);
+oidc.on('introspection.error', handleClientAuthErrors);
+oidc.on('revocation.error', handleClientAuthErrors);
+oidc.on('server_error', handleServerErrors);
 
 export default oidc;
