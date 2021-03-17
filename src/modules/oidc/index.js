@@ -73,6 +73,7 @@ function handleClientAuthErrors({ headers: { authorization }, oidc: { body, clie
 }
 
 function handleServerErrors(ctx, err) {
+  log.error(ctx);
   log.error(err);
 }
 
