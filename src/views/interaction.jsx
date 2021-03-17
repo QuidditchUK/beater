@@ -2,6 +2,16 @@ import './reset.scss';
 import './fonts.scss';
 import './global.scss';
 
+const SCOPES = {
+  profile: {
+    label: 'Profile',
+    claims: ['Preferred first name', 'Preferred last name', 'Current club', 'Current QUK Membership'],
+  },
+  email: {
+    label: 'Email Address',
+  },
+};
+
 export default function Interaction({
   details,
   title,
@@ -9,16 +19,9 @@ export default function Interaction({
   // params,
   uid,
 }) {
-  // const isNewAuthorization = [
-  //   details.scopes.accepted,
-  //   details.scopes.rejected,
-  //   details.claims.accepted,
-  //   details.claims.rejected,
-  // ].every(({ length }) => length === 0);
+  const newScopes = details.scopes.new.filter((scope) => scope !== 'openid').map((scope) => SCOPES[scope]);
 
   const previouslyAuthorized = [details.scopes.new, details.claims.new].every(({ length }) => length === 0);
-  const newScopes = details.scopes.new.filter((scope) => scope !== 'openid');
-
   const newClaims = new Set(details.claims.new);
   ['sub', 'sid', 'auth_time', 'acr', 'amr', 'iss'].forEach(Set.prototype.delete.bind(newClaims));
 
@@ -30,20 +33,25 @@ export default function Interaction({
         </div>
 
         <h1>{title}</h1>
-        <h2>{client.clientName} access to:</h2>
+        <h2>{client.clientName} would like access to:</h2>
 
-        <ul>
-          {/* {isNewAuthorization && (<li>This is a new authorization</li>)} */}
-          {previouslyAuthorized && (<li>the client is asking you to confirm previously given authorization</li>)}
+        {previouslyAuthorized && (<div className="label">{client.clientName} is asking you to confirm a previously given authorization</div>)}
 
-          {newScopes.length !== 0 && (
-            <React.Fragment>
-              <li>Scopes:</li>
-              <ul>
-                {newScopes.map((scope) => (<li>{scope}</li>))}
-              </ul>
-            </React.Fragment>
-          )}
+        {newScopes.length !== 0 && (
+          <ul className="scope-list">
+            {newScopes.map((scope) => (
+              <React.Fragment key={scope.label}>
+                <li className="label">{scope.label}</li>
+
+                {scope.claims && (
+                  <ul className="claim-list">
+                    {scope.claims.map((claim) => (<li className="claim" key={claim}>{claim}</li>))}
+                  </ul>
+                )}
+              </React.Fragment>
+            ))}
+          </ul>
+        )}
 
           {newClaims.size !== 0 && (
             <React.Fragment>
@@ -53,13 +61,6 @@ export default function Interaction({
               </ul>
             </React.Fragment>
           )}
-
-          {/* {params.scope && params.scope.includes('offline_access') && (
-            <li>the client {client.clientName} is asking to have offline access to this authorization
-              {!details.scopes.new.includes('offline_access') && (<React.Fragment>(which you've previously granted)</React.Fragment>)}
-            </li>
-          )} */}
-        </ul>
 
         <form autocomplete="off" action={`/interaction/${uid}/confirm`} method="post">
           <button autofocus type="submit" className="login login-submit">Continue</button>
