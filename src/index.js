@@ -29,10 +29,10 @@ const log = getLogger('app');
 const app = express();
 
 const allowList = process.env.NODE_ENV === 'production'
-  ? ['https://quidditchuk.org', 'https://www.quidditchuk.org', 'https://chaser.quidditchuk.org', 'https://quidditchscheduler-staging.eu.auth0.com', 'https://auth0.com']
+  ? ['https://quidditchuk.org', 'https://www.quidditchuk.org', 'https://chaser.quidditchuk.org']
   : ['http://localhost:3000'];
 
-app.use(cors({
+app.use(unless(cors({
   origin(origin, callback) {
     if (allowList.indexOf(origin) !== -1) {
       callback(null, true);
@@ -42,7 +42,7 @@ app.use(cors({
   },
   methods: 'GET,PUT,POST,PATCH',
   credentials: true,
-}));
+}), '/oidc'));
 
 app.use(unless(bodyParser.json(), '/oidc'));
 app.use(unless(bodyParser.urlencoded({ extended: false }), '/oidc'));
