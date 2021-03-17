@@ -2,6 +2,9 @@ import { Router } from 'express';
 import bodyParser from 'body-parser';
 import oidc from '../modules/oidc';
 import Account from '../modules/oidc/account';
+import getLogger from '../modules/logger';
+
+const log = getLogger('OIDC');
 
 function setNoCache(req, res, next) {
   res.set('Pragma', 'no-cache');
@@ -41,6 +44,7 @@ export default function oidcRoute() {
         title: 'Authorise',
       });
     } catch (err) {
+      log.error(err);
       return next(err);
     }
   });
@@ -75,6 +79,7 @@ export default function oidcRoute() {
 
       await oidc.interactionFinished(req, res, result, { mergeWithLastSubmission: false });
     } catch (err) {
+      log.error(err);
       next(err);
     }
   });
@@ -89,6 +94,7 @@ export default function oidcRoute() {
       };
       await oidc.interactionFinished(req, res, result, { mergeWithLastSubmission: true });
     } catch (err) {
+      log.error(err);
       next(err);
     }
   });
@@ -101,6 +107,7 @@ export default function oidcRoute() {
       };
       await oidc.interactionFinished(req, res, result, { mergeWithLastSubmission: false });
     } catch (err) {
+      log.error(err);
       next(err);
     }
   });
