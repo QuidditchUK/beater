@@ -74,20 +74,12 @@ function handleClientAuthErrors({ headers: { authorization }, oidc: { body, clie
   }
 }
 
-function handleServerErrors(ctx, err) {
-  log.info('IN SERVER_ERROR');
-  log.error(ctx);
-  log.error(err);
-}
-
 oidc.on('grant.error', handleClientAuthErrors);
 oidc.on('introspection.error', handleClientAuthErrors);
 oidc.on('revocation.error', handleClientAuthErrors);
-oidc.on('server_error', handleServerErrors);
-
-oidc.on('authorization.error', (ctx, error) => {
-  log.info('IN AUTHORIZATION.ERROR');
-  log.error(ctx);
+oidc.on('server_error', ({ oidc: { body, client } }, error) => {
+  log.error(body);
+  log.error(client);
   log.error(error);
 });
 
