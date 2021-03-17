@@ -42,7 +42,7 @@ app.use(unless(cors({
   },
   methods: 'GET,PUT,POST,PATCH',
   credentials: true,
-}), '/oidc'));
+}), '/oidc', '/interaction'));
 
 app.use(unless(bodyParser.json(), '/oidc'));
 app.use(unless(bodyParser.urlencoded({ extended: false }), '/oidc'));

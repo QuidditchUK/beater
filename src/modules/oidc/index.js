@@ -51,7 +51,7 @@ const configuration = {
   // at a time.
   interactions: {
     url(ctx) {
-      return `/oidc/interaction/${ctx.oidc.uid}`;
+      return `/interaction/${ctx.oidc.uid}`;
     },
   },
 };
