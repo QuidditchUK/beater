@@ -11,7 +11,7 @@ const configuration = {
       logo_uri: 'https://www.quidditchscheduler.com/assets/site-icons/icon.svg',
       client_id: settings.oidc.quidditchSchedulerId,
       client_secret: settings.oidc.quidditchSchedulerSecret,
-      redirect_uris: ['https://quidditchscheduler-staging.eu.auth0.com/login/callback'],
+      redirect_uris: ['https://quidditchscheduler-staging.eu.auth0.com/login/callback', 'https://quidditchscheduler-develop.eu.auth0.com/login/callback'],
       response_types: ['code'],
       grant_types: ['authorization_code'],
       token_endpoint_auth_method: 'client_secret_post',
@@ -60,8 +60,8 @@ const oidc = new Provider('https://api.quidditchuk.org', configuration);
 
 oidc.proxy = true;
 
-oidc.on('server_error', (_, error) => {
-  console.log(error);
-});
+// oidc.on('server_error', (_, error) => {
+//   console.log(error);
+// });
 
 export default oidc;
