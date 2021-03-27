@@ -4,11 +4,11 @@ import './global.scss';
 
 const SCOPES = {
   profile: {
-    label: 'Profile',
+    label: 'Your Profile information',
     claims: ['Preferred first name', 'Preferred last name', 'Current club', 'Current QUK Membership'],
   },
   email: {
-    label: 'Email Address',
+    label: 'Your Email Address',
   },
 };
 
@@ -29,11 +29,15 @@ export default function Interaction({
     <div className="container">
       <div className="login">
         <div className="logo">
-          <img src="/images/logo.png" alt="Quidditch UK" height="45px" width="45px" />{' '}<span class="heavy-plus">+</span>{' '}{client.logoUri && (<img src={client.logoUri} height="45px" width="45px" alt={client.clientName} />)}
+          <img src="/images/logo.png" alt="Quidditch UK" height="45px" width="45px" />{' '}
+          <span className="heavy-plus">+</span>{' '}
+          {client.logoUri && (
+            <img src={client.logoUri} height="45px" width="45px" alt={client.clientName} />
+          )}
         </div>
 
         <h1>{title}</h1>
-        <h2>{client.clientName} would like access to:</h2>
+        <h2>{client.clientName} would like access to the following information from QuidditchUK:</h2>
 
         {previouslyAuthorized && (<div className="label">{client.clientName} is asking you to confirm a previously given authorization</div>)}
 
@@ -53,21 +57,26 @@ export default function Interaction({
           </ul>
         )}
 
-          {newClaims.size !== 0 && (
-            <React.Fragment>
-              <li>Claims:</li>
-              <ul>
-                {newClaims.forEach((claim) => (<li>{claim}</li>))}
-              </ul>
-            </React.Fragment>
-          )}
+        {newClaims.size !== 0 && (
+          <React.Fragment>
+            <li>Claims:</li>
+            <ul>
+              {newClaims.forEach((claim) => (<li>{claim}</li>))}
+            </ul>
+          </React.Fragment>
+        )}
 
-        <form autocomplete="off" action={`/interaction/${uid}/confirm`} method="post">
-          <button autofocus type="submit" className="login login-submit">Continue</button>
-        </form>
+        <div className="flex-buttons">
+          <form autoComplete="off" action={`/interaction/${uid}/confirm`} method="post">
+            <button autoFocus type="submit" className="login login-submit">Approve</button>
+          </form>
+
+          <a href={`/interaction/${uid}/abort`}>
+            <button type="button" className="login login-decline">Decline</button>
+          </a>
+        </div>
 
         <div className="login-help">
-          <a href={`/interaction/${uid}/abort`}>[ Cancel ]</a>
           {client.tosUri && (<a href={client.tosUri}>[ Terms of Service ]</a>)}
           {client.policyUri && (<a href={client.policyUri}>[ Privacy Policy ]</a>)}
         </div>
