@@ -53,6 +53,7 @@ export default {
     youthEmail: 'youth@quidditchuk.org',
     nationalTeamsEmails: {
       UK: 'teamuk@quidditchuk.org',
+      England: 'teamengland@quidditchuk.org',
       Wales: 'teamwales@quidditchuk.org',
       Scotland: 'teamscotland@quidditchuk.org',
     },
