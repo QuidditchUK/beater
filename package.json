@@ -46,7 +46,7 @@
     "oidc-provider": "^6.31.0",
     "passport": "0.4.1",
     "passport-local": "1.0.0",
-    "pg-promise": "10.8.7",
+    "pg-promise": "10.10.2",
     "postmark": "^2.5.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
