@@ -39,14 +39,10 @@ passport.serializeUser((user, done) => {
     role: user.type,
   };
 
-  log.debug('passport serializeUser %s', loginUser);
   return done(null, loginUser);
 });
 
-passport.deserializeUser((user, done) => {
-  log.debug('passport deserializeUser %s', user);
-  return done(null, user);
-});
+passport.deserializeUser((user, done) => done(null, user));
 
 export default passport;
 
