@@ -1,7 +1,8 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import getLogger from './logger';
-import { readOne, checkPassword } from '../models/users';
+import prisma from './prisma';
+import { checkPassword } from '../models/users';
 
 const log = getLogger('modules/passport');
 
@@ -13,7 +14,7 @@ passport.use(new LocalStrategy(
   },
   async (email, password, done) => {
     try {
-      const user = await readOne('email', email);
+      const user = await prisma.users.findUnique({ where: { email } });
 
       if (!user) {
         return done(null, false, { message: 'Not valid username or password' });

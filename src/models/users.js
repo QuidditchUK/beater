@@ -1,17 +1,9 @@
 import crypto from 'crypto';
-import { db, pgp } from '../modules/pg';
-import { sqlReadOne, sqlUpdateOne } from '../sql';
-
-export const readOne = (key, value) => db.oneOrNone(sqlReadOne, {
-  table: 'users',
-  columns: '*',
-  key,
-  value,
-});
+import prisma from '../modules/prisma';
 
 export const checkPassword = async (email, password) => {
   try {
-    const user = await readOne('email', email);
+    const user = await prisma.users.findUnique({ where: { email } });
 
     return crypto.createHmac('sha1', user.salt).update(password).digest('hex') === user.hashed_password;
   } catch (err) {
@@ -19,13 +11,14 @@ export const checkPassword = async (email, password) => {
   }
 };
 
-export const update = (uuid, data) => db.none(sqlUpdateOne, {
-  table: 'users',
-  sets: pgp.helpers.sets(data),
-  uuid,
-});
+export const update = async (uuid, data) => {
+  await prisma.users.update({
+    where: { uuid },
+    data,
+  });
+};
 
-export const updatePassword = (uuid, password) => {
+export const updatePassword = async (uuid, password) => {
   const salt = `${Math.random()}`;
   const hashed_password = crypto.createHmac('sha1', salt)
     .update(password)
@@ -33,15 +26,11 @@ export const updatePassword = (uuid, password) => {
 
   const data = { hashed_password, salt };
 
-  return db.none(sqlUpdateOne, {
-    table: 'users',
-    sets: pgp.helpers.sets(data),
-    uuid,
-  });
+  await update(uuid, data);
 };
 
 export const create = async ({ password, email, ...rest }) => {
-  const user = await readOne('email', email);
+  const user = await prisma.users.findUnique({ where: { email } });
 
   if (user) {
     throw new Error('User with email address already exists');
@@ -60,5 +49,5 @@ export const create = async ({ password, email, ...rest }) => {
     ...rest,
   };
 
-  return db.none(pgp.helpers.insert(data, null, 'users'));
+  await prisma.users.create({ data });
 };

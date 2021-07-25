@@ -4,10 +4,10 @@ import asyncHandler from 'express-async-handler';
 import settings from '../config';
 import getLogger from '../modules/logger';
 import passport, { checkAuthenticated, checkAdmin } from '../modules/passport';
+import prisma from '../modules/prisma';
 import { parse } from '../modules/utils';
 import {
   update,
-  readOne,
   create,
   updatePassword,
   checkPassword,
@@ -83,14 +83,14 @@ export default function authRoute() {
   });
 
   router.get('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
-    const { hashed_password, salt, ...user } = await readOne('email', req.user.email);
+    const { hashed_password, salt, ...user } = await prisma.users.findUnique({ where: { email: req.user.email } });
 
     res.json(user);
   }));
 
   router.post('/forgot', sanitiseEmailMiddleware, asyncHandler(async (req, res) => {
     try {
-      const { hashed_password, uuid, created } = await readOne('email', req.body.email);
+      const { hashed_password, uuid, created } = await prisma.users.findUnique({ where: { email: req.body.email } });
       const token = jwt.sign({ uuid, email: req.body.email }, `${hashed_password}-${created.toISOString()}`, { expiresIn: '1d' });
 
       sendEmail(req.body.email, 'forgotPassword', { reset_url: `${settings.app.baseUrl}/reset?token=${token}&uuid=${uuid}` });
@@ -105,7 +105,7 @@ export default function authRoute() {
 
   router.post('/reset', validate(resetSchema), asyncHandler(async (req, res, next) => {
     try {
-      const { hashed_password, created, email } = await readOne('uuid', req.body.uuid);
+      const { hashed_password, created, email } = await prisma.users.findUnique({ where: { uuid: req.body.uuid } });
       jwt.verify(req.body.token, `${hashed_password}-${created.toISOString()}`);
 
       await updatePassword(req.body.uuid, req.body.password);
@@ -128,7 +128,7 @@ export default function authRoute() {
   });
 
   router.put('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
-    const { club_uuid, first_name, last_name } = await readOne('uuid', req.user.uuid);
+    const { club_uuid, first_name, last_name } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
     await update(req.user.uuid, req.body);
 
     if (req.body.club_uuid && req.body.club_uuid !== club_uuid) {
@@ -141,7 +141,7 @@ export default function authRoute() {
       });
     }
 
-    const { hashed_password, salt, ...user } = await readOne('uuid', req.user.uuid);
+    const { hashed_password, salt, ...user } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
     res.json(user);
   }));
 

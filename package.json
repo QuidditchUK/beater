@@ -7,14 +7,16 @@
     "start": "babel-node ./src",
     "serve": "npm run build && node dist/index.js",
     "prod": "node dist/index.js",
-    "dev": "docker-compose -f docker-dev.yml up --build",
-    "dev:api": "babel-watch src/index.js -L",
-    "dev:debug": "babel-node --inspect-brk=0.0.0.0 src/index.js",
-    "debug": "docker-compose -f docker-debug.yml up --build",
-    "migrate": "node ./bin/migrate.js",
-    "dev:startup": "bash startup.sh",
-    "test": "ava",
-    "test:coverage": "nyc ava"
+    "migrations": "prisma migrate deploy",
+    "________________docker________________": "",
+    "dev": "docker compose up --build",
+    "dev:app": "prisma generate && babel-watch src/index.js -L",
+    "docker:down": "docker compose down",
+    "migrate:init": "prisma migrate dev --name init",
+    "generate:client": "prisma generate",
+    "db:up": "docker compose -f db-docker-compose.yml up -d",
+    "db:seed": "prisma db seed --preview-feature",
+    "db:setup": "yarn db:up && sleep 15 && yarn migrate:init && yarn db:seed"
   },
   "dependencies": {
     "@babel/cli": "^7.13.10",
@@ -26,9 +28,9 @@
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
     "@babel/register": "^7.13.8",
+    "@prisma/client": "^2.27.0",
     "@react-ssr/core": "^0.24.0",
     "@react-ssr/express": "^0.24.0",
-    "axios": "0.21.1",
     "body-parser": "1.19.0",
     "connect-redis": "5.0.0",
     "cookie-parser": "1.4.5",
@@ -42,11 +44,9 @@
     "jose": "^3.6.0",
     "jsonwebtoken": "8.5.1",
     "method-override": "3.0.0",
-    "migrate": "^1.6.2",
     "oidc-provider": "^6.31.0",
     "passport": "0.4.1",
     "passport-local": "1.0.0",
-    "pg-promise": "10.8.7",
     "postmark": "^2.5.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -56,7 +56,6 @@
     "yup": "^0.32.0"
   },
   "devDependencies": {
-    "ava": "3.15.0",
     "babel-eslint": "10.1.0",
     "babel-watch": "7.3.0",
     "dotenv": "8.2.0",
@@ -65,7 +64,7 @@
     "eslint-plugin-import": "2.22.1",
     "husky": "4.3.7",
     "lint-staged": "10.5.3",
-    "nyc": "15.1.0"
+    "prisma": "^2.27.0"
   },
   "husky": {
     "hooks": {

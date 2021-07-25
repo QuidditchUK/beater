@@ -1,14 +1,12 @@
-import { db, pgp } from '../modules/pg';
-import { sqlReadMany } from '../sql';
 import stripe from '../modules/stripe';
+import prisma from '../modules/prisma';
 
-export const create = (data) => db.none(pgp.helpers.insert(data, null, 'users_stripe_products'));
+export const create = async (data) => {
+  await prisma.users_stripe_products.create({ data });
+};
 export const getUserProducts = async (user_uuid) => {
-  const rows = await db.any(sqlReadMany, {
-    columns: '*',
-    table: 'users_stripe_products',
-    key: 'user_uuid',
-    value: user_uuid,
+  const rows = await prisma.users_stripe_products.findMany({
+    where: { user_uuid },
   });
 
   if (!rows.length) {
