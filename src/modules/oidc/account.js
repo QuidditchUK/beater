@@ -1,14 +1,15 @@
 import { parse } from 'date-fns';
-import { readOne, checkPassword } from '../../models/users';
+import { checkPassword } from '../../models/users';
 import { getClub } from '../../models/clubs';
 import { getUserProducts } from '../../models/products';
+import prisma from '../prisma';
 
 // class Account {
 const Account = {
   // This interface is required by oidc-provider
   findAccount: async (ctx, id) => {
     // This would ideally be just a check whether the account is still in your storage
-    const account = await readOne('uuid', id);
+    const account = await prisma.users.findUnique({ where: { uuid: id } });
 
     if (!account) {
       return undefined;
@@ -48,7 +49,7 @@ const Account = {
       const check = await checkPassword(email, password);
 
       if (check) {
-        const { uuid } = await readOne('email', email);
+        const { uuid } = await prisma.users.findUnique({ where: { email } });
 
         return uuid;
       }

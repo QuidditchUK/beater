@@ -1,3 +1,5 @@
+// Function that parses authorization headers into
+// email + password from base64 token
 export function parse(auth) {
   if (!auth || typeof auth !== 'string') {
     throw new Error('No or wrong argument');
