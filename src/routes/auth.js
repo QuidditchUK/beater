@@ -145,6 +145,42 @@ export default function authRoute() {
     res.json(user);
   }));
 
+  router.put('/national', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    await update(req.user.uuid, req.body);
+    res.status(200).end();
+  }));
+
+  router.put('/scouting', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const {
+      first_name, last_name, first_team, second_team, third_team, position, playstyle, years, experience,
+    } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
+
+    // Email to head scout, with spplication and national team profile information.
+    sendEmail(settings.postmark.scoutingEmail, 'scoutingApplication', {
+      first_name,
+      last_name,
+      email: req.user.email,
+      event: req.body.event,
+      number: req.body.number,
+      team: req.body.team,
+      first_team,
+      second_team,
+      third_team,
+      position,
+      playstyle,
+      years,
+      experience,
+    });
+
+    // Email to user, to confirm application has been received.
+    sendEmail(req.user.email, 'scoutingResponse', {
+      first_name,
+      event: req.body.event,
+    });
+
+    res.status(200).end();
+  }));
+
   router.put('/password', authenticateJWT, checkAuthenticated, validate(updateSchema), asyncHandler(async (req, res) => {
     try {
       const check = await checkPassword(req.user.email, req.body.old_password);
