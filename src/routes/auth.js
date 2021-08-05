@@ -146,7 +146,23 @@ export default function authRoute() {
   }));
 
   router.put('/national', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const { first_name, last_name } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
     await update(req.user.uuid, req.body);
+
+    sendEmail(settings.postmark.scoutingEmail, 'nationalTeamInterest', {
+      first_name,
+      last_name,
+      email: req.user.email,
+      national_team_interest: req.body.national_team_interest,
+      first_team: req.body.first_team,
+      second_team: req.body.second_team,
+      third_team: req.body.third_team,
+      position: req.body.position,
+      playstyle: req.body.playstyle,
+      years: req.body.years,
+      experience: req.body.experience,
+    });
+
     res.status(200).end();
   }));
 
