@@ -66,9 +66,9 @@ export default {
       newMember: 19486834,
       ediCommitteeForm: 20291343,
       youthCoachForm: 21146875,
-      nationalTeamInterest: 99,
-      scoutingApplication: 1234,
-      scoutingResponse: 5678,
+      nationalTeamInterest: 24631798,
+      scoutingApplication: 24628586,
+      scoutingResponse: 24632999,
     },
   },
   stripe: {
