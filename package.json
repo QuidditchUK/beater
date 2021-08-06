@@ -39,7 +39,7 @@
     "express": "4.17.1",
     "express-async-handler": "1.1.4",
     "express-jwt": "6.0.0",
-    "express-session": "1.17.1",
+    "express-session": "1.17.2",
     "ioredis": "^4.19.4",
     "jose": "^3.6.0",
     "jsonwebtoken": "8.5.1",
