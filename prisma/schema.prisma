@@ -44,22 +44,30 @@ model spatial_ref_sys {
 }
 
 model users {
-  uuid               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created            DateTime? @default(now()) @db.Timestamptz(6)
-  updated            DateTime? @default(now()) @db.Timestamptz(6)
-  email              String    @unique @db.VarChar(255)
-  hashed_password    String?   @db.VarChar
-  salt               String?   @db.VarChar
-  type               String    @default("user") @db.VarChar
-  first_name         String?   @db.VarChar(255)
-  last_name          String?   @db.VarChar(255)
-  phone              String?   @db.VarChar(30)
-  last_login         DateTime? @db.Timestamptz(6)
-  stripe_customer_id String?   @db.VarChar(255)
-  club_uuid          String?   @db.Uuid
-  is_student         Boolean?
-  university         String?
-  clubs              clubs?    @relation(fields: [club_uuid], references: [uuid])
+  uuid                   String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created                DateTime? @default(now()) @db.Timestamptz(6)
+  updated                DateTime? @default(now()) @db.Timestamptz(6)
+  email                  String    @unique @db.VarChar(255)
+  hashed_password        String?   @db.VarChar
+  salt                   String?   @db.VarChar
+  type                   String    @default("user") @db.VarChar
+  first_name             String?   @db.VarChar(255)
+  last_name              String?   @db.VarChar(255)
+  phone                  String?   @db.VarChar(30)
+  last_login             DateTime? @db.Timestamptz(6)
+  stripe_customer_id     String?   @db.VarChar(255)
+  club_uuid              String?   @db.Uuid
+  is_student             Boolean?
+  university             String?
+  clubs                  clubs?    @relation(fields: [club_uuid], references: [uuid])
+  national_team_interest Boolean?
+  first_team             String?   @db.VarChar(10)
+  second_team            String?   @db.VarChar(10)
+  third_team             String?   @db.VarChar(10)
+  position               String?   @db.VarChar(20)
+  playstyle              String?
+  years                  Int?
+  experience             String?
 }
 
 model users_stripe_products {
