@@ -64,7 +64,7 @@ model users {
   first_team             String?   @db.VarChar(10)
   second_team            String?   @db.VarChar(10)
   third_team             String?   @db.VarChar(10)
-  position               String?   @db.VarChar(10)
+  position               String?   @db.VarChar(20)
   playstyle              String?
   years                  Int?
   experience             String?
