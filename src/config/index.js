@@ -57,7 +57,7 @@ export default {
       Wales: 'teamwales@quidditchuk.org',
       Scotland: 'teamscotland@quidditchuk.org',
     },
-    scoutingEmail: 'quk-scouting@gmail.com',
+    scoutingEmail: 'quk.scouting@gmail.com',
     templates: {
       welcome: 19455866,
       forgotPassword: 19133707,
