@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import oidc from '../modules/oidc';
 import Account from '../modules/oidc/account';
 import getLogger from '../modules/logger';
+import { sanitiseEmailMiddleware } from '../modules/sanitise';
 
 const log = getLogger('OIDC');
 
@@ -48,7 +49,7 @@ export default function oidcRoute() {
     }
   });
 
-  router.post('/:uid/login', setNoCache, parse, async (req, res, next) => {
+  router.post('/:uid/login', sanitiseEmailMiddleware, setNoCache, parse, async (req, res, next) => {
     try {
       const { uid, prompt, params } = await oidc.interactionDetails(req, res);
       const client = await oidc.Client.find(params.client_id);
