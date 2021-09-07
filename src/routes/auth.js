@@ -163,7 +163,7 @@ export default function authRoute() {
       playstyle: req.body.playstyle,
       years: req.body.years,
       experience: req.body.experience,
-      name,
+      club_name: club_name ?? '',
     });
 
     res.status(200).end();
@@ -191,7 +191,8 @@ export default function authRoute() {
       playstyle,
       years,
       experience,
-      name,
+      club_name: club_name ?? '',
+      pronouns: req.body.pronouns,
     });
 
     // Email to user, to confirm application has been received.
