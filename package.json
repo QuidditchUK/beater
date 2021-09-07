@@ -28,7 +28,7 @@
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
     "@babel/register": "^7.13.8",
-    "@prisma/client": "^2.27.0",
+    "@prisma/client": "^3.0.0",
     "@react-ssr/core": "^0.24.0",
     "@react-ssr/express": "^0.24.0",
     "body-parser": "1.19.0",
