@@ -149,7 +149,7 @@ export default function authRoute() {
     const { first_name, last_name, club_uuid } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
     await update(req.user.uuid, req.body);
 
-    const { name } = await getClub(club_uuid);
+    const { name: club_name } = await getClub(club_uuid);
 
     sendEmail(settings.postmark.scoutingEmail, 'nationalTeamInterest', {
       first_name,
