@@ -149,7 +149,11 @@ export default function authRoute() {
     const { first_name, last_name, club_uuid } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
     await update(req.user.uuid, req.body);
 
-    const { name: club_name } = await getClub(club_uuid);
+    let club_name = null;
+    if (club_uuid) {
+      const club = await getClub(club_uuid);
+      club_name = club.name;
+    }
 
     sendEmail(settings.postmark.scoutingEmail, 'nationalTeamInterest', {
       first_name,
@@ -163,7 +167,7 @@ export default function authRoute() {
       playstyle: req.body.playstyle,
       years: req.body.years,
       experience: req.body.experience,
-      club_name: club_name ?? '',
+      club_name,
     });
 
     res.status(200).end();
@@ -174,7 +178,11 @@ export default function authRoute() {
       first_name, last_name, first_team, second_team, third_team, position, playstyle, years, experience, club_uuid,
     } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
 
-    const { name: club_name } = await getClub(club_uuid);
+    let club_name = null;
+    if (club_uuid) {
+      const club = await getClub(club_uuid);
+      club_name = club.name;
+    }
 
     // Email to head scout, with application and national team profile information.
     sendEmail(settings.postmark.scoutingEmail, 'scoutingApplication', {
@@ -191,7 +199,7 @@ export default function authRoute() {
       playstyle,
       years,
       experience,
-      club_name: club_name ?? '',
+      club_name,
       pronouns: req.body.pronouns,
     });
 
