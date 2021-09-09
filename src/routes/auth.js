@@ -146,8 +146,14 @@ export default function authRoute() {
   }));
 
   router.put('/national', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
-    const { first_name, last_name } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
+    const { first_name, last_name, club_uuid } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
     await update(req.user.uuid, req.body);
+
+    let club_name = null;
+    if (club_uuid) {
+      const club = await getClub(club_uuid);
+      club_name = club.name;
+    }
 
     sendEmail(settings.postmark.scoutingEmail, 'nationalTeamInterest', {
       first_name,
@@ -161,6 +167,7 @@ export default function authRoute() {
       playstyle: req.body.playstyle,
       years: req.body.years,
       experience: req.body.experience,
+      club_name,
     });
 
     res.status(200).end();
@@ -168,10 +175,16 @@ export default function authRoute() {
 
   router.put('/scouting', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
     const {
-      first_name, last_name, first_team, second_team, third_team, position, playstyle, years, experience,
+      first_name, last_name, first_team, second_team, third_team, position, playstyle, years, experience, club_uuid,
     } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
 
-    // Email to head scout, with spplication and national team profile information.
+    let club_name = null;
+    if (club_uuid) {
+      const club = await getClub(club_uuid);
+      club_name = club.name;
+    }
+
+    // Email to head scout, with application and national team profile information.
     sendEmail(settings.postmark.scoutingEmail, 'scoutingApplication', {
       first_name,
       last_name,
@@ -186,6 +199,8 @@ export default function authRoute() {
       playstyle,
       years,
       experience,
+      club_name,
+      pronouns: req.body.pronouns,
     });
 
     // Email to user, to confirm application has been received.
