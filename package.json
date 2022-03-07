@@ -59,7 +59,7 @@
   "devDependencies": {
     "babel-eslint": "10.1.0",
     "babel-watch": "7.3.0",
-    "dotenv": "8.2.0",
+    "dotenv": "16.0.0",
     "eslint": "7.17.0",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-plugin-import": "2.22.1",
