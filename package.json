@@ -32,7 +32,7 @@
     "@react-ssr/core": "^0.24.0",
     "@react-ssr/express": "^0.24.0",
     "body-parser": "1.19.0",
-    "connect-redis": "5.0.0",
+    "connect-redis": "6.1.3",
     "cookie-parser": "1.4.5",
     "cors": "2.8.5",
     "date-fns": "^2.17.0",
