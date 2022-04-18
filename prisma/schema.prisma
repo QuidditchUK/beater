@@ -68,6 +68,7 @@ model users {
   playstyle              String?
   years                  Int?
   experience             String?
+  scopes                 scopes[]
 }
 
 model users_stripe_products {
@@ -76,4 +77,13 @@ model users_stripe_products {
   updated           DateTime? @default(now()) @db.Timestamptz(6)
   user_uuid         String    @db.Uuid
   stripe_product_id String    @db.VarChar(255)
+}
+
+model scopes {
+  uuid      String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created   DateTime? @default(now()) @db.Timestamptz(6)
+  updated   DateTime? @default(now()) @db.Timestamptz(6)
+  scope     String    @db.VarChar(255)
+  user      users     @relation(fields: [user_uuid], references: [uuid])
+  user_uuid String    @db.Uuid
 }

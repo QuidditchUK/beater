@@ -14,7 +14,7 @@ passport.use(new LocalStrategy(
   },
   async (email, password, done) => {
     try {
-      const user = await prisma.users.findUnique({ where: { email } });
+      const user = await prisma.users.findUnique({ where: { email }, include: { scopes: true } });
 
       if (!user) {
         return done(null, false, { message: 'Not valid username or password' });
@@ -38,6 +38,7 @@ passport.serializeUser((user, done) => {
     uuid: user.uuid,
     email: user.email,
     role: user.type,
+    scopes: user.scopes,
   };
 
   return done(null, loginUser);

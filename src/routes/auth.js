@@ -23,7 +23,7 @@ const log = getLogger('router/auth');
 
 function loginMiddleware(req, res, next) {
   if (!(req.body && req.body.email && req.body.password)
-      && (req.headers.Authorization || req.headers.authorization)) {
+    && (req.headers.Authorization || req.headers.authorization)) {
     const credentials = parse(req.headers.Authorization || req.headers.authorization);
 
     req.body = {
@@ -47,6 +47,7 @@ function loginMiddleware(req, res, next) {
       uuid: user.uuid,
       email: user.email,
       role: user.type,
+      scopes: user.scopes,
     };
 
     try {
@@ -83,7 +84,7 @@ export default function authRoute() {
   });
 
   router.get('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
-    const { hashed_password, salt, ...user } = await prisma.users.findUnique({ where: { email: req.user.email } });
+    const { hashed_password, salt, ...user } = await prisma.users.findUnique({ where: { email: req.user.email }, include: { scopes: true } });
 
     res.json(user);
   }));
