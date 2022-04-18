@@ -15,7 +15,7 @@ services:
     environment:
       NODE_ENV: development
       LOG_LEVEL: debug
-      POSTGRES_URL: postgres://docker:docker@postgres:5432/docker
+      DATABASE_URL: postgres://docker:docker@postgres:5432/docker
       REDIS_URL: redis://redis:6379
       JWT_SECRET: Not.Known.Secret.Word
       SESSION_SECRET: VerySecretKey

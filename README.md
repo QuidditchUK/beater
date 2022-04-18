@@ -37,13 +37,9 @@ A big part of this API concerns our OpenID Connect Provider implementation, it i
 
 ## Deployment
 
-Deployment is controlled by a Github Action that must be manually triggered by one of the QuidditchUK Tech Staff, it takes a copy of the current main branch and deploys it to an AWS ElasticBeanstalk instance. Any new environment variables will need to be added via the development team.
+Deployment is controlled the QuidditchUK Tech Staff on to our Heroku app. New environment variables must be added by the QuidditchUK Tech Staff.
 
 ## Known Limitations
-
-### Migrations
-
-There is currently no automatic running of migrations on the production database as part of the deployment process. Any DB migrations must be run by the Technology Officer.
 
 ### Stripe Functionality
 
