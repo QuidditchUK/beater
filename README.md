@@ -37,7 +37,7 @@ A big part of this API concerns our OpenID Connect Provider implementation, it i
 
 ## Deployment
 
-Deployment is controlled the QuidditchUK Tech Staff on to our Heroku app. New environment variables must be added by the QuidditchUK Tech Staff.
+Deployment is controlled by the QuidditchUK Tech Staff on to our Heroku app. New environment variables must be added by the QuidditchUK Tech Staff.
 
 ## Known Limitations
 
