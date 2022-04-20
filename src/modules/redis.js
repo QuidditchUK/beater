@@ -9,7 +9,6 @@ const port = settings.port || 6379;
 const host = settings.hostname || '127.0.0.1';
 
 export default (key = '') => {
-  console.log(settings);
   const logger = getLogger(`redis-${key}`);
 
   const client = new Redis(port, host, { no_ready_check: true, rejectUnauthorized: false });
