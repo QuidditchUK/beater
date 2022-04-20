@@ -56,7 +56,7 @@ const configuration = {
   },
 };
 
-const oidc = new Provider('https://api.quidditchuk.org', configuration);
+const oidc = new Provider('https://quk-beater.herokuapp.com', configuration);
 
 oidc.proxy = true;
 
