@@ -60,8 +60,8 @@ const oidc = new Provider('https://api.quidditchuk.org', configuration);
 
 oidc.proxy = true;
 
-// oidc.on('server_error', (_, error) => {
-//   console.log(error);
-// });
+oidc.on('server_error', (_, error) => {
+  console.log(error);
+});
 
 export default oidc;
