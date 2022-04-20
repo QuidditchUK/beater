@@ -2,14 +2,14 @@ import { URL } from 'url';
 import Redis from 'ioredis';
 
 import getLogger from './logger';
-import config from '../config';
 
-const settings = new URL(config.redis.url);
+const settings = new URL(process.env.REDIS_URL);
 
 const port = settings.port || 6379;
 const host = settings.hostname || '127.0.0.1';
 
 export default (key = '') => {
+  console.log(settings);
   const logger = getLogger(`redis-${key}`);
 
   const client = new Redis(port, host, { no_ready_check: true });
