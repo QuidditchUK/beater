@@ -12,7 +12,7 @@ export default (key = '') => {
   console.log(settings);
   const logger = getLogger(`redis-${key}`);
 
-  const client = new Redis(port, host, { no_ready_check: true });
+  const client = new Redis(port, host, { no_ready_check: true, rejectUnauthorized: false });
 
   if (settings.username && settings.password) {
     client.auth(settings.username, settings.password);
