@@ -12,7 +12,7 @@ const host = settings.hostname || '127.0.0.1';
 export default (key = '') => {
   const logger = getLogger(`redis-${key}`);
 
-  const client = new Redis(port, host, { no_ready_check: true });
+  const client = new Redis(port, host, { no_ready_check: true, auth_pass: 'foobar' });
 
   if (settings.username && settings.password) {
     client.auth(settings.username, settings.password);
