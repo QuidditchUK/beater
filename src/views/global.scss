@@ -6,12 +6,12 @@ body {
 
 .container {
   height: 100vh;
-    display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-    margin: 0 auto;
-  
+  margin: 0 auto;
+
 }
 
 .logo {
@@ -77,7 +77,7 @@ body {
     border-radius: 0.25rem;
     font-weight: 400;
     cursor: pointer;
-    font-family: "adelle-sans",sans-serif;
+    font-family: "adelle-sans", sans-serif;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-left: 1rem;
@@ -112,7 +112,7 @@ body {
     border-radius: 0.25rem;
     font-weight: 400;
     cursor: pointer;
-    font-family: "adelle-sans",sans-serif;
+    font-family: "adelle-sans", sans-serif;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-left: 1rem;
@@ -149,25 +149,26 @@ body {
 }
 
 .label {
-	background: white;
-	padding: 12px 16px;
-	border-radius: 8px;
-	margin-bottom: 8px;
-  color:rgb(14, 55, 95);  
+  background: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: rgb(14, 55, 95);
 }
 
 .scope-list {
   background: white;
   border-radius: 8px;
   list-style-type: decimal;
+  padding-bottom: 8px;
 }
 
 .claim-list {
-	margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .claim {
-	margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .flex-buttons {
