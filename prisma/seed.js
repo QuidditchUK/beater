@@ -15,11 +15,13 @@ async function main() {
   await prisma.users.create({
     data: {
       email: 'admin@quidditchuk.org',
-      type: 'admin',
       first_name: 'Quidditch',
       last_name: 'UK',
       hashed_password,
       salt,
+      scopes: {
+        create: [{ scope: 'admin' }],
+      },
     },
   });
 

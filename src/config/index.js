@@ -5,7 +5,7 @@ if (process.env.NODE_ENV === 'development') {
 
 export default {
   app: {
-    port: Number(process.env.PORT) || 3000,
+    port: Number(process.env.PORT) || 4000,
     host: process.env.HOST || 'localhost',
     jwt: {
       secret: process.env.JWT_SECRET,

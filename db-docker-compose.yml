@@ -6,10 +6,10 @@ services:
   postgres:
     container_name: postgres
     restart: always
-    image: mdillon/postgis:10-alpine
+    image: postgres:13-alpine
     ports:
       - "5432:5432"
     environment:
+      DATABASE_URL: postgres://docker:docker@docker:5432/docker
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: docker
