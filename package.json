@@ -57,8 +57,9 @@
     "yup": "^0.32.0"
   },
   "devDependencies": {
-    "babel-eslint": "10.1.0",
-    "babel-watch": "7.3.0",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/eslint-plugin": "^7.17.7",
+    "babel-watch": "^7.7.0",
     "dotenv": "^16.0.0",
     "eslint": "7.17.0",
     "eslint-config-airbnb-base": "14.2.1",
