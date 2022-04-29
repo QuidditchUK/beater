@@ -15,7 +15,7 @@
     "migrate:init": "prisma migrate dev --name init",
     "generate:client": "prisma generate",
     "db:up": "docker compose -f db-docker-compose.yml up -d",
-    "db:seed": "prisma db seed --preview-feature",
+    "db:seed": "prisma db seed",
     "db:setup": "yarn db:up && sleep 15 && yarn migrate:init && yarn db:seed",
     "prepare": "husky install"
   },
@@ -72,10 +72,7 @@
       "eslint --fix"
     ]
   },
-  "nyc": {
-    "all": true,
-    "include": [
-      "src/**/*.js"
-    ]
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }
