@@ -2037,10 +2037,10 @@ babel-plugin-transform-react-remove-prop-types@^0.4.24:
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-remove-prop-types/-/babel-plugin-transform-react-remove-prop-types-0.4.24.tgz#f2edaf9b4c6a5fbe5c1d678bfb531078c1555f3a"
   integrity sha512-eqj0hVcJUR57/Ug2zE1Yswsw4LhuqqHhD+8v120T1cl3kjg76QwtyBrdIk4WVwK+lAhBJVYCd/v+4nc4y+8JsA==
 
-babel-watch@7.3.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/babel-watch/-/babel-watch-7.3.0.tgz#5864c04de3c7860e284e07d070c99753dbb71044"
-  integrity sha512-cDz+3gyJhfLV9JRBaHuxSzeuZ+BHLCqOCViOn2LwCCfgH8O0BciWtOaFJA+s69+Y3ZOiA8/fCd4gfMzGl0Pgiw==
+babel-watch@7.7.0:
+  version "7.7.0"
+  resolved "https://registry.yarnpkg.com/babel-watch/-/babel-watch-7.7.0.tgz#a87083cdfe8bc38d3905bfb64814d3480c53877f"
+  integrity sha512-PKytGmhgXWcNmNK+Y0fEQ/0+re8jDVAAppL1JGqdPKihab2siG5dzbM1dnKXvn0VWOW1ybJjiW+dDb6nV0S1KA==
   dependencies:
     chalk "^4.1.0"
     chokidar "^3.4.3"
@@ -2050,6 +2050,7 @@ babel-watch@7.3.0:
     lodash.isregexp "^4.0.1"
     lodash.isstring "^4.0.1"
     source-map-support "^0.5.19"
+    string-argv "^0.3.1"
 
 balanced-match@^1.0.0:
   version "1.0.0"
@@ -8213,7 +8214,7 @@ strict-uri-encode@^1.0.0:
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
   integrity sha1-J5siXfHVgrH1TmWt3UNS4Y+qBxM=
 
-string-argv@0.3.1:
+string-argv@0.3.1, string-argv@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/string-argv/-/string-argv-0.3.1.tgz#95e2fbec0427ae19184935f816d74aaa4c5c19da"
   integrity sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==
