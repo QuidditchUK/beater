@@ -3,6 +3,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import getLogger from './logger';
 import prisma from './prisma';
 import { checkPassword } from '../models/users';
+import { ADMIN } from '../constants/scopes';
 
 const log = getLogger('modules/passport');
 
@@ -57,12 +58,15 @@ export const checkAuthenticated = (req, res, next) => {
   return next({ message: 'USER NOT AUTH' });
 };
 
-export const checkAdmin = (req, res, next) => {
-  if (req.user.role === 'admin') {
+export const checkScopeAuthorized = (scopes = []) => (req, res, next) => {
+  const userScopes = req.user.scopes.map(({ scope }) => scope);
+  const isAuthorized = scopes.some((scope) => userScopes.includes(scope)) || userScopes.includes(ADMIN);
+
+  if (isAuthorized) {
     return next();
   }
 
-  log.warn('user is not authenticated %s', JSON.stringify({ cookie: req.cookies['connect.sid'], session: req.sessionID }));
-  res.status(403).json({ isAdmin: false });
+  log.warn('user is not authorized %s', JSON.stringify({ cookie: req.cookies['connect.sid'], session: req.sessionID }));
+  res.status(403).json();
   return next({ message: 'USER NOT AUTH' });
 };

@@ -1,35 +1,26 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 
-import {
-  getClubBySlug,
-  allClubs,
-  create,
-  getClub,
-} from '../models/clubs';
 import { authenticateJWT } from '../modules/jwt';
-import { checkAuthenticated, checkAdmin } from '../modules/passport';
+import { checkAuthenticated, checkScopeAuthorized } from '../modules/passport';
+import { CLUBS_WRITE, CLUBS_READ, EMT } from '../constants/scopes';
+import prisma from '../modules/prisma';
 
 export default function clubsRoute() {
   const router = new Router();
 
   router.get('/search', asyncHandler(async (req, res) => {
-    const clubs = await allClubs();
+    const clubs = await prisma.clubs.findMany({ where: { status: 'active' } });
     res.json(clubs);
   }));
 
-  router.get('/slug/:slug', asyncHandler(async (req, res) => {
-    const club = await getClubBySlug(req.params.slug);
-    if (!club) {
-      res.sendStatus(404);
-      return;
-    }
-
-    res.json(club);
+  router.get('/all', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_READ, EMT]), asyncHandler(async (req, res) => {
+    const clubs = await prisma.clubs.findMany({});
+    res.json(clubs);
   }));
 
   router.get('/:uuid', asyncHandler(async (req, res) => {
-    const club = await getClub(req.params.uuid);
+    const club = await prisma.clubs.findUnique({ where: { uuid: req.params.uuid } });
     if (!club) {
       res.sendStatus(404);
       return;
@@ -38,9 +29,20 @@ export default function clubsRoute() {
     res.json(club);
   }));
 
-  router.post('/', authenticateJWT, checkAuthenticated, checkAdmin, asyncHandler(async (req, res) => {
+  router.put('/:uuid', checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
+    const club = await prisma.clubs.update({ where: { uuid: req.params.uuid }, data: req.body });
+
+    if (!club) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(club);
+  }));
+
+  router.post('/', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
     try {
-      await create(req.body);
+      await prisma.clubs.create({ data: req.body });
       res.status(201).end();
     } catch (error) {
       res.status(400).json({ error: error.message });

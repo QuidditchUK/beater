@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import settings from '../config';
 import getLogger from '../modules/logger';
-import passport, { checkAuthenticated, checkAdmin } from '../modules/passport';
+import passport, { checkAuthenticated } from '../modules/passport';
 import prisma from '../modules/prisma';
 import { parse } from '../modules/utils';
 import {
@@ -12,7 +12,6 @@ import {
   updatePassword,
   checkPassword,
 } from '../models/users';
-import { getClub } from '../models/clubs';
 import { authenticateJWT } from '../modules/jwt';
 import { validate } from '../modules/validate';
 import { schema, resetSchema, updateSchema } from '../modules/validation_schemas/users';
@@ -133,7 +132,7 @@ export default function authRoute() {
     await update(req.user.uuid, req.body);
 
     if (req.body.club_uuid && req.body.club_uuid !== club_uuid) {
-      const { email, name } = await getClub(req.body.club_uuid);
+      const { email, name } = await prisma.clubs.findUnique({ where: { uuid: req.body.club_uuid } });
       sendEmail(email, 'newMember', {
         email: req.user.email,
         name,
@@ -152,7 +151,7 @@ export default function authRoute() {
 
     let club_name = null;
     if (club_uuid) {
-      const club = await getClub(club_uuid);
+      const club = await prisma.clubs.findUnique({ where: { uuid: club_uuid } });
       club_name = club.name;
     }
 
@@ -181,7 +180,7 @@ export default function authRoute() {
 
     let club_name = null;
     if (club_uuid) {
-      const club = await getClub(club_uuid);
+      const club = await prisma.clubs.findUnique({ where: { uuid: club_uuid } });
       club_name = club.name;
     }
 
@@ -242,10 +241,6 @@ export default function authRoute() {
       access_token: req.access_token,
       token_type: 'Bearer',
     });
-  });
-
-  router.get('/admin', authenticateJWT, checkAdmin, (_, res) => {
-    res.json({ isAdmin: true });
   });
 
   return router;

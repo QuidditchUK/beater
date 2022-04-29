@@ -1,6 +1,5 @@
 import { parse } from 'date-fns';
 import { checkPassword } from '../../models/users';
-import { getClub } from '../../models/clubs';
 import { getUserProducts } from '../../models/products';
 import prisma from '../prisma';
 
@@ -18,7 +17,7 @@ const Account = {
     let club;
 
     if (account.club_uuid) {
-      club = await getClub(account.club_uuid);
+      club = await prisma.clubs.findUnique({ where: { uuid: account.club_uuid } });
     }
 
     const products = await getUserProducts(id);
