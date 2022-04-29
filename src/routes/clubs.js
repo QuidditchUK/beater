@@ -10,12 +10,16 @@ export default function clubsRoute() {
   const router = new Router();
 
   router.get('/search', asyncHandler(async (req, res) => {
-    const clubs = await prisma.clubs.findMany({ where: { status: 'active' } });
+    const clubs = await prisma.clubs.findMany({ where: { status: 'active' }, orderBy: { name: 'asc' } });
     res.json(clubs);
   }));
 
   router.get('/all', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_READ, EMT]), asyncHandler(async (req, res) => {
-    const clubs = await prisma.clubs.findMany({});
+    const clubs = await prisma.clubs.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    });
     res.json(clubs);
   }));
 
