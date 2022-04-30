@@ -1,8 +1,9 @@
 module.exports = {
+  parser: '@babel/eslint-parser',
   plugins: [
     'import',
+    '@babel',
   ],
-  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 6,
     sourceType: 'module',
