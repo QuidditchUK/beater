@@ -53,8 +53,8 @@ export default function clubsRoute() {
 
   router.post('/', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
     try {
-      await prisma.clubs.create({ data: req.body });
-      res.status(201).end();
+      const club = await prisma.clubs.create({ data: req.body });
+      res.status(201).json(club);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
