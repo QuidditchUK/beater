@@ -40,7 +40,7 @@ export default function clubsRoute() {
     res.json(club);
   }));
 
-  router.put('/:uuid', checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
+  router.put('/:uuid', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
     const club = await prisma.clubs.update({ where: { uuid: req.params.uuid }, data: req.body });
 
     if (!club) {
