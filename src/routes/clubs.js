@@ -19,6 +19,13 @@ export default function clubsRoute() {
       orderBy: {
         name: 'asc',
       },
+      include: {
+        _count: {
+          select: {
+            users: true,
+          },
+        },
+      },
     });
     res.json(clubs);
   }));

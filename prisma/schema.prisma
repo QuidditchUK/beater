@@ -9,38 +9,22 @@ datasource db {
 }
 
 model clubs {
-  uuid             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created          DateTime? @db.Timestamptz(6)
-  updated          DateTime? @db.Timestamptz(6)
-  name             String?   @db.VarChar(255)
-  slug             String?   @unique @db.VarChar
-  league           String?   @db.VarChar(255)
-  venue            String    @db.VarChar
-  featured_color   String?   @db.VarChar(30)
-  text_color       String?   @db.VarChar(30)
-  icon             String    @db.VarChar(255)
-  trainings        String?   @db.VarChar(255)
-  leader           String?   @db.VarChar(255)
-  leader_position  String?   @db.VarChar(255)
-  official_website String?   @db.VarChar(255)
-  status           String    @default("active") @db.VarChar
-  social_facebook  String?   @db.VarChar(255)
-  social_twitter   String?   @db.VarChar(255)
-  social_youtube   String?   @db.VarChar(255)
-  social_instagram String?   @db.VarChar(255)
-  tags             String[]
-  images           String[]
-  description      String?
-  email            String?   @db.VarChar(255)
-  users            users[]
-}
-
-model spatial_ref_sys {
-  srid      Int     @id
-  auth_name String? @db.VarChar(256)
-  auth_srid Int?
-  srtext    String? @db.VarChar(2048)
-  proj4text String? @db.VarChar(2048)
+  uuid           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created        DateTime? @db.Timestamptz(6)
+  updated        DateTime? @db.Timestamptz(6)
+  name           String?   @db.VarChar(255)
+  slug           String?   @unique @db.VarChar
+  league         String?   @db.VarChar(255)
+  venue          String    @db.VarChar
+  featured_color String?   @db.VarChar(30)
+  text_color     String?   @db.VarChar(30)
+  icon           String    @db.VarChar(255)
+  status         String    @default("active") @db.VarChar
+  active         Boolean   @default(true)
+  images         String[]
+  description    String?
+  email          String?   @db.VarChar(255)
+  users          users[]
 }
 
 model users {
