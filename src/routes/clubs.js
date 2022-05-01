@@ -10,7 +10,7 @@ export default function clubsRoute() {
   const router = new Router();
 
   router.get('/search', asyncHandler(async (req, res) => {
-    const clubs = await prisma.clubs.findMany({ where: { status: 'active' }, orderBy: { name: 'asc' } });
+    const clubs = await prisma.clubs.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
     res.json(clubs);
   }));
 

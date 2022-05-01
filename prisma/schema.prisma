@@ -9,22 +9,15 @@ datasource db {
 }
 
 model clubs {
-  uuid           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created        DateTime? @db.Timestamptz(6)
-  updated        DateTime? @db.Timestamptz(6)
-  name           String?   @db.VarChar(255)
-  slug           String?   @unique @db.VarChar
-  league         String?   @db.VarChar(255)
-  venue          String    @db.VarChar
-  featured_color String?   @db.VarChar(30)
-  text_color     String?   @db.VarChar(30)
-  icon           String    @db.VarChar(255)
-  status         String    @default("active") @db.VarChar
-  active         Boolean   @default(true)
-  images         String[]
-  description    String?
-  email          String?   @db.VarChar(255)
-  users          users[]
+  uuid    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created DateTime? @db.Timestamptz(6)
+  updated DateTime? @db.Timestamptz(6)
+  name    String?   @db.VarChar(255)
+  slug    String?   @unique @db.VarChar
+  league  String?   @db.VarChar(255)
+  active  Boolean   @default(true)
+  email   String?   @db.VarChar(255)
+  users   users[]
 }
 
 model users {
