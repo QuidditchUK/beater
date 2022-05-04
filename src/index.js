@@ -40,7 +40,7 @@ app.use(unless(cors({
       callback(null, false);
     }
   },
-  methods: 'GET,PUT,POST,PATCH',
+  methods: 'GET,PUT,POST,PATCH,DELETE',
   credentials: true,
 }), '/oidc', '/interaction'));
 

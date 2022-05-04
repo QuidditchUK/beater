@@ -2,12 +2,26 @@ import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 
 import { authenticateJWT } from '../modules/jwt';
+import settings from '../config';
 import { checkAuthenticated, checkScopeAuthorized } from '../modules/passport';
 import { CLUBS_WRITE, CLUBS_READ, EMT } from '../constants/scopes';
 import prisma from '../modules/prisma';
+import { email } from '../modules/email';
 
 export default function clubsRoute() {
   const router = new Router();
+
+  router.post('/register', asyncHandler(async (req, res) => {
+    const { clubName, email: clubEmail, league } = req.body;
+    await prisma.clubs.create({
+      data: {
+        name: clubName, email: clubEmail, league, active: false,
+      },
+    });
+
+    email(settings.postmark.clubsEmail, 'registerClubForm', req.body, settings.postmark.adminEmail, settings.postmark.adminEmail);
+    res.status(200).end();
+  }));
 
   router.get('/search', asyncHandler(async (req, res) => {
     const clubs = await prisma.clubs.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
@@ -57,6 +71,15 @@ export default function clubsRoute() {
       res.status(201).json(club);
     } catch (error) {
       res.status(400).json({ error: error.message });
+    }
+  }));
+
+  router.delete('/:uuid', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
+    try {
+      await prisma.clubs.delete({ where: { uuid: req.params.uuid } });
+      res.sendStatus(204);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
   }));
 

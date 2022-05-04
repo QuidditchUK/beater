@@ -57,6 +57,7 @@ export default {
       Wales: 'teamwales@quidditchuk.org',
       Scotland: 'teamscotland@quidditchuk.org',
     },
+    clubsEmail: 'clubs@quidditchuk.org',
     scoutingEmail: 'quk.scouting@gmail.com',
     templates: {
       welcome: 19455866,
@@ -69,6 +70,7 @@ export default {
       nationalTeamInterest: 24631798,
       scoutingApplication: 24628586,
       scoutingResponse: 24632999,
+      registerClubForm: 27851237,
     },
   },
   stripe: {
