@@ -8,6 +8,7 @@ import webhooksRoute from './webhooks';
 import oidcRoute from './oidc';
 import oidc from '../modules/oidc';
 import scopesRoute from './scopes';
+import transfersRoute from './transfers';
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ router.use('/products', productsRoute());
 router.use('/contact', contactRoute());
 router.use('/webhooks', webhooksRoute());
 router.use('/scopes', scopesRoute());
+router.use('/transfers', transfersRoute());
 router.use('/interaction', oidcRoute());
 
 router.use('/oidc', oidc.callback);

@@ -83,7 +83,10 @@ export default function authRoute() {
   });
 
   router.get('/me', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
-    const { hashed_password, salt, ...user } = await prisma.users.findUnique({ where: { email: req.user.email }, include: { scopes: true } });
+    const { hashed_password, salt, ...user } = await prisma.users.findUnique({
+      where: { email: req.user.email },
+      include: { scopes: true, transfers: true },
+    });
 
     res.json(user);
   }));
