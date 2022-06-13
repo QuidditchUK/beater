@@ -40,7 +40,7 @@ function loginMiddleware(req, res, next) {
     if (!user) {
       log.verbose('user authentication failed, no such user');
       res.status(403).json({ error: info }).end();
-      return next();
+      return null;
     }
 
     const loginUser = {
