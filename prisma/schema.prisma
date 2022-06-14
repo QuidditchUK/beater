@@ -84,3 +84,9 @@ enum TransferStatus {
   APPROVED
   DECLINED
 }
+
+model system_settings {
+  uuid            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created         DateTime? @default(now()) @db.Timestamptz(6)
+  transfer_window Boolean?  @default(false)
+}

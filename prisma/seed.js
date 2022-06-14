@@ -53,6 +53,12 @@ async function main() {
       },
     ],
   });
+
+  await prisma.system_settings.create({
+    data: {
+      transfer_window: false,
+    },
+  });
 }
 
 main()
