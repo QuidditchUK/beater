@@ -71,6 +71,10 @@ export default {
       scoutingApplication: 24628586,
       scoutingResponse: 24632999,
       registerClubForm: 27851237,
+      transferClubNewMember: 28284441,
+      transferRequestForm: 28284444,
+      transferDeclined: 28283993,
+      transferApproved: 28284451,
     },
   },
   stripe: {

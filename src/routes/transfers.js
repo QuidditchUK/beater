@@ -7,6 +7,8 @@ import {
   ADMIN, EMT, TRANSFER_WRITE, TRANSFER_READ,
 } from '../constants/scopes';
 import prisma from '../modules/prisma';
+import { email } from '../modules/email';
+import settings from '../config';
 
 export default function transfersRoute() {
   const router = new Router();
@@ -28,16 +30,31 @@ export default function transfersRoute() {
         return;
       }
 
-      const { club_uuid: prev_club_uuid } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
+      const { club_uuid: prev_club_uuid, first_name, last_name } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
       const { club_uuid: new_club_uuid } = req.body;
 
       const transfer = await prisma.transfers.create({
         data: {
           prev_club_uuid, new_club_uuid, user_uuid: req.user.uuid,
         },
+        include: {
+          newClub: true,
+          prevClub: true,
+        },
       });
 
-      // TODO: Notifications
+      // Notifications
+      email(
+        settings.postmark.clubsEmail,
+        'transferRequestForm',
+        {
+          first_name,
+          last_name,
+          prev_club_name: transfer?.prevClub.name,
+          new_club_name: transfer?.newClub?.name,
+        },
+        settings.postmark.clubsEmail,
+      );
 
       res.json(transfer);
     } catch (error) {
@@ -56,9 +73,12 @@ export default function transfersRoute() {
         data: {
           status: 'APPROVED', actioned_by, updated: new Date(), reason,
         },
+        include: {
+          newClub: true,
+        },
       });
 
-      await prisma.users.update({
+      const user = await prisma.users.update({
         where: { uuid: transfer?.user_uuid },
         data: {
           club_uuid: transfer.new_club_uuid,
@@ -66,7 +86,10 @@ export default function transfersRoute() {
         },
       });
 
-      // TODO: Notifications
+      // Notifications
+      email(transfer?.newClub?.email, 'transferClubNewMember', { first_name: user?.first_name, last_name: user?.last_name, email: user?.email }, settings.postmark.clubsEmail);
+      email(user?.email, 'transferApproved', { first_name: user?.first_name, new_club_name: transfer?.newClub?.name }, settings.postmark.clubsEmail);
+
       res.json(transfer);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -84,9 +107,16 @@ export default function transfersRoute() {
         data: {
           status: 'DECLINED', actioned_by, updated: new Date(), reason,
         },
+        include: {
+          newClub: true,
+        },
       });
 
-      // TODO: Notifications
+      const user = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
+
+      // Notifications
+      email(user?.email, 'transferDeclined', { first_name: user?.first_name, new_club_name: transfer?.newClub?.name }, settings.postmark.clubsEmail);
+
       res.json(transfer);
     } catch (error) {
       res.status(400).json({ error: error.message });
