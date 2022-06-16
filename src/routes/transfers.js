@@ -31,7 +31,11 @@ export default function transfersRoute() {
       const { club_uuid: prev_club_uuid } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
       const { club_uuid: new_club_uuid } = req.body;
 
-      const transfer = await prisma.transfers.create({ prev_club_uuid, new_club_uuid, user_uuid: req.user.uuid });
+      const transfer = await prisma.transfers.create({
+        data: {
+          prev_club_uuid, new_club_uuid, user_uuid: req.user.uuid,
+        },
+      });
 
       // TODO: Notifications
 
