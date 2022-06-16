@@ -9,15 +9,17 @@ datasource db {
 }
 
 model clubs {
-  uuid    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created DateTime? @db.Timestamptz(6)
-  updated DateTime? @db.Timestamptz(6)
-  name    String?   @db.VarChar(255)
-  slug    String?   @unique @db.VarChar
-  league  String?   @db.VarChar(255)
-  active  Boolean   @default(true)
-  email   String?   @db.VarChar(255)
-  users   users[]
+  uuid             String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created          DateTime?   @db.Timestamptz(6)
+  updated          DateTime?   @db.Timestamptz(6)
+  name             String?     @db.VarChar(255)
+  slug             String?     @unique @db.VarChar
+  league           String?     @db.VarChar(255)
+  active           Boolean     @default(true)
+  email            String?     @db.VarChar(255)
+  users            users[]
+  prevClubTransfer transfers[] @relation("prevClub")
+  newClubTransfer  transfers[] @relation("newClub")
 }
 
 model users {
@@ -47,6 +49,7 @@ model users {
   experience             String?
   scopes                 scopes[]
   transfers              transfers[]
+  actionedBy             transfers[] @relation("actionedBy")
 }
 
 model users_stripe_products {
@@ -77,6 +80,9 @@ model transfers {
   actioned_by    String?        @db.Uuid
   reason         String?        @db.Text
   user           users          @relation(fields: [user_uuid], references: [uuid])
+  prevClub       clubs?         @relation(name: "prevClub", fields: [prev_club_uuid], references: [uuid])
+  newClub        clubs?         @relation(name: "newClub", fields: [new_club_uuid], references: [uuid])
+  actionedBy     users?         @relation(name: "actionedBy", fields: [actioned_by], references: [uuid])
 }
 
 enum TransferStatus {

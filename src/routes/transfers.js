@@ -8,11 +8,26 @@ import {
 } from '../constants/scopes';
 import prisma from '../modules/prisma';
 
-export default function scopesRoute() {
+export default function transfersRoute() {
   const router = new Router();
 
   router.post('/', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
     try {
+      const [{ transfer_window }] = await prisma.system_settings.findMany({
+        select: {
+          transfer_window: true,
+        },
+        orderBy: {
+          created: 'desc',
+        },
+        take: 1,
+      });
+
+      if (!transfer_window) {
+        res.status(403).json({ error: 'Transfer window is not open' }).end();
+        return;
+      }
+
       const { club_uuid: prev_club_uuid } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
       const { club_uuid: new_club_uuid } = req.body;
 
@@ -31,7 +46,7 @@ export default function scopesRoute() {
     const { reason } = req.body;
 
     try {
-      const { user_uuid: actioned_by } = req.user.uuid;
+      const { uuid: actioned_by } = req.user;
       const transfer = await prisma.transfers.update({
         where: { uuid: transfer_uuid },
         data: {
@@ -59,7 +74,7 @@ export default function scopesRoute() {
     const { reason } = req.body;
 
     try {
-      const { user_uuid: actioned_by } = req.user.uuid;
+      const { uuid: actioned_by } = req.user;
       const transfer = await prisma.transfers.update({
         where: { uuid: transfer_uuid },
         data: {
@@ -76,6 +91,30 @@ export default function scopesRoute() {
 
   router.get('/', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, TRANSFER_READ]), asyncHandler(async (req, res) => {
     const transfers = await prisma.transfers.findMany({
+      include: {
+        user: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
+        },
+        prevClub: {
+          select: {
+            name: true,
+          },
+        },
+        newClub: {
+          select: {
+            name: true,
+          },
+        },
+        actionedBy: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
+        },
+      },
       orderBy: {
         created: 'asc',
       },
