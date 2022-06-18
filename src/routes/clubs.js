@@ -65,6 +65,38 @@ export default function clubsRoute() {
     res.json(club);
   }));
 
+  router.get('/:uuid/members', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_READ, EMT]), asyncHandler(async (req, res) => {
+    const club = await prisma.clubs.findUnique({
+      where: { uuid: req.params.uuid },
+      include: {
+        users: {
+          select: {
+            first_name: true,
+            last_name: true,
+            email: true,
+            stripe_products: {
+              select: {
+                products: {
+                  select: {
+                    description: true,
+                    expires: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!club) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.json(club.users);
+  }));
+
   router.post('/', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
     try {
       const club = await prisma.clubs.create({ data: req.body });
