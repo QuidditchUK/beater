@@ -1,6 +1,6 @@
 # 🤾🔴 Beater
 
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md) 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
 Beater is a QuidditchUK Backend application built in Node.js and Express.
 
@@ -16,7 +16,7 @@ The following guide spins up a local environment for development, with an up-to-
 
 This project assumes you already have a Node evironment setup and have yarn installed. We strongly recommend using a Node Version Manager like [nvm](https://github.com/nvm-sh/nvm). You will also need to have [Docker Desktop](https://www.docker.com/get-started)
 
-You will need a `.env` file to set environment variables - duplicate `.env.example` and rename the copy to `.env` to get started.
+You will need a `.env` file to set environment variables - duplicate `.env.example` and rename the copy to `.env` to get started!
 
 ### Steps
 
