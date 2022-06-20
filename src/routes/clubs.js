@@ -85,6 +85,9 @@ export default function clubsRoute() {
               },
             },
           },
+          orderBy: {
+            last_name: 'asc',
+          },
         },
       },
     });
