@@ -157,6 +157,78 @@ export default function transfersRoute() {
     res.json(transfers);
   }));
 
+  router.get('/pending', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, TRANSFER_READ]), asyncHandler(async (req, res) => {
+    const transfers = await prisma.transfers.findMany({
+      include: {
+        user: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
+        },
+        prevClub: {
+          select: {
+            name: true,
+          },
+        },
+        newClub: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      where: {
+        status: 'PENDING',
+      },
+    });
+
+    res.json(transfers);
+  }));
+
+  router.get('/actioned/:page', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, TRANSFER_READ]), asyncHandler(async (req, res) => {
+    const { page } = req.params ?? { page: 0 };
+    const limit = 10;
+
+    const transfers = await prisma.transfers.findMany({
+      skip: page * limit,
+      take: limit,
+      include: {
+        user: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
+        },
+        prevClub: {
+          select: {
+            name: true,
+          },
+        },
+        newClub: {
+          select: {
+            name: true,
+          },
+        },
+        actionedBy: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
+        },
+      },
+      where: {
+        NOT: { status: 'PENDING' },
+      },
+    });
+    const count = await prisma.transfers.count({
+      where: {
+        NOT: { status: 'PENDING' },
+      },
+    });
+
+    res.json({ transfers, pages: Math.ceil(count / limit) });
+  }));
+
   router.delete('/:transfer_uuid', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
     const { transfer_uuid } = req.params;
 
