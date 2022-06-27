@@ -219,6 +219,9 @@ export default function transfersRoute() {
       where: {
         NOT: { status: 'PENDING' },
       },
+      orderBy: {
+        created: 'asc',
+      },
     });
     const count = await prisma.transfers.count({
       where: {
