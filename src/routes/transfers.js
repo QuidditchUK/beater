@@ -220,7 +220,7 @@ export default function transfersRoute() {
         NOT: { status: 'PENDING' },
       },
       orderBy: {
-        created: 'asc',
+        created: 'desc',
       },
     });
     const count = await prisma.transfers.count({
