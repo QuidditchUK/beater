@@ -40,12 +40,6 @@ async function main() {
         active: true,
       },
       {
-        name: 'Werewolves of London Quidditch Club',
-        slug: 'werewolves-of-london',
-        league: 'Community',
-        active: true,
-      },
-      {
         name: 'St Andrews Snidgets Quidditch Club',
         slug: 'st-andrews-snidgets',
         league: 'University',
@@ -54,10 +48,40 @@ async function main() {
     ],
   });
 
+  const club = await prisma.clubs.create({
+    data: {
+      name: 'Werewolves of London Quidditch Club',
+      slug: 'werewolves-of-london',
+      league: 'Community',
+      active: true,
+    },
+  });
+
   await prisma.system_settings.create({
     data: {
       transfer_window: false,
     },
+  });
+
+  await prisma.teams.createMany({
+    data: [
+      {
+        club_uuid: club.uuid,
+        name: 'Werewolves of London Firsts',
+      },
+      {
+        club_uuid: club.uuid,
+        name: 'Werewolves of London Seconds',
+      },
+      {
+        name: 'Team England',
+        type: 'NATIONAL',
+      },
+      {
+        name: 'London Monarchs',
+        type: 'MERC',
+      },
+    ],
   });
 }
 

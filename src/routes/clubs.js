@@ -45,7 +45,10 @@ export default function clubsRoute() {
   }));
 
   router.get('/:uuid', asyncHandler(async (req, res) => {
-    const club = await prisma.clubs.findUnique({ where: { uuid: req.params.uuid } });
+    const club = await prisma.clubs.findUnique({
+      where: { uuid: req.params.uuid },
+      include: { teams: true },
+    });
     if (!club) {
       res.sendStatus(404);
       return;

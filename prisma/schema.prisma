@@ -20,6 +20,7 @@ model clubs {
   users            users[]
   prevClubTransfer transfers[] @relation("prevClub")
   newClubTransfer  transfers[] @relation("newClub")
+  teams            teams[]
 }
 
 model users {
@@ -51,6 +52,7 @@ model users {
   transfers              transfers[]
   actionedBy             transfers[]             @relation("actionedBy")
   stripe_products        users_stripe_products[]
+  teams                  teams_users[]
 }
 
 model users_stripe_products {
@@ -94,6 +96,12 @@ enum TransferStatus {
   DECLINED
 }
 
+enum TeamType {
+  CLUB
+  MERC
+  NATIONAL
+}
+
 model system_settings {
   uuid            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   created         DateTime? @default(now()) @db.Timestamptz(6)
@@ -107,4 +115,27 @@ model stripe_products {
   description           String                  @db.Text
   expires               String                  @db.VarChar(255)
   users_stripe_products users_stripe_products[]
+}
+
+model teams {
+  uuid      String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created   DateTime?     @db.Timestamptz(6)
+  updated   DateTime?     @db.Timestamptz(6)
+  name      String?       @db.VarChar(255)
+  type      TeamType      @default(CLUB)
+  icon      String?       @db.Text
+  club_uuid String?       @db.Uuid
+  clubs     clubs?        @relation(fields: [club_uuid], references: [uuid])
+  users     teams_users[]
+}
+
+model teams_users {
+  uuid    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created DateTime? @db.Timestamptz(6)
+  updated DateTime? @db.Timestamptz(6)
+
+  teams     teams  @relation(fields: [team_uuid], references: [uuid])
+  team_uuid String @db.Uuid
+  users     users  @relation(fields: [user_uuid], references: [uuid])
+  user_uuid String @db.Uuid
 }
