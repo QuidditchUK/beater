@@ -87,6 +87,16 @@ export default function clubsRoute() {
                 },
               },
             },
+            teams: {
+              select: {
+                teams: {
+                  select: {
+                    name: true,
+                    club_uuid: true,
+                  },
+                },
+              },
+            },
           },
           orderBy: {
             last_name: 'asc',

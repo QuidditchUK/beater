@@ -84,7 +84,39 @@ export default function transfersRoute() {
           club_uuid: transfer.new_club_uuid,
           updated: new Date(),
         },
+        include: {
+          teams: {
+            select: {
+              teams: {
+                select: {
+                  uuid: true,
+                  type: true,
+                },
+              },
+            },
+          },
+        },
       });
+
+      // Remove user CLUB team if they have one
+      const team = user?.teams?.find(({ teams }) => teams?.type === 'CLUB');
+
+      if (team) {
+        const teamUsers = await prisma?.teams_users?.findMany({
+          where: { team_uuid: team?.uuid },
+        });
+
+        const teamUser = teamUsers?.find(({ user_uuid }) => user_uuid === user?.uuid);
+
+        // Remove from existing club teams
+        if (teamUser) {
+          await prisma.teams_users?.delete({
+            where: {
+              uuid: teamUser?.uuid,
+            },
+          });
+        }
+      }
 
       // Notifications
       email(transfer?.newClub?.email, 'transferClubNewMember', { first_name: user?.first_name, last_name: user?.last_name, email: user?.email }, settings.postmark.clubsEmail);

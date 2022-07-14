@@ -4,27 +4,6 @@ const crypto = require('crypto');
 const prisma = new PrismaClient();
 
 async function main() {
-  const salt = `${Math.random()}`;
-  const password = 'password';
-
-  const hashed_password = crypto
-    .createHmac('sha1', salt)
-    .update(password)
-    .digest('hex');
-
-  await prisma.users.create({
-    data: {
-      email: 'admin@quidditchuk.org',
-      first_name: 'Quidditch',
-      last_name: 'UK',
-      hashed_password,
-      salt,
-      scopes: {
-        create: [{ scope: 'admin' }],
-      },
-    },
-  });
-
   await prisma.clubs.createMany({
     data: [
       {
@@ -70,16 +49,61 @@ async function main() {
         name: 'Werewolves of London Firsts',
       },
       {
-        club_uuid: club.uuid,
-        name: 'Werewolves of London Seconds',
-      },
-      {
         name: 'Team England',
         type: 'NATIONAL',
       },
       {
         name: 'London Monarchs',
         type: 'MERC',
+      },
+    ],
+  });
+
+  const clubTeam = await prisma.teams.create({
+    data: {
+      club_uuid: club.uuid,
+      name: 'Werewolves of London Seconds',
+    },
+  });
+
+  const nationalTeam = await prisma.teams.create({
+    data: {
+      name: 'Team Wales',
+      type: 'NATIONAL',
+    },
+  });
+
+  const salt = `${Math.random()}`;
+  const password = 'password';
+
+  const hashed_password = crypto
+    .createHmac('sha1', salt)
+    .update(password)
+    .digest('hex');
+
+  const user = await prisma.users.create({
+    data: {
+      email: 'admin@quidditchuk.org',
+      first_name: 'Quidditch',
+      last_name: 'UK',
+      hashed_password,
+      salt,
+      scopes: {
+        create: [{ scope: 'admin' }],
+      },
+      club_uuid: club?.uuid,
+    },
+  });
+
+  await prisma.teams_users.createMany({
+    data: [
+      {
+        team_uuid: clubTeam?.uuid,
+        user_uuid: user?.uuid,
+      },
+      {
+        team_uuid: nationalTeam?.uuid,
+        user_uuid: user?.uuid,
       },
     ],
   });
