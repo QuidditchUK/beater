@@ -122,6 +122,62 @@ export default function clubsRoute() {
     }
   }));
 
+  router.get('/:uuid/teams', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_READ, EMT]), asyncHandler(async (req, res) => {
+    try {
+      const teams = await prisma.teams.findMany({
+        where: { club_uuid: req.params.uuid },
+      });
+
+      res.json(teams);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
+  // TODO adjust middleware to allow club leadership to CRUD club teams
+  router.post('/:uuid/teams', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
+    try {
+      const team = await prisma.teams.create({
+        data: {
+          ...req.body,
+          club_uuid: req.params.uuid,
+          type: 'CLUB',
+        },
+      });
+      res.status(201).json(team);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
+  router.delete('/:uuid/teams/:team_uuid', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
+    try {
+      const { uuid: club_uuid, team_uuid } = req.params;
+
+      if (!club_uuid) {
+        res.status(404).json({ error: `No club found with uuid ${club_uuid}` });
+        return;
+      }
+
+      const clubTeams = await prisma.teams.findMany({
+        where: {
+          club_uuid,
+        },
+      });
+
+      const team = clubTeams.find(({ uuid }) => uuid === team_uuid);
+
+      if (!team) {
+        res.status(404).json({ error: `No team with uuid ${club_uuid} found in club ${club_uuid}` });
+      }
+
+      await prisma.teams.delete({ where: { uuid: team?.uuid } });
+      res.status(204);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }));
+
   router.delete('/:uuid', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
     try {
       await prisma.clubs.delete({ where: { uuid: req.params.uuid } });

@@ -106,9 +106,10 @@ export default function transfersRoute() {
           where: { team_uuid: team?.uuid },
         });
 
+        // find the relevant teams_users entry
         const teamUser = teamUsers?.find(({ user_uuid }) => user_uuid === user?.uuid);
 
-        // Remove from existing club teams
+        // Remove the teams_users row
         if (teamUser) {
           await prisma.teams_users?.delete({
             where: {

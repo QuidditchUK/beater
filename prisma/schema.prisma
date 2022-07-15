@@ -119,13 +119,13 @@ model stripe_products {
 
 model teams {
   uuid      String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created   DateTime?     @db.Timestamptz(6)
-  updated   DateTime?     @db.Timestamptz(6)
+  created   DateTime?     @default(now()) @db.Timestamptz(6)
+  updated   DateTime?     @default(now()) @db.Timestamptz(6)
   name      String?       @db.VarChar(255)
   type      TeamType      @default(CLUB)
   icon      String?       @db.Text
   club_uuid String?       @db.Uuid
-  clubs     clubs?        @relation(fields: [club_uuid], references: [uuid])
+  clubs     clubs?        @relation(fields: [club_uuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   users     teams_users[]
 }
 
@@ -134,8 +134,8 @@ model teams_users {
   created DateTime? @db.Timestamptz(6)
   updated DateTime? @db.Timestamptz(6)
 
-  teams     teams  @relation(fields: [team_uuid], references: [uuid])
+  teams     teams  @relation(fields: [team_uuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   team_uuid String @db.Uuid
-  users     users  @relation(fields: [user_uuid], references: [uuid])
+  users     users  @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   user_uuid String @db.Uuid
 }
