@@ -53,6 +53,8 @@ model users {
   actionedBy             transfers[]             @relation("actionedBy")
   stripe_products        users_stripe_products[]
   teams                  teams_users[]
+  scouting_requests      scouting_requests[]
+  scoutedBy              scouting_requests[]     @relation("scoutedBy")
 }
 
 model users_stripe_products {
@@ -102,6 +104,18 @@ enum TeamType {
   NATIONAL
 }
 
+enum ScoutingStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+enum ScoutingOutcome {
+  PENDING
+  SUCCEEDED
+  UNSUCCESSFUL
+}
+
 model system_settings {
   uuid            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   created         DateTime? @default(now()) @db.Timestamptz(6)
@@ -138,4 +152,21 @@ model teams_users {
   team_uuid String @db.Uuid
   users     users  @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   user_uuid String @db.Uuid
+}
+
+model scouting_requests {
+  uuid       String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created    DateTime?        @default(now()) @db.Timestamptz(6)
+  updated    DateTime?        @default(now()) @db.Timestamptz(6)
+  user_uuid  String           @db.Uuid
+  user       users            @relation(fields: [user_uuid], references: [uuid])
+  status     ScoutingStatus   @default(PENDING)
+  reason     String?          @db.Text
+  event      String?          @db.Text
+  number     Int?
+  team       String?          @db.Text
+  pronouns   String?          @db.Text
+  scouted_by String?          @db.Uuid
+  scoutedBy  users?           @relation(name: "scoutedBy", fields: [scouted_by], references: [uuid])
+  outcome    ScoutingOutcome? @default(PENDING)
 }

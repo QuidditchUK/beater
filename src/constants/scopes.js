@@ -1,6 +1,7 @@
 export const ADMIN = 'admin';
 export const VOLUNTEER = 'volunteer';
 export const EMT = 'emt';
+export const HEAD_SCOUT = 'head-scout';
 
 export const CLUBS_READ = 'clubs:read';
 export const CLUBS_WRITE = 'clubs:write';
@@ -12,6 +13,8 @@ export const USERS_WRITE = 'users:write';
 
 export const USERS_PRODUCT_READ = 'users-product:read';
 export const USERS_PRODUCT_WRITE = 'users-product:write';
+
+export const NATIONAL_TEAM_READ = 'national-team:read';
 
 export const SCOUTING_ENGLAND_READ = 'scouting-england:read';
 export const SCOUTING_ENGLAND_WRITE = 'scouting-england:write';

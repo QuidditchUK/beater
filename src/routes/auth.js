@@ -189,42 +189,60 @@ export default function authRoute() {
   }));
 
   router.put('/scouting', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
-    const {
-      first_name, last_name, first_team, second_team, third_team, position, playstyle, years, experience, club_uuid,
-    } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
+    try {
+      const {
+        first_name, last_name, first_team, second_team, third_team, position, playstyle, years, experience, club_uuid,
+      } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
 
-    let club_name = null;
-    if (club_uuid) {
-      const club = await prisma.clubs.findUnique({ where: { uuid: club_uuid } });
-      club_name = club.name;
+      let club_name = null;
+      if (club_uuid) {
+        const club = await prisma.clubs.findUnique({ where: { uuid: club_uuid } });
+        club_name = club.name;
+      }
+
+      // Create scouting request
+      // TODO: Once new flow finished enable here
+
+      // const scoutingRequest = await prisma.scouting_requests.create({
+      //   data: {
+      //     user_uuid: req.user.uuid,
+      //     number: req.body.number,
+      //     team: req.body.team,
+      //     pronouns: req.body.pronouns,
+      //     event: req.body.event,
+      //   },
+      // });
+
+      // Email to head scout, with application and national team profile information.
+      sendEmail(settings.postmark.scoutingEmail, 'scoutingApplication', {
+        first_name,
+        last_name,
+        email: req.user.email,
+        event: req.body.event,
+        number: req.body.number,
+        team: req.body.team,
+        first_team,
+        second_team,
+        third_team,
+        position,
+        playstyle,
+        years,
+        experience,
+        club_name,
+        pronouns: req.body.pronouns,
+      });
+
+      // Email to user, to confirm application has been received.
+      sendEmail(req.user.email, 'scoutingResponse', {
+        first_name,
+        event: req.body.event,
+      });
+
+      // res.json(scoutingRequest);
+      res.status(200).end();
+    } catch (error) {
+      res.status(400).json({ error: error.message });
     }
-
-    // Email to head scout, with application and national team profile information.
-    sendEmail(settings.postmark.scoutingEmail, 'scoutingApplication', {
-      first_name,
-      last_name,
-      email: req.user.email,
-      event: req.body.event,
-      number: req.body.number,
-      team: req.body.team,
-      first_team,
-      second_team,
-      third_team,
-      position,
-      playstyle,
-      years,
-      experience,
-      club_name,
-      pronouns: req.body.pronouns,
-    });
-
-    // Email to user, to confirm application has been received.
-    sendEmail(req.user.email, 'scoutingResponse', {
-      first_name,
-      event: req.body.event,
-    });
-
-    res.status(200).end();
   }));
 
   router.put('/password', authenticateJWT, checkAuthenticated, validate(updateSchema), asyncHandler(async (req, res) => {

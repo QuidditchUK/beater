@@ -107,6 +107,16 @@ async function main() {
       },
     ],
   });
+
+  await prisma.scouting_requests.create({
+    data: {
+      user_uuid: user?.uuid,
+      number: 69,
+      team: 'Bangor Broken Broomsticks',
+      pronouns: 'He/him',
+      event: 'British Quidditch Cup 2022',
+    },
+  });
 }
 
 main()
