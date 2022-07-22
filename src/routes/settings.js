@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 import { authenticateJWT } from '../modules/jwt';
 import { checkAuthenticated, checkScopeAuthorized } from '../modules/passport';
 import { EMT } from '../constants/scopes';
+import { TRANSFERS_CLOSED, TRANSFERS_OPEN } from '../constants/notifications';
 import prisma from '../modules/prisma';
 
 export default function settingsRoute() {
@@ -31,6 +32,25 @@ export default function settingsRoute() {
         where: {
           uuid: oldSettings.uuid,
         },
+      });
+
+      // notifications
+      const transferChanged = oldSettings?.transfer_window !== settings?.transfer_window;
+
+      if (!transferChanged) {
+        res.json(settings);
+        return;
+      }
+
+      const whereUsers = transferChanged ? { transfer_window_notifications: true } : {};
+
+      const users = await prisma?.users?.findMany({ where: whereUsers, select: { uuid: true } });
+
+      await prisma?.notifications?.createMany({
+        data: users.map(({ uuid: user_uuid }) => ({
+          user_uuid,
+          type_id: settings?.transfer_window ? TRANSFERS_OPEN : TRANSFERS_CLOSED,
+        })),
       });
 
       res.json(settings);
