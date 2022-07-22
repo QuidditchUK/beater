@@ -42,21 +42,6 @@ async function main() {
     },
   });
 
-  await prisma.notification_types.createMany({
-    data: [
-      { type: 'TRANSFERS_OPEN', description: 'The transfer window has opened' },
-      { type: 'TRANSFERS_CLOSED', description: 'The transfer window has closed' },
-      { type: 'TRANSFER_APPROVED', description: 'Your transfer has been approved' },
-      { type: 'TRANSFER_DECLINED', description: 'Your transfer has been declined' },
-      { type: 'SCOUTING_WINDOW_OPEN', description: 'Scouting requests are now open' },
-      { type: 'SCOUTING_WINDOW_CLOSING_24', description: 'Scouting requests are closing in 24 hours' },
-      { type: 'SCOUTING_WINDOW_CLOSED', description: 'Scouting requests are now closed' },
-      { type: 'EVENT_REGISTRATION_OPEN', description: 'Event registration is now open' },
-      { type: 'EVENT_REGISTRATION_CLOSING_24', description: 'Event registration is closing in 24 hours' },
-      { type: 'EVENT_REGISTRATION_CLOSED', description: 'Event registration is now closed' },
-    ],
-  });
-
   await prisma.teams.createMany({
     data: [
       {
