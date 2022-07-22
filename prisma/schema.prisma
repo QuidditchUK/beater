@@ -24,37 +24,42 @@ model clubs {
 }
 
 model users {
-  uuid                   String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  created                DateTime?               @default(now()) @db.Timestamptz(6)
-  updated                DateTime?               @default(now()) @db.Timestamptz(6)
-  email                  String                  @unique @db.VarChar(255)
-  hashed_password        String?                 @db.VarChar
-  salt                   String?                 @db.VarChar
-  type                   String                  @default("user") @db.VarChar
-  first_name             String?                 @db.VarChar(255)
-  last_name              String?                 @db.VarChar(255)
-  phone                  String?                 @db.VarChar(30)
-  last_login             DateTime?               @db.Timestamptz(6)
-  stripe_customer_id     String?                 @db.VarChar(255)
-  club_uuid              String?                 @db.Uuid
-  is_student             Boolean?
-  university             String?
-  clubs                  clubs?                  @relation(fields: [club_uuid], references: [uuid])
-  national_team_interest Boolean?
-  first_team             String?                 @db.VarChar(10)
-  second_team            String?                 @db.VarChar(10)
-  third_team             String?                 @db.VarChar(10)
-  position               String?                 @db.VarChar(20)
-  playstyle              String?
-  years                  Int?
-  experience             String?
-  scopes                 scopes[]
-  transfers              transfers[]
-  actionedBy             transfers[]             @relation("actionedBy")
-  stripe_products        users_stripe_products[]
-  teams                  teams_users[]
-  scouting_requests      scouting_requests[]
-  scoutedBy              scouting_requests[]     @relation("scoutedBy")
+  uuid                             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created                          DateTime? @default(now()) @db.Timestamptz(6)
+  updated                          DateTime? @default(now()) @db.Timestamptz(6)
+  email                            String    @unique @db.VarChar(255)
+  hashed_password                  String?   @db.VarChar
+  salt                             String?   @db.VarChar
+  type                             String    @default("user") @db.VarChar
+  first_name                       String?   @db.VarChar(255)
+  last_name                        String?   @db.VarChar(255)
+  phone                            String?   @db.VarChar(30)
+  last_login                       DateTime? @db.Timestamptz(6)
+  stripe_customer_id               String?   @db.VarChar(255)
+  club_uuid                        String?   @db.Uuid
+  is_student                       Boolean?
+  university                       String?
+  clubs                            clubs?    @relation(fields: [club_uuid], references: [uuid])
+  national_team_interest           Boolean?
+  first_team                       String?   @db.VarChar(10)
+  second_team                      String?   @db.VarChar(10)
+  third_team                       String?   @db.VarChar(10)
+  position                         String?   @db.VarChar(20)
+  playstyle                        String?
+  years                            Int?
+  experience                       String?
+  scouting_window_notifications    Boolean   @default(false)
+  transfer_window_notifications    Boolean   @default(false)
+  event_registration_notifications Boolean   @default(false)
+
+  scopes            scopes[]
+  transfers         transfers[]
+  actionedBy        transfers[]             @relation("actionedBy")
+  stripe_products   users_stripe_products[]
+  teams             teams_users[]
+  scouting_requests scouting_requests[]
+  scoutedBy         scouting_requests[]     @relation("scoutedBy")
+  notifications     notifications[]
 }
 
 model users_stripe_products {
@@ -159,7 +164,7 @@ model scouting_requests {
   created    DateTime?        @default(now()) @db.Timestamptz(6)
   updated    DateTime?        @default(now()) @db.Timestamptz(6)
   user_uuid  String           @db.Uuid
-  user       users            @relation(fields: [user_uuid], references: [uuid])
+  user       users            @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   status     ScoutingStatus   @default(PENDING)
   reason     String?          @db.Text
   event      String?          @db.Text
@@ -170,4 +175,22 @@ model scouting_requests {
   notes      String?          @db.Text
   scoutedBy  users?           @relation(name: "scoutedBy", fields: [scouted_by], references: [uuid])
   outcome    ScoutingOutcome? @default(PENDING)
+}
+
+model notification_types {
+  type          String          @id @db.Text
+  description   String          @db.Text
+  notifications notifications[]
+}
+
+model notifications {
+  uuid      String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created   DateTime           @default(now()) @db.Timestamptz(6)
+  user_uuid String             @db.Uuid
+  user      users              @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  read      Boolean            @default(false)
+  read_date DateTime?          @db.Timestamptz(6)
+  type_id   String             @db.Text
+  type      notification_types @relation(fields: [type_id], references: [type])
+  event     String?            @db.Text
 }
