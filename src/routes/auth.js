@@ -276,5 +276,64 @@ export default function authRoute() {
     });
   });
 
+  router.get('/notifications', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    try {
+      const notifications = await prisma?.notifications?.findMany({
+        where: {
+          user_uuid: req.user?.uuid,
+        },
+        include: {
+          type: true,
+        },
+        orderBy: {
+          created: 'desc',
+        },
+      });
+
+      res.json(notifications);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
+  router.get('/notifications/unread', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    try {
+      const count = await prisma?.notifications?.count({
+        where: {
+          AND: [
+            { user_uuid: req.user?.uuid },
+            { read: false },
+          ],
+        },
+      });
+
+      res.json(count);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
+  router.put('/notifications/:notification_uuid', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const { notification_uuid } = req.params;
+    try {
+      const notification = await prisma?.notifications?.update({
+        where: { uuid: notification_uuid },
+        data: { ...req.body, read_date: new Date() },
+      });
+
+      res.json(notification);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
+  router.delete('/notifications/:notification_uuid', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const { notification_uuid } = req.params;
+
+    await prisma.notifications.delete({ where: { uuid: notification_uuid } });
+
+    res.sendStatus(204);
+  }));
+
   return router;
 }
