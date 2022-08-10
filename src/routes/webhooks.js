@@ -51,9 +51,9 @@ export default function stripeWebhooksRoute() {
 
   router.post('/prismic', async (req, res) => {
     try {
-      console.log('REQ');
-      console.log(util.inspect(req));
-      console.log(JSON.stringify(util.inspect(req)));
+      console.log('BODY');
+      console.log(util.inspect(req.body));
+      // console.log(JSON.stringify(util.inspect(req)));
 
       // console.log(JSON.stringify(req));
       const { documents } = req || ['a'];
