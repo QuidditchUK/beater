@@ -1,3 +1,4 @@
+import * as util from 'util';
 import { Router } from 'express';
 import Prismic from '@prismicio/client';
 import { prisma } from '@prisma/client';
@@ -50,8 +51,11 @@ export default function stripeWebhooksRoute() {
 
   router.post('/prismic', async (req, res) => {
     try {
-      console.log('PRISMIC DOCUMENTS');
-      console.log(JSON.stringify(req));
+      console.log('REQ');
+      console.log(util.inspect(req));
+      console.log(JSON.stringify(util.inspect(req)));
+
+      // console.log(JSON.stringify(req));
       const { documents } = req || ['a'];
 
       const { results } = await Client().get({
