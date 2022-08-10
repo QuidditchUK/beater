@@ -49,30 +49,34 @@ export default function stripeWebhooksRoute() {
   });
 
   router.post('/prismic', async (req, res) => {
-    const { documents } = req.body;
+    try {
+      const { documents } = req.body;
 
-    const { results } = await Client().get({
-      predicates: [
-        Prismic.predicate.at('document.id', documents[0]),
-      ],
-    });
+      const { results } = await Client().get({
+        predicates: [
+          Prismic.predicate.at('document.id', documents[0]),
+        ],
+      });
 
-    const [document] = results || [null];
+      const [document] = results || [null];
 
-    if (!document || document?.type !== 'post') {
-      // if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
+      if (!document || document?.type !== 'post') {
+        // if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
+        res.status(200).end();
+        return;
+      }
+
+      // send push notifications to those with push notifications
+      const pushes = await prisma?.push_notifications?.findMany();
+
+      pushes.forEach(({ endpoint, auth, p256dh }) => {
+        pushNotification({ endpoint, keys: { auth, p256dh } }, PUSH_PAYLOADS.NEWS({ title: document?.data?.title, summary: document?.data?.meta_description }));
+      });
+
       res.status(200).end();
-      return;
+    } catch (error) {
+      res.status(200).end();
     }
-
-    // send push notifications to those with push notifications
-    const pushes = await prisma?.push_notifications?.findMany();
-
-    pushes.forEach(({ endpoint, auth, p256dh }) => {
-      pushNotification({ endpoint, keys: { auth, p256dh } }, PUSH_PAYLOADS.NEWS({ title: document?.data?.title, summary: document?.data?.meta_description }));
-    });
-
-    res.status(200).end();
   });
 
   return router;
