@@ -61,6 +61,11 @@ export default function stripeWebhooksRoute() {
       // send push notifications to those with push notifications
       const pushes = await prisma?.push_notifications?.findMany();
 
+      console.log('PUSHES');
+      console.log(pushes);
+      console.log('DOC');
+      console.log(document);
+
       pushes?.forEach(({ endpoint, auth, p256dh }) => {
         pushNotification({ endpoint, keys: { auth, p256dh } }, PUSH_PAYLOADS.NEWS({ title: document?.data?.title, summary: document?.data?.meta_description }));
       });
