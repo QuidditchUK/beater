@@ -335,5 +335,37 @@ export default function authRoute() {
     res.sendStatus(204);
   }));
 
+  router.get('/push-notifications', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    try {
+      const pushNotifications = await prisma?.push_notifications?.findMany({
+        where: {
+          user_uuid: req.user?.uuid,
+        },
+      });
+      res.json(pushNotifications);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
+  router.post('/push-notifications', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    try {
+      const pushNotification = await prisma?.push_notifications?.create({
+        data: req.body,
+      });
+
+      res.json(pushNotification);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
+  router.delete('/push-notifications/:push_uuid', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
+    const { push_uuid } = req.params;
+    await prisma?.push_notifications?.delete({ where: { uuid: push_uuid } });
+
+    res.sendStatus(204);
+  }));
+
   return router;
 }

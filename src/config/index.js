@@ -87,4 +87,8 @@ export default {
     quidditchSchedulerId: process.env.OIDC_QUIDDITCH_SCHEDULER_ID,
     quidditchSchedulerSecret: process.env.OIDC_QUIDDITCH_SCHEDULER_SECRET,
   },
+  vapid: {
+    publicKey: process.env.VAPID_PUBLIC_KEY,
+    privateKey: process.env.VAPID_PRIVATE_KEY,
+  },
 };

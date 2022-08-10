@@ -52,14 +52,15 @@ model users {
   transfer_window_notifications    Boolean   @default(false)
   event_registration_notifications Boolean   @default(false)
 
-  scopes            scopes[]
-  transfers         transfers[]
-  actionedBy        transfers[]             @relation("actionedBy")
-  stripe_products   users_stripe_products[]
-  teams             teams_users[]
-  scouting_requests scouting_requests[]
-  scoutedBy         scouting_requests[]     @relation("scoutedBy")
-  notifications     notifications[]
+  scopes             scopes[]
+  transfers          transfers[]
+  actionedBy         transfers[]             @relation("actionedBy")
+  stripe_products    users_stripe_products[]
+  teams              teams_users[]
+  scouting_requests  scouting_requests[]
+  scoutedBy          scouting_requests[]     @relation("scoutedBy")
+  notifications      notifications[]
+  push_notifications push_notifications[]
 }
 
 model users_stripe_products {
@@ -193,4 +194,15 @@ model notifications {
   type_id   String             @db.Text
   type      notification_types @relation(fields: [type_id], references: [type])
   event     String?            @db.Text
+}
+
+model push_notifications {
+  uuid       String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  endpoint   String  @unique @db.Text
+  p256dh     String  @db.Text
+  auth       String  @db.Text
+  user_agent String? @db.Text
+  device_id  String? @db.Text
+  user_uuid  String  @db.Uuid
+  user       users   @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
 }
