@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import Prismic from '@prismicio/client';
+import * as Prismic from '@prismicio/client';
 
 const REF_API_URL = 'https://chaser.cdn.prismic.io/api/v2';
 const API_TOKEN = process.env.PRISMIC_API_TOKEN;
