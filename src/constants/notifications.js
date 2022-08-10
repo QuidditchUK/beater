@@ -31,8 +31,9 @@ export const PUSH_PAYLOADS = {
     title: 'Push Notifications enabled',
     body: 'You will now recieve push notifications from QuidditchUK on this device',
   },
-  NEWS: ({ title, summary }) => ({
+  NEWS: ({ title, body, image }) => ({
     title,
-    body: summary,
+    body,
+    image,
   }),
 };
