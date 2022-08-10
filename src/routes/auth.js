@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
-import * as webPush from 'web-push';
+import pushNotification from '../modules/push';
 import settings from '../config';
 import getLogger from '../modules/logger';
 import passport, { checkAuthenticated } from '../modules/passport';
@@ -352,16 +352,16 @@ export default function authRoute() {
 
   router.post('/push-notifications', authenticateJWT, checkAuthenticated, asyncHandler(async (req, res) => {
     try {
-      const pushNotification = await prisma?.push_notifications?.create({
+      const pn = await prisma?.push_notifications?.create({
         data: req.body,
       });
 
-      webPush.sendNotification({
-        endpoint: pushNotification.endpoint,
-        keys: { p256dh: pushNotification.p256dh, auth: pushNotification.auth },
-      }, JSON.stringify(PUSH_PAYLOADS.PUSH_NOTIFICATION_ENABLED));
+      pushNotification({
+        endpoint: pn.endpoint,
+        keys: { p256dh: pn.p256dh, auth: pn.auth },
+      }, PUSH_PAYLOADS.PUSH_NOTIFICATION_ENABLED);
 
-      res.json(pushNotification);
+      res.json(pn);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
