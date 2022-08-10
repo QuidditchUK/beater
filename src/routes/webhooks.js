@@ -1,6 +1,5 @@
 import * as util from 'util';
 import { Router } from 'express';
-import Prismic from '@prismicio/client';
 import { prisma } from '@prisma/client';
 import stripe from '../modules/stripe';
 import { update } from '../models/users';
@@ -51,20 +50,22 @@ export default function stripeWebhooksRoute() {
 
   router.post('/prismic', async (req, res) => {
     try {
-      console.log('BODY');
-      console.log(util.inspect(req.body));
+      // console.log('BODY');
+      // console.log(util.inspect(req.body));
       // console.log(JSON.stringify(util.inspect(req)));
 
       // console.log(JSON.stringify(req));
-      const { documents } = req || ['a'];
+      const { documents } = req.body || ['a'];
+      console.log(util.inspect(documents));
 
-      const { results } = await Client().get({
-        predicates: [
-          Prismic.predicate.at('document.id', documents[0]),
-        ],
-      });
+      const document = await Client.getByID(documents[0]);
+      // const { results } = await Client().get({
+      //   predicates: [
+      //     Prismic.predicate.at('document.id', documents[0]),
+      //   ],
+      // });
 
-      const [document] = results || [null];
+      // const [document] = results || [null];
 
       if (!document || document?.type !== 'post') {
         // if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
