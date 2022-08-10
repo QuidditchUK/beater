@@ -50,11 +50,9 @@ export default function stripeWebhooksRoute() {
 
   router.post('/prismic', async (req, res) => {
     try {
-      console.log('PRISMIC REQ');
-      console.log(req);
-      console.log('PRISMIC REQ BODY');
-      console.log(req.body);
-      const { documents } = req.body;
+      console.log('PRISMIC DOCUMENTS');
+      console.log(req.documents);
+      const { documents } = req || ['a'];
 
       const { results } = await Client().get({
         predicates: [
@@ -79,6 +77,7 @@ export default function stripeWebhooksRoute() {
 
       res.status(200).end();
     } catch (error) {
+      console.log(error);
       res.status(200).end();
     }
   });
