@@ -1,4 +1,4 @@
-import { sendNotification } from 'web-push';
+import * as webPush from 'web-push';
 import { PUSH_PAYLOADS } from '../constants/notifications';
 import prisma from './prisma';
 
@@ -16,7 +16,7 @@ const sendNotifications = async ({ user_uuid, type_id }) => {
   }
 
   pushNotifications?.forEach(({ endpoint, p256dh, auth }) => {
-    sendNotification({ endpoint, keys: { p256dh, auth } }, JSON.stringify(PUSH_PAYLOADS[type_id]));
+    webPush.sendNotification({ endpoint, keys: { p256dh, auth } }, JSON.stringify(PUSH_PAYLOADS[type_id]));
   });
 };
 

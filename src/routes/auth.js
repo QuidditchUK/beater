@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
-import { sendNotification } from 'web-push';
+import * as webPush from 'web-push';
 import settings from '../config';
 import getLogger from '../modules/logger';
 import passport, { checkAuthenticated } from '../modules/passport';
@@ -356,7 +356,7 @@ export default function authRoute() {
         data: req.body,
       });
 
-      sendNotification({
+      webPush.sendNotification({
         endpoint: pushNotification.endpoint,
         keys: { p256dh: pushNotification.p256dh, auth: pushNotification.auth },
       }, JSON.stringify(PUSH_PAYLOADS.PUSH_NOTIFICATION_ENABLED));
