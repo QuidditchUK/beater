@@ -10,9 +10,22 @@ export const EVENT_REGISTRATION_CLOSING_24 = 'EVENT_REGISTRATION_CLOSING_24';
 export const EVENT_REGISTRATION_CLOSED = 'EVENT_REGISTRATION_CLOSED';
 
 export const PUSH_PAYLOADS = {
-  [TRANSFER_APPROVED]: {
+  [TRANSFER_APPROVED]: ({ club_name }) => ({
     title: 'Your transfer has been approved',
-    body: 'Your club transfer has been approved, you are now registered with your new club',
+    body: `Transfer to ${club_name} has been approved`,
+  }),
+  [TRANSFER_DECLINED]: ({ club_name }) => ({
+    title: 'Your transfer has been declined',
+    body: `Transfer to ${club_name} has been declined`,
+  }),
+  [TRANSFERS_OPEN]: {
+    title: 'Transfers Open',
+    body: 'The transfer window has opened, click to transfer clubs',
+    actions: [{ action: TRANSFERS_OPEN, title: 'Transfer' }],
+  },
+  [TRANSFERS_CLOSED]: {
+    title: 'Transfers Closed',
+    body: 'The transfer window has now closed.',
   },
   PUSH_NOTIFICATION_ENABLED: {
     title: 'Push Notifications enabled',

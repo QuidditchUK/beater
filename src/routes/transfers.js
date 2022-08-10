@@ -124,7 +124,7 @@ export default function transfersRoute() {
       // Notifications
       email(transfer?.newClub?.email, 'transferClubNewMember', { first_name: user?.first_name, last_name: user?.last_name, email: user?.email }, settings.postmark.clubsEmail);
       email(user?.email, 'transferApproved', { first_name: user?.first_name, new_club_name: transfer?.newClub?.name }, settings.postmark.clubsEmail);
-      await sendNotifications({ user_uuid: transfer?.user_uuid, type_id: TRANSFER_APPROVED });
+      await sendNotifications({ user_uuid: transfer?.user_uuid, type_id: TRANSFER_APPROVED }, { club_name: transfer?.newClub?.name });
 
       res.json(transfer);
     } catch (error) {
@@ -152,12 +152,7 @@ export default function transfersRoute() {
 
       // Notifications
       email(user?.email, 'transferDeclined', { first_name: user?.first_name, new_club_name: transfer?.newClub?.name }, settings.postmark.clubsEmail);
-      await prisma?.notifications?.create({
-        data: {
-          user_uuid: transfer?.user_uuid,
-          type_id: TRANSFER_DECLINED,
-        },
-      });
+      await sendNotifications({ user_uuid: transfer?.user_uuid, type_id: TRANSFER_DECLINED }, { club_name: transfer?.newClub?.name });
 
       res.json(transfer);
     } catch (error) {

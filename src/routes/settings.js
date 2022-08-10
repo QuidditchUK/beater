@@ -4,8 +4,9 @@ import asyncHandler from 'express-async-handler';
 import { authenticateJWT } from '../modules/jwt';
 import { checkAuthenticated, checkScopeAuthorized } from '../modules/passport';
 import { EMT } from '../constants/scopes';
-import { TRANSFERS_CLOSED, TRANSFERS_OPEN } from '../constants/notifications';
+import { PUSH_PAYLOADS, TRANSFERS_CLOSED, TRANSFERS_OPEN } from '../constants/notifications';
 import prisma from '../modules/prisma';
+import pushNotification from '../modules/push';
 
 export default function settingsRoute() {
   const router = new Router();
@@ -44,13 +45,32 @@ export default function settingsRoute() {
 
       const whereUsers = transferChanged ? { transfer_window_notifications: true } : {};
 
-      const users = await prisma?.users?.findMany({ where: whereUsers, select: { uuid: true } });
+      const users = await prisma?.users?.findMany({
+        where: whereUsers,
+        select: {
+          uuid: true,
+          push_notifications: true,
+        },
+      });
+
+      const type_id = settings?.transfer_window ? TRANSFERS_OPEN : TRANSFERS_CLOSED;
 
       await prisma?.notifications?.createMany({
         data: users.map(({ uuid: user_uuid }) => ({
           user_uuid,
-          type_id: settings?.transfer_window ? TRANSFERS_OPEN : TRANSFERS_CLOSED,
+          type_id,
         })),
+      });
+
+      // push notifications
+      // only users that have push notifications
+      const pushUsers = users.filter(({ push_notifications }) => push_notifications?.length !== 0);
+
+      // for Each of the users, loop over their push notifications and send a notification
+      pushUsers.forEach((pushUser) => {
+        pushUser.push_notifications.forEach(({ endpoint, auth, p256dh }) => {
+          pushNotification({ endpoint, keys: { auth, p256dh } }, PUSH_PAYLOADS[type_id]);
+        });
       });
 
       res.json(settings);
