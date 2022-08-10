@@ -1,8 +1,12 @@
 import { Router } from 'express';
-// import { prisma } from '@prisma/client';
+import Prismic from '@prismicio/client';
+import { prisma } from '@prisma/client';
 import stripe from '../modules/stripe';
 import { update } from '../models/users';
 import { create } from '../models/products';
+import { Client } from '../modules/prismic';
+import pushNotification from '../modules/push';
+import { PUSH_PAYLOADS } from '../constants/notifications';
 
 export default function stripeWebhooksRoute() {
   const router = new Router();
@@ -42,6 +46,32 @@ export default function stripeWebhooksRoute() {
       default:
         res.status(400).end();
     }
+  });
+
+  router.post('/prismic', async (req, res) => {
+    const { documents } = req.body;
+
+    const { results } = await Client().get({
+      predicates: [
+        Prismic.predicate.at('document.id', documents[0]),
+      ],
+    });
+
+    const [document] = results || [null];
+
+    if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
+      res.status(200).end();
+      return;
+    }
+
+    // send push notifications to those with push notifications
+    const pushes = await prisma?.push_notifications?.findMany();
+
+    pushes.forEach(({ endpoint, auth, p256dh }) => {
+      pushNotification({ endpoint, keys: { auth, p256dh } }, PUSH_PAYLOADS.NEWS({ title: document?.data?.title, summary: document?.data?.meta_description }));
+    });
+
+    res.status(200).end();
   });
 
   return router;
