@@ -1,6 +1,5 @@
-import * as util from 'util';
 import { Router } from 'express';
-import { prisma } from '@prisma/client';
+import prisma from '../modules/prisma';
 import stripe from '../modules/stripe';
 import { update } from '../models/users';
 import { create } from '../models/products';
@@ -50,22 +49,8 @@ export default function stripeWebhooksRoute() {
 
   router.post('/prismic', async (req, res) => {
     try {
-      // console.log('BODY');
-      // console.log(util.inspect(req.body));
-      // console.log(JSON.stringify(util.inspect(req)));
-
-      // console.log(JSON.stringify(req));
       const { documents } = req.body || ['a'];
-      console.log(util.inspect(documents));
-
       const document = await Client.getByID(documents[0]);
-      // const { results } = await Client().get({
-      //   predicates: [
-      //     Prismic.predicate.at('document.id', documents[0]),
-      //   ],
-      // });
-
-      // const [document] = results || [null];
 
       if (!document || document?.type !== 'post') {
         // if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
@@ -76,7 +61,7 @@ export default function stripeWebhooksRoute() {
       // send push notifications to those with push notifications
       const pushes = await prisma?.push_notifications?.findMany();
 
-      pushes.forEach(({ endpoint, auth, p256dh }) => {
+      pushes?.forEach(({ endpoint, auth, p256dh }) => {
         pushNotification({ endpoint, keys: { auth, p256dh } }, PUSH_PAYLOADS.NEWS({ title: document?.data?.title, summary: document?.data?.meta_description }));
       });
 
