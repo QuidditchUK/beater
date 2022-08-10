@@ -52,8 +52,7 @@ export default function stripeWebhooksRoute() {
       const { documents } = req.body || ['a'];
       const document = await Client.getByID(documents[0]);
 
-      if (!document || document?.type !== 'post') {
-        // if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
+      if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
         res.status(200).end();
         return;
       }
@@ -63,7 +62,7 @@ export default function stripeWebhooksRoute() {
 
       pushes?.forEach(({ endpoint, auth, p256dh }) => {
         pushNotification({ endpoint, keys: { auth, p256dh } }, PUSH_PAYLOADS.NEWS({
-          title: document?.data?.title,
+          title: `News | ${document?.data?.title}`,
           body: document?.data?.meta_description || null,
           image: document?.data?.meta_image?.url || document?.data?.image?.url,
         }));
