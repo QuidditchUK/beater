@@ -59,7 +59,8 @@ export default function stripeWebhooksRoute() {
 
     const [document] = results || [null];
 
-    if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
+    if (!document || document?.type !== 'post') {
+      // if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
       res.status(200).end();
       return;
     }
