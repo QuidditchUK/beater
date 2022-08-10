@@ -16,7 +16,7 @@ const sendNotifications = async ({ user_uuid, type_id }) => {
   }
 
   pushNotifications?.forEach(({ endpoint, p256dh, auth }) => {
-    sendNotification({ endpoint, keys: { p256dh, auth } }, PUSH_PAYLOADS[type_id]);
+    sendNotification({ endpoint, keys: { p256dh, auth } }, JSON.stringify(PUSH_PAYLOADS[type_id]));
   });
 };
 

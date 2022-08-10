@@ -14,4 +14,8 @@ export const PUSH_PAYLOADS = {
     title: 'Your transfer has been approved',
     body: 'Your club transfer has been approved, you are now registered with your new club',
   },
+  PUSH_NOTIFICATION_ENABLED: {
+    title: 'Push Notifications enabled',
+    body: 'You will now recieve push notifications from QuidditchUK on this device',
+  },
 };
