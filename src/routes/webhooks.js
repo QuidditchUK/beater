@@ -50,10 +50,12 @@ export default function stripeWebhooksRoute() {
   router.post('/prismic', async (req, res) => {
     try {
       const { documents, masterRef } = req.body;
-      if (!documents[0] || !masterRef) {
+      if (!documents[0]) {
         res.status(200).end();
         return;
       }
+
+      console.log(masterRef);
 
       const document = await Client(masterRef).getByID(documents[0]);
 
