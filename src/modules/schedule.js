@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, addHours } from 'date-fns';
 import fetch from 'node-fetch';
 import prisma from './prisma';
 import pushNotification from './push';
@@ -29,7 +29,7 @@ const schedulePush = async () => {
         time,
         pitch: slot?.pitch,
         role,
-        formatted: `${format(time, 'haa')} Pitch ${slot?.pitch} ${role}`,
+        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch} ${role}`,
       };
     });
 
@@ -43,7 +43,7 @@ const schedulePush = async () => {
         time,
         pitch: slot.pitch,
         team,
-        formatted: `${format(time, 'haa')} Pitch ${slot?.pitch} vs ${team}`,
+        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch} vs ${team}`,
       };
     });
 
