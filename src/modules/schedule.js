@@ -18,8 +18,8 @@ const schedulePush = async () => {
     const volunteeringRes = await fetch(VOLUNTEERING_URL({ tournamentId: 15, playerId: 119 })) || [];
     const playingRes = await fetch(PLAYING_URL({ tournamentId: 15, playerId: 119 })) || [];
 
-    const volunteering = volunteeringRes.json();
-    const playing = playingRes.json();
+    const volunteering = await volunteeringRes.json();
+    const playing = await playingRes.json();
 
     console.log('VOLUNTEERING');
     console.log(volunteering);
