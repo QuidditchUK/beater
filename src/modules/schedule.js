@@ -15,8 +15,11 @@ const PLAYING_URL = ({ tournamentId, playerId }) => `https://api.quidditchschedu
 
 const schedulePush = async () => {
   try {
-    const volunteering = await fetch(VOLUNTEERING_URL({ tournamentId: 15, playerId: 119 })) || [];
-    const playing = await fetch(PLAYING_URL({ tournamentId: 15, playerId: 119 })) || [];
+    const volunteeringRes = await fetch(VOLUNTEERING_URL({ tournamentId: 15, playerId: 119 })) || [];
+    const playingRes = await fetch(PLAYING_URL({ tournamentId: 15, playerId: 119 })) || [];
+
+    const volunteering = volunteeringRes.json();
+    const playing = playingRes.json();
 
     console.log('VOLUNTEERING');
     console.log(volunteering);
