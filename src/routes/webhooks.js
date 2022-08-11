@@ -78,7 +78,7 @@ export default function stripeWebhooksRoute() {
         },
         events: {
           title: `Event | ${document?.data?.event_name}`,
-          body: `${format(new Date(document?.data?.event_start_date), 'MMMM d, yyyy')} | ${document?.data?.venue}}`,
+          body: `${format(new Date(document?.data?.event_start_date), 'MMMM d, yyyy')} | ${document?.data?.venue}`,
           image: document?.data?.images?.[0]?.image?.url || null,
           data: { url: `/events/${document.uid}` },
         },
