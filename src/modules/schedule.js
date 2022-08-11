@@ -21,12 +21,6 @@ const schedulePush = async () => {
     const volunteering = await volunteeringRes.json();
     const playing = await playingRes.json();
 
-    console.log('PLAYING RES');
-    console.log(playingRes);
-
-    console.log('PLAYING');
-    console.log(playing);
-
     const volunteeringData = volunteering?.map((slot) => {
       const time = new Date(slot?.timeslot?.time);
       const { role } = slot.officials.find((official) => official?.volunteer?.person?.id === 119);
@@ -74,8 +68,6 @@ const schedulePush = async () => {
         tag: 'experiment-schedule-update',
         body,
       });
-
-      console.log('SENT PUSHES');
     });
   } catch (error) {
     console.log('ERROR IN SCHEDULE PUSH');
