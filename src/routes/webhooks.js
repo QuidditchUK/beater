@@ -5,7 +5,7 @@ import { update } from '../models/users';
 import { create } from '../models/products';
 import { Client } from '../modules/prismic';
 import pushNotification from '../modules/push';
-import { PUSH_PAYLOADS } from '../constants/notifications';
+// import { PUSH_PAYLOADS } from '../constants/notifications';
 
 export default function stripeWebhooksRoute() {
   const router = new Router();
@@ -52,21 +52,32 @@ export default function stripeWebhooksRoute() {
       const { documents } = req.body || ['a'];
       const document = await Client.getByID(documents[0]);
 
-      if (!document || document?.type !== 'post' || document?.first_publication_date !== document?.last_publication_date) {
+      // push on events and news, first time published
+      if (!document || document?.type !== 'post' || document?.type !== 'events' || document?.first_publication_date !== document?.last_publication_date) {
         res.status(200).end();
         return;
       }
+
+      const payload = {
+        post: {
+          title: `News | ${document?.data?.title}`,
+          body: document?.data?.meta_description || null,
+          image: document?.data?.meta_image?.url || document?.data?.image?.url,
+          data: { url: `/news/${document.uid}` },
+        },
+        events: {
+          title: `Event | ${document?.data?.event_name}`,
+          body: document?.data?.meta_description || null,
+          image: document?.data?.meta_image?.url || document?.data?.images?.[0]?.url,
+          data: { url: `/events/${document.uid}` },
+        },
+      };
 
       // send push notifications to those with push notifications
       const pushes = await prisma?.push_notifications?.findMany();
 
       pushes?.forEach(({ endpoint, auth, p256dh }) => {
-        pushNotification({ endpoint, keys: { auth, p256dh } }, PUSH_PAYLOADS.NEWS({
-          title: `News | ${document?.data?.title}`,
-          body: document?.data?.meta_description || null,
-          image: document?.data?.meta_image?.url || document?.data?.image?.url,
-          data: { url: `/news/${document.uid}` },
-        }));
+        pushNotification({ endpoint, keys: { auth, p256dh } }, payload[document.type]);
       });
 
       res.status(200).end();
