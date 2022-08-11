@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { format } from 'date-fns';
 import prisma from '../modules/prisma';
 import stripe from '../modules/stripe';
 import { update } from '../models/users';
@@ -77,8 +78,8 @@ export default function stripeWebhooksRoute() {
         },
         events: {
           title: `Event | ${document?.data?.event_name}`,
-          body: document?.data?.meta_description || null,
-          image: document?.data?.meta_image?.url || document?.data?.images?.[0]?.url,
+          body: `${format(new Date(document?.data?.event_start_date), 'MMMM d, yyyy')} ${document?.data?.about}`,
+          image: document?.data?.images?.[0]?.url || null,
           data: { url: `/events/${document.uid}` },
         },
       };
