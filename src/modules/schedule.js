@@ -53,7 +53,7 @@ const schedulePush = async () => {
       .filter((slot) => new Date() < slot?.time) // only show slots in the future
       .slice(0, 2) //
       .map((slot) => slot?.formatted)
-      .join(' \n ');
+      .join(' \n');
 
     // Hardcoded to find Dec Ramsay pushes so no one else gets my schedule
     const pushes = await prisma?.push_notifications?.findMany({
