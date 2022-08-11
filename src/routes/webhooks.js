@@ -6,7 +6,6 @@ import { update } from '../models/users';
 import { create } from '../models/products';
 import { Client } from '../modules/prismic';
 import pushNotification from '../modules/push';
-// import { PUSH_PAYLOADS } from '../constants/notifications';
 
 export default function stripeWebhooksRoute() {
   const router = new Router();
