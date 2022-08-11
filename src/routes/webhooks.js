@@ -65,6 +65,7 @@ export default function stripeWebhooksRoute() {
           title: `News | ${document?.data?.title}`,
           body: document?.data?.meta_description || null,
           image: document?.data?.meta_image?.url || document?.data?.image?.url,
+          data: { url: `/news/${document.uid}` },
         }));
       });
 
