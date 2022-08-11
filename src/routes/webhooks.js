@@ -49,11 +49,17 @@ export default function stripeWebhooksRoute() {
 
   router.post('/prismic', async (req, res) => {
     try {
-      const { documents } = req.body || ['a'];
-      const document = await Client.getByID(documents[0]);
+      const { documents, masterRef } = req.body;
+      if (!documents[0] || !masterRef) {
+        res.status(200).end();
+        return;
+      }
+
+      const document = await Client(masterRef).getByID(documents[0]);
 
       // push on events and news, first time published
-      if (!document || document?.type !== 'post' || document?.type !== 'events' || document?.first_publication_date !== document?.last_publication_date) {
+      if (!document || document?.type !== 'post' || document?.type !== 'events') {
+        // if (!document || document?.type !== 'post' || document?.type !== 'events' || document?.first_publication_date !== document?.last_publication_date) {
         res.status(200).end();
         return;
       }
