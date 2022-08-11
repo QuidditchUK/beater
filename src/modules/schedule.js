@@ -21,14 +21,9 @@ const schedulePush = async () => {
     const volunteering = await volunteeringRes.json();
     const playing = await playingRes.json();
 
-    console.log('VOLUNTEERING');
-    console.log(volunteering);
-    console.log('PLAYING');
-    console.log(playing);
-
     const volunteeringData = volunteering?.map((slot) => {
       const time = new Date(slot?.timeslot?.time);
-      const { role } = slot.officials.find((official) => official?.volunteer?.person.id === '119');
+      const { role } = slot.officials.find((official) => official?.volunteer?.person?.id === 119);
 
       return {
         time,
