@@ -57,11 +57,14 @@ export default function stripeWebhooksRoute() {
 
       const document = await Client(masterRef).getByID(documents[0]);
 
-      console.log(document);
+      // console.log(document);
 
       // push on events and news, first time published
-      if (!document || document?.type !== 'post' || document?.type !== 'events') {
-        // if (!document || document?.type !== 'post' || document?.type !== 'events' || document?.first_publication_date !== document?.last_publication_date) {
+      if (!document || (document?.type !== 'post' && document?.type !== 'events')) {
+        // if (!document
+        //   || (document?.type !== 'post' && document?.type !== 'events')
+        //   || document?.first_publication_date !== document?.last_publication_date
+        // ) {
         res.status(200).end();
         return;
       }
@@ -81,14 +84,14 @@ export default function stripeWebhooksRoute() {
         },
       };
 
-      console.log(payload[document?.type]);
-      console.log(JSON.stringify(payload[document.type]));
+      // console.log(payload[document?.type]);
+      // console.log(JSON.stringify(payload[document.type]));
 
       // send push notifications to those with push notifications
       const pushes = await prisma?.push_notifications?.findMany();
 
-      console.log('PUSHING NOTIFICATIONS:');
-      console.log(pushes.length);
+      // console.log('PUSHING NOTIFICATIONS:');
+      // console.log(pushes.length);
 
       pushes?.forEach(({ endpoint, auth, p256dh }) => {
         pushNotification({ endpoint, keys: { auth, p256dh } }, payload[document.type]);
