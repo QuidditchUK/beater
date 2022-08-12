@@ -94,7 +94,8 @@ const schedulePush = async () => {
         title: 'Tournament Schedule',
         tag: 'experiment-schedule-update',
         requireInteraction: true,
-        actions: [{ action: 'dismiss', title: 'Dismiss' }],
+        actions: [{ action: 'dismiss', title: 'Dismiss' }, { action: 'full_schedule', title: 'Full Schedule' }],
+        data: { url: '/events/community-league-2-2223' },
         body,
       });
     });
