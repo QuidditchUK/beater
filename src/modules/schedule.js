@@ -66,6 +66,8 @@ const schedulePush = async () => {
       pushNotification({ endpoint, keys: { auth, p256dh } }, {
         title: 'Tournament Schedule',
         tag: 'experiment-schedule-update',
+        requireInteraction: true,
+        actions: [{ action: 'dismiss', title: 'Dismiss' }],
         body,
       });
     });
