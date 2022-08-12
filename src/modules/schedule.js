@@ -51,7 +51,7 @@ const schedulePush = async () => {
       .concat(volunteeringData, playingData) // put the data together in 1 array
       .sort((a, b) => a.time - b.time) // order by time
       .filter((slot) => new Date() < slot?.time) // only show slots in the future
-      .slice(0, 2) //
+      .slice(0, 3) //
       .map((slot) => slot?.formatted)
       .join(' \n');
 
