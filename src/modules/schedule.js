@@ -18,12 +18,27 @@ const roles = {
   SNITCH_REFEREE: 'SR',
   SNITCH_RUNNER: 'Snitch',
   ASSISTANT_REFEREE: 'AR',
+  FIRST_AIDER: 'First Aid',
+  PITCH_MANAGER: 'Pitch',
+  TIMEKEEPER: 'Time',
+  SCOREKEEPER: 'Score',
+  GOAL_REFEREE: 'Goal',
 };
 
 const teams = {
   'East Midlands Vipers': 'Vipers',
+  'LQC A': 'LQC A',
   'LQC B': 'LQC B',
   'West Country Rebels': 'Rebels',
+  'Southsea Quidditch': 'Southsea',
+  'Oxford Mammoths': 'Mammoths',
+  'Phoenix Quidditch': 'Phoenix',
+  Velociraptors: 'Raptors',
+  'Werewolves of London Seconds': 'WOL2',
+  'Werewolves of London Firsts': 'WOL1',
+  Kelpies: 'Kelpies',
+  'Olympians QC': 'Olympians',
+
 };
 
 const schedulePush = async () => {
@@ -38,9 +53,12 @@ const schedulePush = async () => {
       const time = new Date(slot?.timeslot?.time);
       const { role } = slot.officials.find((official) => official?.volunteer?.person?.id === 119);
 
+      const teamA = teams[slot.teamA.name] || 'Team A';
+      const teamB = teams[slot.teamB.name] || 'Team B';
+
       return {
         time,
-        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch}, ${roles[role] ? roles[role] : ''}`,
+        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch}, ${roles[role] ? roles[role] : 'Volunteer'} ${teamA} vs ${teamB}`,
       };
     });
 
@@ -52,7 +70,7 @@ const schedulePush = async () => {
 
       return {
         time,
-        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch} vs ${teams[team]}`,
+        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch}, Prometheans vs ${teams[team] ?? 'Team'}`,
       };
     });
 
