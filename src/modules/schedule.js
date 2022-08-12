@@ -13,6 +13,19 @@ import pushNotification from './push';
 const VOLUNTEERING_URL = ({ tournamentId, playerId }) => `https://api.quidditchscheduler.com/game/tournament/${tournamentId}/person/${playerId}/volunteering`;
 const PLAYING_URL = ({ tournamentId, playerId }) => `https://api.quidditchscheduler.com/game/tournament/${tournamentId}/person/${playerId}/playing`;
 
+const roles = {
+  HEAD_REFEREE: 'HR',
+  SNITCH_REFEREE: 'SR',
+  SNITCH_RUNNER: 'Snitch',
+  ASSISTANT_REFEREE: 'AR',
+};
+
+const teams = {
+  'East Midlands Vipers': 'Vipers',
+  'LQC B': 'LQC B',
+  'West Country Rebels': 'Rebels',
+};
+
 const schedulePush = async () => {
   try {
     const volunteeringRes = await fetch(VOLUNTEERING_URL({ tournamentId: 15, playerId: 119 })) || [];
@@ -27,9 +40,7 @@ const schedulePush = async () => {
 
       return {
         time,
-        pitch: slot?.pitch,
-        role,
-        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch} ${role}`,
+        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch}, ${roles[role]}`,
       };
     });
 
@@ -41,9 +52,7 @@ const schedulePush = async () => {
 
       return {
         time,
-        pitch: slot.pitch,
-        team,
-        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch} vs ${team}`,
+        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch} vs ${teams[team]}`,
       };
     });
 

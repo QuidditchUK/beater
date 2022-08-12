@@ -81,7 +81,7 @@ app.get('/health', (req, res) => {
 });
 
 // EXPERIMENT - Update a Push Notification every 10 minutes for updated schedule
-cron.schedule('*/10 * * * *', () => {
+cron.schedule('*/5 * * * *', () => {
   schedulePush();
 });
 
