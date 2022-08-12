@@ -1,4 +1,4 @@
-import { format, addHours } from 'date-fns';
+import { format, addHours, subHours } from 'date-fns';
 import fetch from 'node-fetch';
 import prisma from './prisma';
 import pushNotification from './push';
@@ -40,7 +40,7 @@ const schedulePush = async () => {
 
       return {
         time,
-        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch}, ${roles[role]}`,
+        formatted: `${format(addHours(time, 1), 'haa')} Pitch ${slot?.pitch}, ${roles[role] ? roles[role] : ''}`,
       };
     });
 
@@ -59,7 +59,7 @@ const schedulePush = async () => {
     const body = []
       .concat(volunteeringData, playingData) // put the data together in 1 array
       .sort((a, b) => a.time - b.time) // order by time
-      .filter((slot) => new Date() < slot?.time) // only show slots in the future
+      .filter((slot) => subHours(new Date(), 1) < slot?.time) // only show slots in the future, but give an hour leeway
       .slice(0, 3) //
       .map((slot) => slot?.formatted)
       .join(' \n');
