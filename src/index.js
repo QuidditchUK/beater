@@ -6,8 +6,8 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import register from '@react-ssr/express/register';
-import cron from 'node-cron';
-import schedulePush from './modules/schedule';
+// import cron from 'node-cron';
+// import schedulePush from './modules/schedule';
 import passport from './modules/passport';
 import getRedisClient from './modules/redis';
 import settings from './config';
@@ -81,9 +81,9 @@ app.get('/health', (req, res) => {
 });
 
 // EXPERIMENT - Update a Push Notification every 10 minutes for updated schedule
-cron.schedule('*/5 * * * *', () => {
-  schedulePush();
-});
+// cron.schedule('*/5 * * * *', () => {
+//   schedulePush();
+// });
 
 app.use(express.static('public'));
 app.use('/', routes);
