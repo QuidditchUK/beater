@@ -295,5 +295,80 @@ export default function transfersRoute() {
     }
   }));
 
+  router.post('/manual', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, TRANSFER_WRITE]), asyncHandler(async (req, res) => {
+    try {
+      const { club_uuid: new_club_uuid, user_uuid } = req.body;
+
+      const { club_uuid: prev_club_uuid } = await prisma.users.findUnique({
+        where: { uuid: user_uuid },
+      });
+
+      const { uuid: actioned_by } = req.user;
+
+      const transfer = await prisma.transfers.create({
+        data: {
+          prev_club_uuid,
+          new_club_uuid,
+          user_uuid: req.user.uuid,
+          actioned_by,
+          status: 'APPROVED',
+        },
+        include: {
+          newClub: true,
+        },
+      });
+
+      // TODO DRY all this up from approve
+      const user = await prisma.users.update({
+        where: { uuid: transfer?.user_uuid },
+        data: {
+          club_uuid: transfer.new_club_uuid,
+          updated: new Date(),
+        },
+        include: {
+          teams: {
+            select: {
+              teams: {
+                select: {
+                  uuid: true,
+                  type: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Remove user CLUB team if they have one
+      const team = user?.teams?.find(({ teams }) => teams?.type === 'CLUB');
+
+      if (team) {
+        const teamUsers = await prisma?.teams_users?.findMany({
+          where: { team_uuid: team?.uuid },
+        });
+
+        // find the relevant teams_users entry
+        const teamUser = teamUsers?.find(({ user_uuid: team_user_uuid }) => team_user_uuid === user?.uuid);
+
+        // Remove the teams_users row
+        if (teamUser) {
+          await prisma.teams_users?.delete({
+            where: {
+              uuid: teamUser?.uuid,
+            },
+          });
+        }
+      }
+
+      email(transfer?.newClub?.email, 'transferClubNewMember', { first_name: user?.first_name, last_name: user?.last_name, email: user?.email }, settings.postmark.clubsEmail);
+      email(user?.email, 'transferApproved', { first_name: user?.first_name, new_club_name: transfer?.newClub?.name }, settings.postmark.clubsEmail);
+      await sendNotifications({ user_uuid: transfer?.user_uuid, type_id: TRANSFER_APPROVED }, { club_name: transfer?.newClub?.name });
+
+      res.json(transfer);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
   return router;
 }

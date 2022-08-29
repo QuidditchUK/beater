@@ -412,5 +412,21 @@ export default function authRoute() {
     res.json({ users, pages: Math.ceil(count / limit) });
   }));
 
+  router.get('/:uuid', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, USERS_READ]), asyncHandler(async (req, res) => {
+    try {
+      const { uuid } = req.params;
+
+      // console.log(uuid);
+
+      const { hashed_password, salt, ...user } = await prisma.users.findUnique({
+        where: { uuid },
+      });
+
+      res.json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }));
+
   return router;
 }
