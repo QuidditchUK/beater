@@ -309,7 +309,7 @@ export default function transfersRoute() {
         data: {
           prev_club_uuid,
           new_club_uuid,
-          user_uuid: req.user.uuid,
+          user_uuid,
           actioned_by,
           status: 'APPROVED',
         },
