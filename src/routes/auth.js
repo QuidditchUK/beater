@@ -4,7 +4,7 @@ import asyncHandler from 'express-async-handler';
 import pushNotification from '../modules/push';
 import settings from '../config';
 import getLogger from '../modules/logger';
-import passport, { checkAuthenticated } from '../modules/passport';
+import passport, { checkAuthenticated, checkScopeAuthorized } from '../modules/passport';
 import prisma from '../modules/prisma';
 import { parse } from '../modules/utils';
 import {
@@ -19,6 +19,7 @@ import { schema, resetSchema, updateSchema } from '../modules/validation_schemas
 import { email as sendEmail } from '../modules/email';
 import { sanitiseEmailMiddleware } from '../modules/sanitise';
 import { PUSH_PAYLOADS } from '../constants/notifications';
+import { EMT, USERS_READ } from '../constants/scopes';
 
 const log = getLogger('router/auth');
 
@@ -372,6 +373,43 @@ export default function authRoute() {
     await prisma?.push_notifications?.delete({ where: { uuid: push_uuid } });
 
     res.sendStatus(204);
+  }));
+
+  router.get('/all/:page', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, USERS_READ]), asyncHandler(async (req, res) => {
+    const { page } = req.params ?? { page: 0 };
+    const limit = 10;
+
+    const users = await prisma.users.findMany({
+      skip: page * limit,
+      take: limit,
+      select: {
+        first_name: true,
+        last_name: true,
+        uuid: true,
+        email: true,
+        stripe_products: {
+          select: {
+            products: {
+              select: {
+                description: true,
+                expires: true,
+              },
+            },
+          },
+        },
+        clubs: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        last_name: 'asc',
+      },
+    });
+    const count = await prisma.users.count();
+
+    res.json({ users, pages: Math.ceil(count / limit) });
   }));
 
   return router;
