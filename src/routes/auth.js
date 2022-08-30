@@ -376,86 +376,93 @@ export default function authRoute() {
   }));
 
   router.get('/search/:term/page/:page', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, USERS_READ]), asyncHandler(async (req, res) => {
-    const { term, page } = req.params ?? { page: 0 };
-    const limit = 10;
+    try {
+      const { term, page } = req.params ?? { page: 0 };
+      const limit = 10;
 
-    const users = await prisma.users.findMany({
-      skip: page * limit,
-      take: limit,
-      where: {
-        OR: [
-          {
-            email: {
-              search: term,
-              mode: 'insensitive',
+      // convert any spaces to an OR operator
+      const searchTerm = term.split(' ').join(' | ');
+
+      const users = await prisma.users.findMany({
+        skip: page * limit,
+        take: limit,
+        where: {
+          OR: [
+            {
+              email: {
+                search: searchTerm,
+                mode: 'insensitive',
+              },
             },
-          },
-          {
-            first_name: {
-              search: term,
-              mode: 'insensitive',
+            {
+              first_name: {
+                search: searchTerm,
+                mode: 'insensitive',
+              },
             },
-          },
-          {
-            last_name: {
-              search: term,
-              mode: 'insensitive',
+            {
+              last_name: {
+                search: searchTerm,
+                mode: 'insensitive',
+              },
             },
-          },
-        ],
-      },
-      select: {
-        first_name: true,
-        last_name: true,
-        uuid: true,
-        email: true,
-        stripe_products: {
-          select: {
-            products: {
-              select: {
-                description: true,
-                expires: true,
+          ],
+        },
+        select: {
+          first_name: true,
+          last_name: true,
+          uuid: true,
+          email: true,
+          stripe_products: {
+            select: {
+              products: {
+                select: {
+                  description: true,
+                  expires: true,
+                },
               },
             },
           },
+          clubs: {
+            select: {
+              name: true,
+            },
+          },
         },
-        clubs: {
-          select: {
-            name: true,
-          },
+        orderBy: {
+          last_name: 'asc',
         },
-      },
-      orderBy: {
-        last_name: 'asc',
-      },
-    });
+      });
 
-    const count = await prisma.users.count({
-      where: {
-        OR: [
-          {
-            email: {
-              search: term,
-              mode: 'insensitive',
+      const count = await prisma.users.count({
+        where: {
+          OR: [
+            {
+              email: {
+                search: searchTerm,
+                mode: 'insensitive',
+              },
             },
-          },
-          {
-            first_name: {
-              search: term,
-              mode: 'insensitive',
+            {
+              first_name: {
+                search: searchTerm,
+                mode: 'insensitive',
+              },
             },
-          },
-          {
-            last_name: {
-              search: term,
-              mode: 'insensitive',
+            {
+              last_name: {
+                search: searchTerm,
+                mode: 'insensitive',
+              },
             },
-          },
-        ],
-      },
-    });
+          ],
+        },
+      });
 
-    res.json({ users, pages: Math.ceil(count / limit) });
+      res.json({ users, pages: Math.ceil(count / limit) });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }));
 
   router.get('/all/:page', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, USERS_READ]), asyncHandler(async (req, res) => {
