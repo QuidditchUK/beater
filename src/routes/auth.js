@@ -381,7 +381,7 @@ export default function authRoute() {
       const limit = 10;
 
       // convert any spaces to an OR operator
-      const searchTerm = term.split(' ').join(' | ');
+      const searchTerm = term.trim().split(' ').join(' | ');
 
       const users = await prisma.users.findMany({
         skip: page * limit,
