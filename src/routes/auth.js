@@ -375,6 +375,66 @@ export default function authRoute() {
     res.sendStatus(204);
   }));
 
+  router.get('/search/:term/page/:page', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, USERS_READ]), asyncHandler(async (req, res) => {
+    const { term, page } = req.params ?? { page: 0 };
+    const limit = 10;
+
+    const users = await prisma.users.findMany({
+      skip: page * limit,
+      take: limit,
+      where: {
+        OR: [
+          {
+            email: {
+              search: term,
+              mode: 'insensitive',
+            },
+          },
+          {
+            first_name: {
+              search: term,
+              mode: 'insensitive',
+            },
+          },
+          {
+            last_name: {
+              search: term,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+      select: {
+        first_name: true,
+        last_name: true,
+        uuid: true,
+        email: true,
+        stripe_products: {
+          select: {
+            products: {
+              select: {
+                description: true,
+                expires: true,
+              },
+            },
+          },
+        },
+        clubs: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        last_name: 'asc',
+      },
+    });
+
+    const count = await prisma.users.count();
+
+    res.json({ users, pages: Math.ceil(count / limit) });
+  }));
+
   router.get('/all/:page', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, USERS_READ]), asyncHandler(async (req, res) => {
     const { page } = req.params ?? { page: 0 };
     const limit = 10;
@@ -415,8 +475,6 @@ export default function authRoute() {
   router.get('/:uuid', authenticateJWT, checkAuthenticated, checkScopeAuthorized([EMT, USERS_READ]), asyncHandler(async (req, res) => {
     try {
       const { uuid } = req.params;
-
-      // console.log(uuid);
 
       const { hashed_password, salt, ...user } = await prisma.users.findUnique({
         where: { uuid },
