@@ -430,7 +430,30 @@ export default function authRoute() {
       },
     });
 
-    const count = await prisma.users.count();
+    const count = await prisma.users.count({
+      where: {
+        OR: [
+          {
+            email: {
+              search: term,
+              mode: 'insensitive',
+            },
+          },
+          {
+            first_name: {
+              search: term,
+              mode: 'insensitive',
+            },
+          },
+          {
+            last_name: {
+              search: term,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    });
 
     res.json({ users, pages: Math.ceil(count / limit) });
   }));
