@@ -49,7 +49,7 @@
     "node-cron": "^3.0.1",
     "node-fetch": "2",
     "oidc-provider": "^6.31.0",
-    "passport": "0.4.1",
+    "passport": "0.6.0",
     "passport-local": "1.0.0",
     "postmark": "^2.5.4",
     "prisma": "^3.13.0",
