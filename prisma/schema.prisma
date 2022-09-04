@@ -22,6 +22,8 @@ model clubs {
   prevClubTransfer transfers[] @relation("prevClub")
   newClubTransfer  transfers[] @relation("newClub")
   teams            teams[]
+  managed_by       String?     @db.Uuid
+  managedBy        users?      @relation(name: "managedBy", fields: [managed_by], references: [uuid])
 }
 
 model users {
@@ -62,6 +64,7 @@ model users {
   scoutedBy          scouting_requests[]     @relation("scoutedBy")
   notifications      notifications[]
   push_notifications push_notifications[]
+  managedBy          clubs[]                 @relation("managedBy")
 }
 
 model users_stripe_products {
@@ -195,6 +198,7 @@ model notifications {
   type_id   String             @db.Text
   type      notification_types @relation(fields: [type_id], references: [type])
   event     String?            @db.Text
+  message   String?            @db.Text
 }
 
 model push_notifications {

@@ -7,6 +7,8 @@ import { checkAuthenticated, checkScopeAuthorized } from '../modules/passport';
 import { CLUBS_WRITE, CLUBS_READ, EMT } from '../constants/scopes';
 import prisma from '../modules/prisma';
 import { email } from '../modules/email';
+import sendNotifications from '../modules/notifications';
+import { CLUB_MANAGEMENT } from '../constants/notifications';
 
 export default function clubsRoute() {
   const router = new Router();
@@ -47,7 +49,15 @@ export default function clubsRoute() {
   router.get('/:uuid', asyncHandler(async (req, res) => {
     const club = await prisma.clubs.findUnique({
       where: { uuid: req.params.uuid },
-      include: { teams: true },
+      include: {
+        teams: true,
+        managedBy: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
+        },
+      },
     });
     if (!club) {
       res.sendStatus(404);
@@ -74,6 +84,7 @@ export default function clubsRoute() {
       include: {
         users: {
           select: {
+            uuid: true,
             first_name: true,
             last_name: true,
             email: true,
@@ -184,6 +195,32 @@ export default function clubsRoute() {
       res.sendStatus(204);
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }));
+
+  // TODO adjust middleware to allow club leadership to assign someone else as manager of their club
+  // Assign a club manager
+  router.put('/:uuid/manager', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
+    try {
+      // assign user as manager
+      const { uuid: club_uuid } = req.params;
+      const { managed_by: user_uuid } = req.body;
+
+      console.log(club_uuid);
+      console.log(user_uuid);
+
+      const club = await prisma?.clubs?.update({
+        where: { uuid: club_uuid },
+        data: {
+          managed_by: user_uuid,
+        },
+      });
+
+      // notify user they are now the manager of the club
+      sendNotifications({ user_uuid, type_id: CLUB_MANAGEMENT }, { club_name: club?.name });
+      res.json(club);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
     }
   }));
 

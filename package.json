@@ -29,6 +29,7 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
     "@babel/register": "^7.17.7",
+    "@faker-js/faker": "^7.5.0",
     "@prisma/client": "^3.13.0",
     "@prismicio/client": "^6.6.4",
     "@react-ssr/core": "^0.24.0",

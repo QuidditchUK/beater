@@ -1,10 +1,16 @@
 import pushNotification from './push';
-import { PUSH_PAYLOADS } from '../constants/notifications';
+import { NOTIFICATION_PAYLOADS, PUSH_PAYLOADS } from '../constants/notifications';
 import prisma from './prisma';
 
 const sendNotifications = async ({ user_uuid, type_id }, data) => {
+  const notificationPayload = NOTIFICATION_PAYLOADS[type_id] || null;
+
   await prisma?.notifications.create({
-    data: { user_uuid, type_id },
+    data: {
+      user_uuid,
+      type_id,
+      message: notificationPayload ? notificationPayload(data) : null,
+    },
   });
 
   const pushNotifications = await prisma?.push_notifications?.findMany({

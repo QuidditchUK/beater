@@ -8,6 +8,13 @@ export const SCOUTING_WINDOW_CLOSED = 'SCOUTING_WINDOW_CLOSED';
 export const EVENT_REGISTRATION_OPEN = 'EVENT_REGISTRATION_OPEN';
 export const EVENT_REGISTRATION_CLOSING_24 = 'EVENT_REGISTRATION_CLOSING_24';
 export const EVENT_REGISTRATION_CLOSED = 'EVENT_REGISTRATION_CLOSED';
+export const CLUB_MANAGEMENT = 'CLUB_MANAGEMENT';
+
+export const NOTIFICATION_PAYLOADS = {
+  [CLUB_MANAGEMENT]: ({ club_name }) => `You are now the manager of ${club_name}`,
+  [TRANSFER_APPROVED]: ({ club_name }) => `Your transfer to ${club_name} has been approved`,
+  [TRANSFER_DECLINED]: ({ club_name }) => `Your transfer to ${club_name} has been declined`,
+};
 
 export const PUSH_PAYLOADS = {
   [TRANSFER_APPROVED]: ({ club_name }) => ({
@@ -31,6 +38,11 @@ export const PUSH_PAYLOADS = {
     title: 'Push Notifications enabled',
     body: 'You will now recieve push notifications from QuidditchUK on this device',
   },
+  [CLUB_MANAGEMENT]: ({ club_name }) => ({
+    title: 'You are now the club manager',
+    body: `${club_name} is now managed by you on QuidditchUK`,
+    actions: [{ action: CLUB_MANAGEMENT, title: 'Manage Club' }],
+  }),
   NEWS: ({
     title, body, image, data,
   }) => ({

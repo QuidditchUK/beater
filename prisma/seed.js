@@ -1,4 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
+const { faker } = require('@faker-js/faker');
+
 const crypto = require('crypto');
 
 const prisma = new PrismaClient();
@@ -81,7 +83,7 @@ async function main() {
     .update(password)
     .digest('hex');
 
-  const user = await prisma.users.create({
+  const admin = await prisma.users.create({
     data: {
       email: 'admin@quidditchuk.org',
       first_name: 'Quidditch',
@@ -96,22 +98,50 @@ async function main() {
     },
   });
 
+  const fakeUsers = Array(50).fill(0).map(() => ({
+    email: faker.internet.email(),
+    first_name: faker.name.firstName(),
+    last_name: faker.name.lastName(),
+    hashed_password,
+    salt,
+    club_uuid: club?.uuid,
+  }));
+
+  await prisma?.users?.createMany({ data: fakeUsers });
+
+  const stripeProduct = await prisma.stripe_products.create({
+    data: {
+      stripe_product_id: 'prod_HdJXJonLozhCzh', // Full Membership, expires in 1000 years
+      description: 'Individual Membership (2021/2022 Season)',
+      expires: '31-05-3020',
+    },
+  });
+
+  const allUsers = await prisma?.users?.findMany();
+
+  await prisma.users_stripe_products.createMany({
+    data: allUsers.map((user) => ({
+      user_uuid: user?.uuid,
+      stripe_product_id: stripeProduct?.stripe_product_id,
+    })),
+  });
+
   await prisma.teams_users.createMany({
     data: [
       {
         team_uuid: clubTeam?.uuid,
-        user_uuid: user?.uuid,
+        user_uuid: admin?.uuid,
       },
       {
         team_uuid: nationalTeam?.uuid,
-        user_uuid: user?.uuid,
+        user_uuid: admin?.uuid,
       },
     ],
   });
 
   await prisma.scouting_requests.create({
     data: {
-      user_uuid: user?.uuid,
+      user_uuid: admin?.uuid,
       number: 69,
       team: 'Bangor Broken Broomsticks',
       pronouns: 'He/him',
