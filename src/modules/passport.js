@@ -1,11 +1,14 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import getLogger from './logger';
+import asyncHandler from 'express-async-handler';
 import prisma from './prisma';
 import { checkPassword } from '../models/users';
 import { ADMIN } from '../constants/scopes';
 
-const log = getLogger('modules/passport');
+export const isScopeAuthorized = (scopes = []) => (req) => {
+  const userScopes = req.user.scopes.map(({ scope }) => scope);
+  return Boolean(scopes.some((scope) => userScopes.includes(scope)) || userScopes.includes(ADMIN));
+};
 
 passport.use(new LocalStrategy(
   {
@@ -54,19 +57,34 @@ export const checkAuthenticated = (req, res, next) => {
     return next();
   }
 
-  log.warn('user is not authenticated %s', JSON.stringify({ cookie: req.cookies['connect.sid'], session: req.sessionID }));
   return next({ message: 'USER NOT AUTH' });
 };
 
 export const checkScopeAuthorized = (scopes = []) => (req, res, next) => {
-  const userScopes = req.user.scopes.map(({ scope }) => scope);
-  const isAuthorized = scopes.some((scope) => userScopes.includes(scope)) || userScopes.includes(ADMIN);
+  const isAuthorized = isScopeAuthorized(scopes)(req);
 
   if (isAuthorized) {
     return next();
   }
 
-  log.warn('user is not authorized %s', JSON.stringify({ cookie: req.cookies['connect.sid'], session: req.sessionID }));
   res.status(403).json();
   return next({ message: 'USER NOT AUTH' });
 };
+
+// Check if the person has the required scopes OR is the owner and has permissions
+export const checkScopeAuthorizedOrOwner = (scopes = [], ownerFn = () => false) => asyncHandler(async (req, res, next) => {
+  const isAuthorized = isScopeAuthorized(scopes)(req);
+
+  if (isAuthorized) {
+    return next();
+  }
+
+  const isOwner = await ownerFn(req);
+
+  if (isOwner) {
+    return next();
+  }
+
+  res.status(403).json();
+  return next({ message: 'USER NOT AUTH' });
+});

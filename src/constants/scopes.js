@@ -2,6 +2,7 @@ export const ADMIN = 'admin';
 export const VOLUNTEER = 'volunteer';
 export const EMT = 'emt';
 export const HEAD_SCOUT = 'head-scout';
+export const CLUB_MANAGEMENT = 'club-management';
 
 export const CLUBS_READ = 'clubs:read';
 export const CLUBS_WRITE = 'clubs:write';

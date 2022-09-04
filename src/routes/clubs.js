@@ -3,12 +3,25 @@ import asyncHandler from 'express-async-handler';
 
 import { authenticateJWT } from '../modules/jwt';
 import settings from '../config';
-import { checkAuthenticated, checkScopeAuthorized } from '../modules/passport';
-import { CLUBS_WRITE, CLUBS_READ, EMT } from '../constants/scopes';
+import {
+  checkAuthenticated, checkScopeAuthorized, checkScopeAuthorizedOrOwner,
+} from '../modules/passport';
+import {
+  CLUBS_WRITE, CLUBS_READ, EMT, CLUB_MANAGEMENT as CLUB_MANAGEMENT_SCOPE,
+} from '../constants/scopes';
 import prisma from '../modules/prisma';
 import { email } from '../modules/email';
 import sendNotifications from '../modules/notifications';
 import { CLUB_MANAGEMENT, CLUB_MEMBER_REMOVED } from '../constants/notifications';
+
+// returns if the requesting user is the manager of the requested club
+const isManager = async (req) => {
+  const club = await prisma?.clubs?.findUnique({
+    where: { uuid: req.params.uuid },
+  });
+
+  return club?.managed_by === req.user.uuid;
+};
 
 export default function clubsRoute() {
   const router = new Router();
@@ -25,11 +38,13 @@ export default function clubsRoute() {
     res.status(200).end();
   }));
 
+  // public search, only lists active clubs
   router.get('/search', asyncHandler(async (req, res) => {
     const clubs = await prisma.clubs.findMany({ where: { active: true }, orderBy: { name: 'asc' } });
     res.json(clubs);
   }));
 
+  // admin search, returns all clubs
   router.get('/all', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_READ, EMT]), asyncHandler(async (req, res) => {
     const clubs = await prisma.clubs.findMany({
       orderBy: {
@@ -78,7 +93,8 @@ export default function clubsRoute() {
     res.json(club);
   }));
 
-  router.get('/:uuid/members', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_READ, EMT]), asyncHandler(async (req, res) => {
+  // get members of a club's names, email, uuid, memberships, and teams
+  router.get('/:uuid/members', authenticateJWT, checkAuthenticated, checkScopeAuthorizedOrOwner([CLUBS_WRITE, EMT], isManager), asyncHandler(async (req, res) => {
     const club = await prisma.clubs.findUnique({
       where: { uuid: req.params.uuid },
       include: {
@@ -133,6 +149,7 @@ export default function clubsRoute() {
     }
   }));
 
+  // TODO: Release Teams to Clubs
   router.get('/:uuid/teams', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_READ, EMT]), asyncHandler(async (req, res) => {
     try {
       const teams = await prisma.teams.findMany({
@@ -198,7 +215,6 @@ export default function clubsRoute() {
     }
   }));
 
-  // TODO adjust middleware to allow club leadership to assign someone else as manager of their club
   // Assign a club manager
   router.put('/:uuid/manager', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
     try {
@@ -206,10 +222,29 @@ export default function clubsRoute() {
       const { uuid: club_uuid } = req.params;
       const { managed_by: user_uuid } = req.body;
 
+      const oldClub = await prisma?.clubs?.findUnique({
+        where: { uuid: club_uuid },
+      });
+
       const club = await prisma?.clubs?.update({
         where: { uuid: club_uuid },
         data: {
           managed_by: user_uuid,
+        },
+      });
+
+      // remove scope from previous manager
+      if (oldClub?.managed_by) {
+        await prisma?.scopes?.deleteMany({
+          where: { scope: CLUB_MANAGEMENT_SCOPE, user_uuid: oldClub?.managed_by },
+        });
+      }
+
+      // Add scope to new manager
+      await prisma?.scopes?.create({
+        data: {
+          scope: CLUB_MANAGEMENT_SCOPE,
+          user_uuid,
         },
       });
 
@@ -221,9 +256,8 @@ export default function clubsRoute() {
     }
   }));
 
-  // TODO adjust middleware to allow club leadership to remove someone from their club
   // Remove a member from a club
-  router.put('/:uuid/members/:user_uuid', authenticateJWT, checkAuthenticated, checkScopeAuthorized([CLUBS_WRITE, EMT]), asyncHandler(async (req, res) => {
+  router.put('/:uuid/members/:user_uuid', authenticateJWT, checkAuthenticated, checkScopeAuthorizedOrOwner([CLUBS_WRITE, EMT], isManager), asyncHandler(async (req, res) => {
     try {
       const { uuid: club_uuid, user_uuid } = req.params;
       // make sure user is member of that club
@@ -236,6 +270,20 @@ export default function clubsRoute() {
       if (checkUser?.club_uuid !== club_uuid) {
         res.status(404).json({ error: `No club found with uuid ${club_uuid}` });
         return;
+      }
+
+      const checkClub = await prisma?.clubs?.findUnique({ where: { uuid: club_uuid } });
+
+      // if user is also the manager, remove scope and remove from club as manager
+      if (checkUser?.uuid === checkClub?.managed_by) {
+        await prisma?.scopes?.deleteMany({
+          where: { scope: CLUB_MANAGEMENT_SCOPE, user_uuid },
+        });
+
+        await prisma?.clubs?.update({
+          where: { uuid: club_uuid },
+          data: { managed_by: null },
+        });
       }
 
       // Remove user from club
