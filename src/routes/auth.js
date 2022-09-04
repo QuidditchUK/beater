@@ -18,8 +18,9 @@ import { validate } from '../modules/validate';
 import { schema, resetSchema, updateSchema } from '../modules/validation_schemas/users';
 import { email as sendEmail } from '../modules/email';
 import { sanitiseEmailMiddleware } from '../modules/sanitise';
-import { PUSH_PAYLOADS } from '../constants/notifications';
+import { CLUB_MEMBER_ADDED, PUSH_PAYLOADS } from '../constants/notifications';
 import { EMT, USERS_READ } from '../constants/scopes';
+import sendNotifications from '../modules/notifications';
 
 const log = getLogger('router/auth');
 
@@ -149,14 +150,16 @@ export default function authRoute() {
     const { club_uuid, first_name, last_name } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
     await update(req.user.uuid, req.body);
 
+    // if update is to join club, send notification to club
     if (req.body.club_uuid && req.body.club_uuid !== club_uuid) {
-      const { email, name } = await prisma.clubs.findUnique({ where: { uuid: req.body.club_uuid } });
+      const { email, name, managed_by } = await prisma.clubs.findUnique({ where: { uuid: req.body.club_uuid } });
       sendEmail(email, 'newMember', {
         email: req.user.email,
         name,
         first_name,
         last_name,
       });
+      await sendNotifications({ user_uuid: managed_by, type_id: CLUB_MEMBER_ADDED }, { club_name: name, user_name: `${first_name} ${last_name}` });
     }
 
     const { hashed_password, salt, ...user } = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });

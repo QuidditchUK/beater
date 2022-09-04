@@ -9,11 +9,15 @@ export const EVENT_REGISTRATION_OPEN = 'EVENT_REGISTRATION_OPEN';
 export const EVENT_REGISTRATION_CLOSING_24 = 'EVENT_REGISTRATION_CLOSING_24';
 export const EVENT_REGISTRATION_CLOSED = 'EVENT_REGISTRATION_CLOSED';
 export const CLUB_MANAGEMENT = 'CLUB_MANAGEMENT';
+export const CLUB_MEMBER_REMOVED = 'CLUB_MEMBER_REMOVED';
+export const CLUB_MEMBER_ADDED = 'CLUB_MEMBER_ADDED';
 
 export const NOTIFICATION_PAYLOADS = {
   [CLUB_MANAGEMENT]: ({ club_name }) => `You are now the manager of ${club_name}`,
   [TRANSFER_APPROVED]: ({ club_name }) => `Your transfer to ${club_name} has been approved`,
   [TRANSFER_DECLINED]: ({ club_name }) => `Your transfer to ${club_name} has been declined`,
+  [CLUB_MEMBER_REMOVED]: ({ club_name }) => `You have been removed as a member of ${club_name}`,
+  [CLUB_MEMBER_ADDED]: ({ club_name, user_name }) => `${user_name} has joined ${club_name}`,
 };
 
 export const PUSH_PAYLOADS = {
@@ -41,6 +45,11 @@ export const PUSH_PAYLOADS = {
   [CLUB_MANAGEMENT]: ({ club_name }) => ({
     title: 'You are now the club manager',
     body: `${club_name} is now managed by you on QuidditchUK`,
+    actions: [{ action: CLUB_MANAGEMENT, title: 'Manage Club' }],
+  }),
+  [CLUB_MEMBER_ADDED]: ({ club_name, user_name }) => ({
+    title: 'New Member',
+    body: `${user_name} has joined ${club_name}`,
     actions: [{ action: CLUB_MANAGEMENT, title: 'Manage Club' }],
   }),
   NEWS: ({

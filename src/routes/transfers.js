@@ -9,7 +9,7 @@ import {
 import prisma from '../modules/prisma';
 import { email } from '../modules/email';
 import settings from '../config';
-import { TRANSFER_APPROVED, TRANSFER_DECLINED } from '../constants/notifications';
+import { TRANSFER_APPROVED, TRANSFER_DECLINED, CLUB_MEMBER_ADDED } from '../constants/notifications';
 import sendNotifications from '../modules/notifications';
 
 export default function transfersRoute() {
@@ -125,6 +125,7 @@ export default function transfersRoute() {
       email(transfer?.newClub?.email, 'transferClubNewMember', { first_name: user?.first_name, last_name: user?.last_name, email: user?.email }, settings.postmark.clubsEmail);
       email(user?.email, 'transferApproved', { first_name: user?.first_name, new_club_name: transfer?.newClub?.name }, settings.postmark.clubsEmail);
       await sendNotifications({ user_uuid: transfer?.user_uuid, type_id: TRANSFER_APPROVED }, { club_name: transfer?.newClub?.name });
+      await sendNotifications({ user_uuid: transfer?.newClub?.managed_by, type_id: CLUB_MEMBER_ADDED }, { club_name: transfer?.newClub?.name, user_name: `${user?.first_name} ${user?.last_name}` });
 
       res.json(transfer);
     } catch (error) {
@@ -363,6 +364,7 @@ export default function transfersRoute() {
       email(transfer?.newClub?.email, 'transferClubNewMember', { first_name: user?.first_name, last_name: user?.last_name, email: user?.email }, settings.postmark.clubsEmail);
       email(user?.email, 'transferApproved', { first_name: user?.first_name, new_club_name: transfer?.newClub?.name }, settings.postmark.clubsEmail);
       await sendNotifications({ user_uuid: transfer?.user_uuid, type_id: TRANSFER_APPROVED }, { club_name: transfer?.newClub?.name });
+      await sendNotifications({ user_uuid: transfer?.newClub?.managed_by, type_id: CLUB_MEMBER_ADDED }, { club_name: transfer?.newClub?.name, user_name: `${user?.first_name} ${user?.last_name}` });
 
       res.json(transfer);
     } catch (error) {

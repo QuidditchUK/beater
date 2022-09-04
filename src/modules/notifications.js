@@ -3,6 +3,10 @@ import { NOTIFICATION_PAYLOADS, PUSH_PAYLOADS } from '../constants/notifications
 import prisma from './prisma';
 
 const sendNotifications = async ({ user_uuid, type_id }, data) => {
+  if (!user_uuid) {
+    return;
+  }
+
   const notificationPayload = NOTIFICATION_PAYLOADS[type_id] || null;
 
   await prisma?.notifications.create({
