@@ -149,7 +149,7 @@ export default function transfersRoute() {
         },
       });
 
-      const user = await prisma.users.findUnique({ where: { uuid: req.user.uuid } });
+      const user = await prisma.users.findUnique({ where: { uuid: transfer?.user_uuid } });
 
       // Notifications
       email(user?.email, 'transferDeclined', { first_name: user?.first_name, new_club_name: transfer?.newClub?.name }, settings.postmark.clubsEmail);
