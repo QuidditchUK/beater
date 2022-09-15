@@ -34,8 +34,10 @@ const sendNotifications = async ({ user_uuid, type_id }, data) => {
     payload = payloadLookup;
   }
 
-  pushNotifications?.forEach(({ endpoint, p256dh, auth }) => {
-    pushNotification({ endpoint, keys: { p256dh, auth } }, PUSH_PAYLOADS[type_id]);
+  pushNotifications?.forEach(({
+    endpoint, p256dh, auth, uuid,
+  }) => {
+    pushNotification({ endpoint, keys: { p256dh, auth } }, PUSH_PAYLOADS[type_id], uuid);
   });
 };
 
