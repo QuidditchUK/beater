@@ -31,7 +31,7 @@ const log = getLogger('app');
 const app = express();
 
 const allowList = process.env.NODE_ENV === 'production'
-  ? ['https://quidditchuk.org', 'https://www.quidditchuk.org', 'https://chaser.quidditchuk.org', 'https://quidditchscheduler-staging.eu.auth0.com']
+  ? ['https://quidditchuk.org', 'https://www.quidditchuk.org', 'https://chaser.quidditchuk.org', 'https://quidditchscheduler-staging.eu.auth0.com', 'https://quadballuk.org', 'https://www.quadballuk.org']
   : ['http://localhost:3000'];
 
 app.use(unless(cors({
