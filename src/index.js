@@ -84,7 +84,6 @@ app.get('/health', (req, res) => {
 // cron.schedule('*/5 * * * *', () => {
 //   schedulePush();
 // });
-
 app.use(express.static('public'));
 app.use('/', routes);
 
