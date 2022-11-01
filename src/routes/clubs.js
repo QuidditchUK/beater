@@ -104,6 +104,8 @@ export default function clubsRoute() {
             first_name: true,
             last_name: true,
             email: true,
+            is_student: true,
+            university: true,
             stripe_products: {
               select: {
                 products: {
