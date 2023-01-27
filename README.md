@@ -1,4 +1,6 @@
-# 🤾🔴 Beater
+# 🤾🔴 Beater (DEPRECATED)
+
+We have now moved to using API Routes in our [chaser](https://github.com/quidditchuk/chaser) application - this repository is now deprecated, and it's only remaining live function is our OIDC provider. Once that has migrated or been deprecated this repo will be moved to read-only.
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
