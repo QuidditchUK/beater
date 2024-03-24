@@ -63,7 +63,7 @@
     "stripe": "^8.69.0",
     "uuidv4": "^6.2.13",
     "web-push": "^3.5.0",
-    "winston": "3.3.3",
+    "winston": "3.13.0",
     "yup": "^0.32.0"
   },
   "devDependencies": {
