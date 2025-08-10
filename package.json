@@ -52,7 +52,7 @@
     "jsonwebtoken": "8.5.1",
     "method-override": "3.0.0",
     "node-cron": "^3.0.1",
-    "node-fetch": "2",
+    "node-fetch": "3",
     "oidc-provider": "^6.31.0",
     "passport": "0.4.1",
     "passport-local": "1.0.0",
