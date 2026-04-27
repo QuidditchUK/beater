@@ -6300,10 +6300,10 @@ jose@^2.0.4:
   dependencies:
     "@panva/asn1.js" "^1.0.0"
 
-jose@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-3.6.0.tgz#9d21aa77f5156f578ef66f8f6f4d1720e233a649"
-  integrity sha512-bhgBEwvie7mPKAPHzH6a9RjiByNyt7iE9+8hMwor1H61VQ3n5f6yX3UbZnnffB2vAbFIH5hudsBE45KUS7WnZQ==
+jose@^4.0.0:
+  version "4.15.9"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.9.tgz#9b68eda29e9a0614c042fa29387196c7dd800100"
+  integrity sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
